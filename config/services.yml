@@ -1,0 +1,10 @@
+services:
+  tokenizer:
+    class: Helmich\TypoScriptParser\Tokenizer\Tokenizer
+  token_printer_structured:
+    class: Helmich\TypoScriptParser\Tokenizer\Printer\StructuredTokenPrinter
+  token_printer_code:
+    class: Helmich\TypoScriptParser\Tokenizer\Printer\CodeTokenPrinter
+  parser:
+    class: Helmich\TypoScriptParser\Parser\Parser
+    arguments: [@tokenizer]
