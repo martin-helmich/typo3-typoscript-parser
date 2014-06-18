@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer;
+namespace Helmich\TypoScriptParser\Tokenizer;
 
 
 /**
@@ -7,7 +7,7 @@ namespace Helmich\TsParser\Tokenizer;
  *
  * @author     Martin Helmich <typo3@martin-helmich.de>
  * @license    MIT
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Tokenizer
  */
 class UnknownOperatorException extends \Exception

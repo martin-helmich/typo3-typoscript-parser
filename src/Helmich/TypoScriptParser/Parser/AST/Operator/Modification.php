@@ -1,8 +1,8 @@
 <?php
-namespace Helmich\TsParser\Parser\AST\Operator;
+namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 
-use Helmich\TsParser\Parser\AST\ObjectPath;
+use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 
 
 /**
@@ -13,7 +13,7 @@ use Helmich\TsParser\Parser\AST\ObjectPath;
  *     foo  = bar
  *     foo := appendToString(baz)
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
 class Modification extends BinaryOperator
@@ -23,7 +23,7 @@ class Modification extends BinaryOperator
 
     /**
      * The modification call.
-     * @var \Helmich\TsParser\Parser\AST\Operator\ModificationCall
+     * @var \Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall
      */
     public $call;
 
@@ -32,9 +32,9 @@ class Modification extends BinaryOperator
     /**
      * Constructs a modification statement.
      *
-     * @param \Helmich\TsParser\Parser\AST\ObjectPath                $object     The object to modify.
-     * @param \Helmich\TsParser\Parser\AST\Operator\ModificationCall $call       The modification call.
-     * @param int                                                    $sourceLine The original source line.
+     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath                $object     The object to modify.
+     * @param \Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall $call       The modification call.
+     * @param int                                                            $sourceLine The original source line.
      */
     public function __construct(ObjectPath $object, ModificationCall $call, $sourceLine)
     {

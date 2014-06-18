@@ -1,12 +1,12 @@
 <?php
 
-namespace Helmich\TsParser\Parser\AST;
+namespace Helmich\TypoScriptParser\Parser\AST;
 
 
 /**
  * Include statements that includes a single TypoScript file.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
 class FileIncludeStatement extends IncludeStatement

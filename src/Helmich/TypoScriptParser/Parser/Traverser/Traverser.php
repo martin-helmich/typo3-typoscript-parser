@@ -1,10 +1,9 @@
 <?php
-namespace Helmich\TsParser\Parser\Traverser;
+namespace Helmich\TypoScriptParser\Parser\Traverser;
 
 
-use Helmich\TsParser\Parser\AST\ConditionalStatement;
-use Helmich\TsParser\Parser\AST\NestedAssignment;
-use Helmich\TsParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
+use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 
 class Traverser
 {
@@ -12,18 +11,18 @@ class Traverser
 
 
     /**
-     * @var \Helmich\TsParser\Parser\AST\Statement[]
+     * @var \Helmich\TypoScriptParser\Parser\AST\Statement[]
      */
     private $statements;
 
 
-    /** @var \Helmich\TsParser\Parser\Traverser\AggregatingVisitor */
+    /** @var \Helmich\TypoScriptParser\Parser\Traverser\AggregatingVisitor */
     private $visitors;
 
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\Statement[] $statements
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $statements
      */
     public function __construct(array $statements)
     {
@@ -34,7 +33,7 @@ class Traverser
 
 
     /**
-     * @param \Helmich\TsParser\Parser\Traverser\Visitor $visitor
+     * @param \Helmich\TypoScriptParser\Parser\Traverser\Visitor $visitor
      */
     public function addVisitor(Visitor $visitor)
     {
@@ -53,8 +52,8 @@ class Traverser
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\Statement[] $statements
-     * @return \Helmich\TsParser\Parser\AST\Statement[]
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $statements
+     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[]
      */
     private function walkRecursive(array $statements)
     {

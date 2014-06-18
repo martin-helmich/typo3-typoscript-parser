@@ -1,14 +1,14 @@
 <?php
-namespace Helmich\TsParser\Parser\AST\Operator;
+namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 
-use Helmich\TsParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 
 /**
  * Abstract base class for statements with binary operators.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpcakage Parser\AST\Operator
  */
 abstract class BinaryOperator extends Statement
@@ -19,7 +19,7 @@ abstract class BinaryOperator extends Statement
     /**
      * The object on the left-hand side of the statement.
      *
-     * @var \Helmich\TsParser\Parser\AST\ObjectPath
+     * @var \Helmich\TypoScriptParser\Parser\AST\ObjectPath
      */
     public $object;
 

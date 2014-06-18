@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer;
+namespace Helmich\TypoScriptParser\Tokenizer;
 
 
 interface TokenInterface

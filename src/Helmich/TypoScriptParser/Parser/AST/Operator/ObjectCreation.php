@@ -1,9 +1,5 @@
 <?php
-namespace Helmich\TsParser\Parser\AST\Operator;
-
-
-use Helmich\TsParser\Parser\AST\ObjectPath;
-use Helmich\TsParser\Parser\AST\Scalar;
+namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 
 /**
@@ -13,7 +9,7 @@ use Helmich\TsParser\Parser\AST\Scalar;
  *
  *     foo = TEXT
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
 class ObjectCreation extends Assignment

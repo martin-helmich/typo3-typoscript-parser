@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer;
+namespace Helmich\TypoScriptParser\Tokenizer;
 
 
 class Tokenizer implements TokenizerInterface
@@ -48,8 +48,8 @@ class Tokenizer implements TokenizerInterface
 
     /**
      * @param string $inputString
-     * @throws \Helmich\TsParser\Tokenizer\TokenizerException
-     * @return \Helmich\TsParser\Tokenizer\TokenInterface[]
+     * @throws \Helmich\TypoScriptParser\Tokenizer\TokenizerException
+     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
      */
     public function tokenizeString($inputString)
     {
@@ -123,15 +123,15 @@ class Tokenizer implements TokenizerInterface
             }
 
             $simpleTokens = [
-                self::TOKEN_COMMENT_ONELINE => TokenInterface::TYPE_COMMENT_ONELINE,
-                self::TOKEN_NESTING_END => TokenInterface::TYPE_BRACE_CLOSE,
-                self::TOKEN_CONDITION => TokenInterface::TYPE_CONDITION,
-                self::TOKEN_CONDITION_ELSE => TokenInterface::TYPE_CONDITION_ELSE,
-                self::TOKEN_CONDITION_END => TokenInterface::TYPE_CONDITION_END,
+                self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
+                self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
+                self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
+                self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
+                self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
                 self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
             ];
 
-            foreach($simpleTokens as $pattern => $type)
+            foreach ($simpleTokens as $pattern => $type)
             {
                 if (preg_match($pattern, $line, $matches))
                 {
@@ -218,7 +218,7 @@ class Tokenizer implements TokenizerInterface
 
     /**
      * @param string $inputStream
-     * @return \Helmich\TsParser\Tokenizer\TokenInterface[]
+     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
      */
     public function tokenizeStream($inputStream)
     {
@@ -231,7 +231,7 @@ class Tokenizer implements TokenizerInterface
     /**
      * @param string $operator
      * @return string
-     * @throws \Helmich\TsParser\Tokenizer\UnknownOperatorException
+     * @throws \Helmich\TypoScriptParser\Tokenizer\UnknownOperatorException
      */
     private function getTokenTypeForBinaryOperator($operator)
     {

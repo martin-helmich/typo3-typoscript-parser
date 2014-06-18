@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Parser\Printer;
+namespace Helmich\TypoScriptParser\Parser\Printer;
 
 
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,7 +10,7 @@ interface ASTPrinterInterface
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\Statement[]          $statements
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]  $statements
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return string
      */

@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Parser;
+namespace Helmich\TypoScriptParser\Parser;
 
 
 use Exception;

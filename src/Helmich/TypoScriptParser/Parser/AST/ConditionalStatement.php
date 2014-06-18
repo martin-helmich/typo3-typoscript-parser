@@ -1,11 +1,11 @@
 <?php
-namespace Helmich\TsParser\Parser\AST;
+namespace Helmich\TypoScriptParser\Parser\AST;
 
 
 /**
  * A conditional statement with a condition, an if-branch and an optional else-branch.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
 class ConditionalStatement extends Statement
@@ -22,14 +22,14 @@ class ConditionalStatement extends Statement
 
     /**
      * Statements within the if-branch.
-     * @var \Helmich\TsParser\Parser\AST\Statement[]
+     * @var \Helmich\TypoScriptParser\Parser\AST\Statement[]
      */
     public $ifStatements = [];
 
 
     /**
      * Statements within the else-branch.
-     * @var \Helmich\TsParser\Parser\AST\Statement[]
+     * @var \Helmich\TypoScriptParser\Parser\AST\Statement[]
      */
     public $elseStatements = [];
 
@@ -38,10 +38,10 @@ class ConditionalStatement extends Statement
     /**
      * Constructs a conditional statement.
      *
-     * @param string                                   $condition      The condition statement
-     * @param \Helmich\TsParser\Parser\AST\Statement[] $ifStatements   The statements in the if-branch.
-     * @param \Helmich\TsParser\Parser\AST\Statement[] $elseStatements The statements in the else-branch (may be empty).
-     * @param int                                      $sourceLine     The original source line.
+     * @param string                                           $condition      The condition statement
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $ifStatements   The statements in the if-branch.
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $elseStatements The statements in the else-branch (may be empty).
+     * @param int                                              $sourceLine     The original source line.
      */
     public function __construct($condition, array $ifStatements, array $elseStatements, $sourceLine)
     {

@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Parser\AST\Operator;
+namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 
 /**
@@ -9,7 +9,7 @@ namespace Helmich\TsParser\Parser\AST\Operator;
  *
  *     foo >
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
 class Delete extends UnaryOperator

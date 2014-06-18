@@ -1,11 +1,11 @@
 <?php
-namespace Helmich\TsParser\Parser\AST;
+namespace Helmich\TypoScriptParser\Parser\AST;
 
 
 /**
  * A scalar value.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
 class Scalar

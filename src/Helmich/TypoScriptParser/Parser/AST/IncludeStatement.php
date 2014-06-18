@@ -1,11 +1,11 @@
 <?php
-namespace Helmich\TsParser\Parser\AST;
+namespace Helmich\TypoScriptParser\Parser\AST;
 
 
 /**
  * Abstract base class for include statements.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
 abstract class IncludeStatement extends Statement

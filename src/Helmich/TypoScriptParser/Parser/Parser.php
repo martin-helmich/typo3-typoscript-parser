@@ -1,31 +1,31 @@
 <?php
-namespace Helmich\TsParser\Parser;
+namespace Helmich\TypoScriptParser\Parser;
 
 
-use Helmich\TsParser\Parser\AST\ConditionalStatement;
-use Helmich\TsParser\Parser\AST\DirectoryIncludeStatement;
-use Helmich\TsParser\Parser\AST\FileIncludeStatement;
-use Helmich\TsParser\Parser\AST\NestedAssignment;
-use Helmich\TsParser\Parser\AST\ObjectPath;
-use Helmich\TsParser\Parser\AST\Operator\Assignment;
-use Helmich\TsParser\Parser\AST\Operator\Copy;
-use Helmich\TsParser\Parser\AST\Operator\Delete;
-use Helmich\TsParser\Parser\AST\Operator\Modification;
-use Helmich\TsParser\Parser\AST\Operator\ModificationCall;
-use Helmich\TsParser\Parser\AST\Operator\ObjectCreation;
-use Helmich\TsParser\Parser\AST\Operator\Reference;
-use Helmich\TsParser\Parser\AST\Scalar;
-use Helmich\TsParser\Tokenizer\Token;
-use Helmich\TsParser\Tokenizer\TokenInterface;
-use Helmich\TsParser\Tokenizer\Tokenizer;
-use Helmich\TsParser\Tokenizer\TokenizerInterface;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
+use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
+use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
+use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
+use Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall;
+use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
+use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Tokenizer\Token;
+use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
+use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 
 class Parser implements ParserInterface
 {
 
 
 
-    /** @var \Helmich\TsParser\Tokenizer\TokenizerInterface */
+    /** @var \Helmich\TypoScriptParser\Tokenizer\TokenizerInterface */
     private $tokenizer;
 
 
@@ -43,7 +43,7 @@ class Parser implements ParserInterface
      * This can be any kind of stream supported by PHP (e.g. a filename or a URL).
      *
      * @param string $stream The stream resource.
-     * @return \Helmich\TsParser\Parser\AST\Statement[] The syntax tree.
+     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
      */
     public function parseStream($stream)
     {
@@ -57,7 +57,7 @@ class Parser implements ParserInterface
      * Parses a TypoScript string.
      *
      * @param string $content The string to parse.
-     * @return \Helmich\TsParser\Parser\AST\Statement[] The syntax tree.
+     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
      */
     public function parseString($content)
     {
@@ -70,8 +70,8 @@ class Parser implements ParserInterface
     /**
      * Parses a token stream.
      *
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens The token stream to parse.
-     * @return \Helmich\TsParser\Parser\AST\Statement[] The syntax tree.
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens The token stream to parse.
+     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
      */
     public function parseTokens(array $tokens)
     {
@@ -101,12 +101,12 @@ class Parser implements ParserInterface
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\ObjectPath      $parentObject
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
-     * @param                                              $i
-     * @param int                                          $startLine
+     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath      $parentObject
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
+     * @param                                                      $i
+     * @param int                                                  $startLine
      * @throws ParseError
-     * @return \Helmich\TsParser\Parser\AST\NestedAssignment
+     * @return \Helmich\TypoScriptParser\Parser\AST\NestedAssignment
      */
     private function parseNestedStatements(ObjectPath $parentObject, array $tokens, &$i, $startLine)
     {
@@ -143,12 +143,12 @@ class Parser implements ParserInterface
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\ObjectPath      $context
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
-     * @param int                                          $i
-     * @param \Helmich\TsParser\Parser\AST\Statement[]     $statements
+     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath      $context
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
+     * @param int                                                  $i
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]     $statements
      * @throws ParseError
-     * @return \Helmich\TsParser\Parser\AST\NestedAssignment
+     * @return \Helmich\TypoScriptParser\Parser\AST\NestedAssignment
      */
     private function parseToken(array $tokens, &$i, array &$statements, ObjectPath $context = NULL)
     {
@@ -396,8 +396,8 @@ class Parser implements ParserInterface
 
 
     /**
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
-     * @return \Helmich\TsParser\Tokenizer\TokenInterface[]
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
+     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
      */
     private function filterTokenStream($tokens)
     {

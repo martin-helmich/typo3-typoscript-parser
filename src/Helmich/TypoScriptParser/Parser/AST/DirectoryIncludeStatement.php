@@ -1,11 +1,11 @@
 <?php
-namespace Helmich\TsParser\Parser\AST;
+namespace Helmich\TypoScriptParser\Parser\AST;
 
 
 /**
  * Include statements that includes many TypoScript files from a directory.
  *
- * @package    Helmich\TsParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
 class DirectoryIncludeStatement extends IncludeStatement

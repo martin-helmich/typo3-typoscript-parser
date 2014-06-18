@@ -1,15 +1,15 @@
 <?php
-namespace Helmich\TsParser\Parser\Traverser;
+namespace Helmich\TypoScriptParser\Parser\Traverser;
 
 
-use Helmich\TsParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 class AggregatingVisitor implements Visitor
 {
 
 
 
-    /** @var \Helmich\TsParser\Parser\Traverser\Visitor[] */
+    /** @var \Helmich\TypoScriptParser\Parser\Traverser\Visitor[] */
     private $visitors = [];
 
 

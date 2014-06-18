@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer;
+namespace Helmich\TypoScriptParser\Tokenizer;
 
 
 interface TokenizerInterface
@@ -9,7 +9,7 @@ interface TokenizerInterface
 
     /**
      * @param string $inputString
-     * @return \Helmich\TsParser\Tokenizer\TokenInterface[]
+     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
      */
     public function tokenizeString($inputString);
 
@@ -17,7 +17,7 @@ interface TokenizerInterface
 
     /**
      * @param string $inputStream
-     * @return \Helmich\TsParser\Tokenizer\TokenInterface[]
+     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
      */
     public function tokenizeStream($inputStream);
 

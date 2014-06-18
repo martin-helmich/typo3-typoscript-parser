@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer\Printer;
+namespace Helmich\TypoScriptParser\Tokenizer\Printer;
 
 
 interface TokenPrinterInterface
@@ -8,7 +8,7 @@ interface TokenPrinterInterface
 
 
     /**
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
      * @return string
      */
     public function printTokenStream(array $tokens);

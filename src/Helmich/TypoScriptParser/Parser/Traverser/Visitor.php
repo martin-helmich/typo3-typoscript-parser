@@ -1,8 +1,8 @@
 <?php
-namespace Helmich\TsParser\Parser\Traverser;
+namespace Helmich\TypoScriptParser\Parser\Traverser;
 
 
-use Helmich\TsParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 interface Visitor
 {

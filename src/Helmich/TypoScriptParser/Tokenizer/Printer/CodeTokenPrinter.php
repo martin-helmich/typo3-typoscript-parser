@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer\Printer;
+namespace Helmich\TypoScriptParser\Tokenizer\Printer;
 
 
 use Symfony\Component\Yaml\Yaml;
@@ -10,7 +10,7 @@ class CodeTokenPrinter implements TokenPrinterInterface
 
 
     /**
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
      * @return string
      */
     public function printTokenStream(array $tokens)

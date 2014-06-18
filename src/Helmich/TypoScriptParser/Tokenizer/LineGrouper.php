@@ -1,5 +1,5 @@
 <?php
-namespace Helmich\TsParser\Tokenizer;
+namespace Helmich\TypoScriptParser\Tokenizer;
 
 
 class LineGrouper
@@ -12,7 +12,7 @@ class LineGrouper
 
 
     /**
-     * @param \Helmich\TsParser\Tokenizer\TokenInterface[] $tokens
+     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
      */
     public function __construct(array $tokens)
     {

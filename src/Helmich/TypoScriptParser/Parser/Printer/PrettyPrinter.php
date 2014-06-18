@@ -1,16 +1,16 @@
 <?php
-namespace Helmich\TsParser\Parser\Printer;
+namespace Helmich\TypoScriptParser\Parser\Printer;
 
 
-use Helmich\TsParser\Parser\AST\ConditionalStatement;
-use Helmich\TsParser\Parser\AST\DirectoryIncludeStatement;
-use Helmich\TsParser\Parser\AST\FileIncludeStatement;
-use Helmich\TsParser\Parser\AST\NestedAssignment;
-use Helmich\TsParser\Parser\AST\Operator\Assignment;
-use Helmich\TsParser\Parser\AST\Operator\Copy;
-use Helmich\TsParser\Parser\AST\Operator\Delete;
-use Helmich\TsParser\Parser\AST\Operator\Modification;
-use Helmich\TsParser\Parser\AST\Operator\Reference;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
+use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
+use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
+use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PrettyPrinter implements ASTPrinterInterface
@@ -19,7 +19,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\Statement[]          $statements
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]  $statements
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return string
      */
@@ -31,7 +31,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
 
     /**
-     * @param \Helmich\TsParser\Parser\AST\Statement[]          $statements
+     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]  $statements
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param int                                               $nesting
      * @return string
@@ -102,9 +102,9 @@ class PrettyPrinter implements ASTPrinterInterface
 
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param                                                   $nesting
-     * @param \Helmich\TsParser\Parser\AST\NestedAssignment     $statement
+     * @param \Symfony\Component\Console\Output\OutputInterface     $output
+     * @param                                                       $nesting
+     * @param \Helmich\TypoScriptParser\Parser\AST\NestedAssignment $statement
      */
     private function printNestedAssignment(OutputInterface $output, $nesting, NestedAssignment $statement)
     {
@@ -116,9 +116,9 @@ class PrettyPrinter implements ASTPrinterInterface
 
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param int                                               $nesting
-     * @param \Helmich\TsParser\Parser\AST\ConditionalStatement $statement
+     * @param \Symfony\Component\Console\Output\OutputInterface         $output
+     * @param int                                                       $nesting
+     * @param \Helmich\TypoScriptParser\Parser\AST\ConditionalStatement $statement
      */
     private function printConditionalStatement(OutputInterface $output, $nesting, $statement)
     {
