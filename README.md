@@ -30,12 +30,14 @@ tree from source code input. The class requires an instance of the `Helmich\Typo
 class as dependency. When using the Symfony DependencyInjection component, you can
 simply use the service `parser` for this.
 
-    use Helmich\TypoScriptParser\Parser\Parser,
-        Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+```php
+use Helmich\TypoScriptParser\Parser\Parser,
+    Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 
-    $typoscript = file_get_contents('path/to/typoscript.ts');
-    $parser     = new Parser(new Tokenizer());
-    $statements = $parser->parse($typoscript);
+$typoscript = file_get_contents('path/to/typoscript.ts');
+$parser     = new Parser(new Tokenizer());
+$statements = $parser->parse($typoscript);
+```
 
 Analyzing TypoScript
 --------------------
@@ -46,28 +48,32 @@ names (there's probably no use case for that, just as a simple example):
 
 First, we need the respective visitor implementation:
 
-    use Helmich\TypoScriptParser\Parser\Traverser\Visitor,
-        Helmich\TypoScriptParser\Parser\AST\Statement,
-        Helmich\TypoScriptParser\Parser\AST\Operator\Assignment,
-        Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+```php
+use Helmich\TypoScriptParser\Parser\Traverser\Visitor,
+    Helmich\TypoScriptParser\Parser\AST\Statement,
+    Helmich\TypoScriptParser\Parser\AST\Operator\Assignment,
+    Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 
-    class VariableNamingCheckVisitor implements Visitor {
-        public function enterTree(array $statements) {}
-        public function enterNode(Statement $statement) {
-            if ($statement instanceof Assignment || $statement instanceof NestedAssignment) {
-                if (!preg_match(',^[0-9]+$,', $statement->object->relativePath)) {
-                    throw new \Exception('Variable names must be numbers only!');
-                }
+class VariableNamingCheckVisitor implements Visitor {
+    public function enterTree(array $statements) {}
+    public function enterNode(Statement $statement) {
+        if ($statement instanceof Assignment || $statement instanceof NestedAssignment) {
+            if (!preg_match(',^[0-9]+$,', $statement->object->relativePath)) {
+                throw new \Exception('Variable names must be numbers only!');
             }
         }
-        public function exitNode(Statement $statement) {}
-        public function exitTree(array $statements) {}
     }
+    public function exitNode(Statement $statement) {}
+    public function exitTree(array $statements) {}
+}
+```
 
 Then traverse the syntax tree:
 
-    use Helmich\TypoScriptParser\Parser\Traverser\Traverser;
+```php
+use Helmich\TypoScriptParser\Parser\Traverser\Traverser;
 
-    $traverser = new Traverser($statements);
-    $traverser->addVisitor(new VariableNamingCheckVisitor());
-    $traverser->walk();
+$traverser = new Traverser($statements);
+$traverser->addVisitor(new VariableNamingCheckVisitor());
+$traverser->walk();
+```
