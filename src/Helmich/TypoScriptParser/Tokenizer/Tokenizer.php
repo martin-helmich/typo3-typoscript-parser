@@ -40,7 +40,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_INCLUDE_STATEMENT = ',^
         <INCLUDE_TYPOSCRIPT:\s+
         source="(?<type>FILE|DIR):(?<filename>[^"]+)"
-        (?:\s+extension="(?<extension>[^"]+)")?
+        (?:\s+extensions="(?<extensions>[^"]+)")?
         \s*>
     $,x';
 
