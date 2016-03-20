@@ -15,7 +15,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_CONDITION_ELSE = ',^\[else\],i';
     const TOKEN_CONDITION_END = ',^\[(global|end)\],i';
 
-    const TOKEN_OBJECT_NAME = ',^(CASE|CLEARGIF|COA(?:_INT)?|COBJ_ARRAY|COLUMNS|CTABLE|EDITPANEL|FILES?|FLUIDTEMPLATE|FORM|HMENU|HRULER|IMAGE|IMG_RESOURCE|IMGTEXT|LOAD_REGISTER|MEDIA|MULTIMEDIA|OTABLE|QTOBJECT|RECORDS|RESTORE_REGISTER|SEARCHRESULT|SVG|SWFOBJECT|TEMPLATE|USER(?:_INT)?|GIFBUILDER|[GT]MENU(?:_LAYERS)?|(?:G|T|JS|IMG)MENUITEM)$,';
+    const TOKEN_OBJECT_NAME = ',^(CASE|CLEARGIF|COA(?:_INT)?|COBJ_ARRAY|COLUMNS|CTABLE|EDITPANEL|FILES?|FLUIDTEMPLATE|FORM|HMENU|HRULER|TEXT|IMAGE|IMG_RESOURCE|IMGTEXT|LOAD_REGISTER|MEDIA|MULTIMEDIA|OTABLE|QTOBJECT|RECORDS|RESTORE_REGISTER|SEARCHRESULT|SVG|SWFOBJECT|TEMPLATE|USER(?:_INT)?|GIFBUILDER|[GT]MENU(?:_LAYERS)?|(?:G|T|JS|IMG)MENUITEM)$,';
     const TOKEN_OBJECT_ACCESSOR = ',^([a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*)$,';
     const TOKEN_OBJECT_REFERENCE = ',^\.?([a-zA-Z0-9_\-]+(?:\.[a-zA-Z0-9_\-]+)*)$,';
 
@@ -60,8 +60,9 @@ class Tokenizer implements TokenizerInterface
         $currentTokenType  = NULL;
         $currentTokenValue = '';
 
-        $lines       = explode("\n", $inputString);
-        $currentLine = 0;
+        $lines                   = explode("\n", $inputString);
+        $currentLine             = 0;
+        $multiLineTokenStartLine = 0;
 
         foreach ($lines as $line)
         {
@@ -92,7 +93,7 @@ class Tokenizer implements TokenizerInterface
             {
                 if (preg_match(',^\s*\),', $line, $matches))
                 {
-                    $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, $currentTokenValue . $matches[0], $currentLine);
+                    $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, rtrim($currentTokenValue), $multiLineTokenStartLine);
 
                     $currentTokenValue = NULL;
                     $currentTokenType  = NULL;
@@ -188,8 +189,9 @@ class Tokenizer implements TokenizerInterface
                         $tokens[] = new Token(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $currentLine);
                         break;
                     case '(':
-                        $currentTokenValue = "(\n";
-                        $currentTokenType  = TokenInterface::TYPE_RIGHTVALUE_MULTILINE;
+                        $currentTokenValue       = "";
+                        $currentTokenType        = TokenInterface::TYPE_RIGHTVALUE_MULTILINE;
+                        $multiLineTokenStartLine = $currentLine;
                         break;
                     default:
                         throw new TokenizerException('Unknown operator: "' . $matches[3] . '"!', 1403084443, NULL, $currentLine);

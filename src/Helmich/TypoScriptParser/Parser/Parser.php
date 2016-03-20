@@ -284,11 +284,11 @@ class Parser implements ParserInterface
                         $i += 2;
                         if ($inElseBranch)
                         {
-                            $elseStatements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i + 1]->getLine());
+                            $elseStatements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i - 2]->getLine());
                         }
                         else
                         {
-                            $ifStatements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i + 1]->getLine());
+                            $ifStatements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i - 2]->getLine());
                         }
                     }
                 }
@@ -314,7 +314,7 @@ class Parser implements ParserInterface
             else
             {
                 $statements[] = new DirectoryIncludeStatement(
-                    $matches['filename'], isset($matches['extension']) ? $matches['extension'] : NULL, $tokens[$i]->getLine()
+                    $matches['filename'], isset($matches['extensions']) ? $matches['extensions'] : NULL, $tokens[$i]->getLine()
                 );
             }
         }
