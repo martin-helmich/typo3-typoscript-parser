@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * A scalar value.
  *
@@ -11,15 +10,12 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 class Scalar
 {
 
-
-
     /**
      * The value.
+     *
      * @var string
      */
     public $value;
-
-
 
     /**
      * Constructs a scalar value.
@@ -30,7 +26,4 @@ class Scalar
     {
         $this->value = $value;
     }
-
-
-
 }

@@ -5,5 +5,5 @@ return [
     ),
     new \Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
         'bar/', '', 2
-    )
+    ),
 ];

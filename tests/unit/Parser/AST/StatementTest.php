@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser\AST;
 
-
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 class StatementTest extends \PHPUnit_Framework_TestCase

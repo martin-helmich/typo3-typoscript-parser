@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * Include statements that includes many TypoScript files from a directory.
  *
@@ -11,7 +10,6 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 class DirectoryIncludeStatement extends IncludeStatement
 {
 
-
     /**
      * The directory to include from.
      *
@@ -19,23 +17,20 @@ class DirectoryIncludeStatement extends IncludeStatement
      */
     public $directory;
 
-
     /**
      * Same as extensions
      *
      * @var string
      * @deprecated Use `extensions` instead
      */
-    public $extension = NULL;
-
+    public $extension = null;
 
     /**
      * An optional file extension filter. May be NULL.
      *
      * @var string
      */
-    public $extensions = NULL;
-
+    public $extensions = null;
 
     /**
      * Constructs a new directory include statement.
@@ -52,6 +47,4 @@ class DirectoryIncludeStatement extends IncludeStatement
         $this->extension  = $extensions;
         $this->extensions = $extensions;
     }
-
-
-} 
+}

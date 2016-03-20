@@ -13,5 +13,5 @@ return [
         new ObjectPath('bar', 'bar'),
         new Scalar(''),
         2
-    )
+    ),
 ];

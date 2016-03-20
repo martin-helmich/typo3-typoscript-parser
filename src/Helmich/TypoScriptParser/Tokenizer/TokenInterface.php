@@ -1,11 +1,8 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-
 interface TokenInterface
 {
-
-
 
     const TYPE_WHITESPACE = "WS";
     const TYPE_COMMENT_MULTILINE = "COMMENT_MULTILINE";
@@ -26,21 +23,15 @@ interface TokenInterface
     const TYPE_OPERATOR_DELETE = "OP_DELETE";
     const TYPE_INCLUDE = "INCLUDE";
 
-
-
     /**
      * @return string
      */
     public function getType();
 
-
-
     /**
      * @return string
      */
     public function getValue();
-
-
 
     /**
      * @return int

@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 /**
  * A delete operator.
  *
@@ -14,7 +13,5 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
  */
 class Delete extends UnaryOperator
 {
-
-
 
 }

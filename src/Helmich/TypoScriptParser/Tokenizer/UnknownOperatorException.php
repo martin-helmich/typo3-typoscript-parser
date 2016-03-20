@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-
 /**
  * Exception that is thrown when an unknown operator is encountered.
  *
@@ -12,7 +11,5 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class UnknownOperatorException extends \Exception
 {
-
-
 
 }

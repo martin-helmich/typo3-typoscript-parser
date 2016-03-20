@@ -1,28 +1,27 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\Traverser;
 
-
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
+/**
+ * Class Traverser
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Parser\Traverser
+ */
 class Traverser
 {
 
-
-
-    /**
-     * @var \Helmich\TypoScriptParser\Parser\AST\Statement[]
-     */
+    /** @var Statement[] */
     private $statements;
 
-
-    /** @var \Helmich\TypoScriptParser\Parser\Traverser\AggregatingVisitor */
+    /** @var AggregatingVisitor */
     private $visitors;
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $statements
+     * @param Statement[] $statements
      */
     public function __construct(array $statements)
     {
@@ -30,18 +29,17 @@ class Traverser
         $this->visitors   = new AggregatingVisitor();
     }
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\Traverser\Visitor $visitor
+     * @param Visitor $visitor
      */
     public function addVisitor(Visitor $visitor)
     {
         $this->visitors->addVisitor($visitor);
     }
 
-
-
+    /**
+     * @return void
+     */
     public function walk()
     {
         $this->visitors->enterTree($this->statements);
@@ -49,24 +47,18 @@ class Traverser
         $this->visitors->exitTree($this->statements);
     }
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $statements
-     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[]
+     * @param Statement[] $statements
+     * @return Statement[]
      */
     private function walkRecursive(array $statements)
     {
-        foreach ($statements as $key => $statement)
-        {
+        foreach ($statements as $key => $statement) {
             $this->visitors->enterNode($statement);
 
-            if ($statement instanceof NestedAssignment)
-            {
+            if ($statement instanceof NestedAssignment) {
                 $statement->statements = $this->walkRecursive($statement->statements);
-            }
-            else if ($statement instanceof ConditionalStatement)
-            {
+            } else if ($statement instanceof ConditionalStatement) {
                 $statement->ifStatements   = $this->walkRecursive($statement->ifStatements);
                 $statement->elseStatements = $this->walkRecursive($statement->elseStatements);
             }

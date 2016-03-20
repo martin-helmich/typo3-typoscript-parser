@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
-
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 
@@ -20,7 +19,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
-            $output = include $outputFile;
+            $output     = include $outputFile;
 
             yield [$file, $output];
         }

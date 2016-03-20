@@ -1,9 +1,7 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
-
 
 /**
  * A copy assignment.
@@ -18,13 +16,12 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
  */
 class Copy extends BinaryObjectOperator
 {
-
     /**
      * Constructs a copy statement.
      *
-     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath $object     The object to copy the value to.
-     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath $target     The object to copy the value from.
-     * @param int                                             $sourceLine The original source line.
+     * @param ObjectPath $object     The object to copy the value to.
+     * @param ObjectPath $target     The object to copy the value from.
+     * @param int        $sourceLine The original source line.
      */
     public function __construct(ObjectPath $object, ObjectPath $target, $sourceLine)
     {

@@ -1,13 +1,10 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer\Printer;
 
-
 use Symfony\Component\Yaml\Yaml;
 
 class StructuredTokenPrinter implements TokenPrinterInterface
 {
-
-
 
     /**
      * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
@@ -17,8 +14,7 @@ class StructuredTokenPrinter implements TokenPrinterInterface
     {
         $content = '';
 
-        foreach ($tokens as $token)
-        {
+        foreach ($tokens as $token) {
             $content .= sprintf("%20s %s\n", $token->getType(), Yaml::dump($token->getValue()));
         }
 

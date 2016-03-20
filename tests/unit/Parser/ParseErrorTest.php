@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser;
 
-
 use Helmich\TypoScriptParser\Parser\ParseError;
 
 class ParseErrorTest extends \PHPUnit_Framework_TestCase

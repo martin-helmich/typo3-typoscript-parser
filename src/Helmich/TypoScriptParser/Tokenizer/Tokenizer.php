@@ -1,11 +1,8 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-
 class Tokenizer implements TokenizerInterface
 {
-
-
 
     const TOKEN_WHITESPACE = ',^[ \t\n]+,s';
     const TOKEN_COMMENT_ONELINE = ',^(#|/)[^\n]*,';
@@ -44,12 +41,10 @@ class Tokenizer implements TokenizerInterface
         \s*>
     $,x';
 
-
-
     /**
      * @param string $inputString
-     * @throws \Helmich\TypoScriptParser\Tokenizer\TokenizerException
-     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
+     * @throws TokenizerException
+     * @return TokenInterface[]
      */
     public function tokenizeString($inputString)
     {
@@ -57,67 +52,57 @@ class Tokenizer implements TokenizerInterface
 
         $tokens = [];
 
-        $currentTokenType  = NULL;
+        $currentTokenType  = null;
         $currentTokenValue = '';
 
         $lines                   = explode("\n", $inputString);
         $currentLine             = 0;
         $multiLineTokenStartLine = 0;
 
-        foreach ($lines as $line)
-        {
+        foreach ($lines as $line) {
             $currentLine++;
-            if ($currentTokenType === TokenInterface::TYPE_COMMENT_MULTILINE)
-            {
-                if (preg_match(self::TOKEN_WHITESPACE, $line, $matches))
-                {
+            if ($currentTokenType === TokenInterface::TYPE_COMMENT_MULTILINE) {
+                if (preg_match(self::TOKEN_WHITESPACE, $line, $matches)) {
                     $currentTokenValue .= $matches[0];
                     $line = substr($line, strlen($matches[0]));
                 }
 
-                if (preg_match(self::TOKEN_COMMENT_MULTILINE_END, $line, $matches))
-                {
+                if (preg_match(self::TOKEN_COMMENT_MULTILINE_END, $line, $matches)) {
                     $currentTokenValue .= $matches[0];
                     $tokens[] = new Token(TokenInterface::TYPE_COMMENT_MULTILINE, $currentTokenValue, $currentLine);
 
-                    $currentTokenValue = NULL;
-                    $currentTokenType  = NULL;
-                }
-                else
-                {
+                    $currentTokenValue = null;
+                    $currentTokenType  = null;
+                } else {
                     $currentTokenValue .= $line;
                 }
                 continue;
-            }
-            elseif ($currentTokenType === TokenInterface::TYPE_RIGHTVALUE_MULTILINE)
-            {
-                if (preg_match(',^\s*\),', $line, $matches))
-                {
-                    $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, rtrim($currentTokenValue), $multiLineTokenStartLine);
+            } elseif ($currentTokenType === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
+                if (preg_match(',^\s*\),', $line, $matches)) {
+                    $tokens[] = new Token(
+                        TokenInterface::TYPE_RIGHTVALUE_MULTILINE,
+                        rtrim($currentTokenValue),
+                        $multiLineTokenStartLine
+                    );
 
-                    $currentTokenValue = NULL;
-                    $currentTokenType  = NULL;
-                }
-                else
-                {
+                    $currentTokenValue = null;
+                    $currentTokenType  = null;
+                } else {
                     $currentTokenValue .= $line . "\n";
                 }
                 continue;
             }
 
-            if (count($tokens) !== 0)
-            {
+            if (count($tokens) !== 0) {
                 $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $currentLine - 1);
             }
 
-            if (preg_match(self::TOKEN_WHITESPACE, $line, $matches))
-            {
+            if (preg_match(self::TOKEN_WHITESPACE, $line, $matches)) {
                 $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[0], $currentLine);
                 $line     = substr($line, strlen($matches[0]));
             }
 
-            if (preg_match(self::TOKEN_COMMENT_MULTILINE_BEGIN, $line, $matches))
-            {
+            if (preg_match(self::TOKEN_COMMENT_MULTILINE_BEGIN, $line, $matches)) {
                 $currentTokenValue = $line;
                 $currentTokenType  = TokenInterface::TYPE_COMMENT_MULTILINE;
                 continue;
@@ -132,56 +117,49 @@ class Tokenizer implements TokenizerInterface
                 self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
             ];
 
-            foreach ($simpleTokens as $pattern => $type)
-            {
-                if (preg_match($pattern, $line, $matches))
-                {
+            foreach ($simpleTokens as $pattern => $type) {
+                if (preg_match($pattern, $line, $matches)) {
                     $tokens[] = new Token($type, $matches[0], $currentLine);
                     continue 2;
                 }
             }
 
-            if (preg_match(self::TOKEN_OPERATOR_LINE, $line, $matches))
-            {
+            if (preg_match(self::TOKEN_OPERATOR_LINE, $line, $matches)) {
                 $tokens[] = new Token(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $currentLine);
 
-                if ($matches[2])
-                {
+                if ($matches[2]) {
                     $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[2], $currentLine);
                 }
 
-                switch ($matches[3])
-                {
+                switch ($matches[3]) {
                     case '=':
                     case ':=':
                     case '<':
                     case '<=':
                     case '>':
-                        try
-                        {
-                            $tokens[] = new Token($this->getTokenTypeForBinaryOperator($matches[3]), $matches[3], $currentLine);
-                        }
-                        catch (UnknownOperatorException $exception)
-                        {
-                            throw new TokenizerException($exception->getMessage(), 1403084548, $exception, $currentLine);
+                        try {
+                            $tokens[] = new Token(
+                                $this->getTokenTypeForBinaryOperator($matches[3]),
+                                $matches[3],
+                                $currentLine
+                            );
+                        } catch (UnknownOperatorException $exception) {
+                            throw new TokenizerException(
+                                $exception->getMessage(), 1403084548, $exception, $currentLine
+                            );
                         }
 
-                        if ($matches[4])
-                        {
+                        if ($matches[4]) {
                             $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
                         }
 
-                        if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5]))
-                        {
+                        if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5])) {
                             $tokens[] = new Token(TokenInterface::TYPE_OBJECT_CONSTRUCTOR, $matches[5], $currentLine);
-                        }
-                        else if (strlen($matches[5]))
-                        {
+                        } else if (strlen($matches[5])) {
                             $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE, $matches[5], $currentLine);
                         }
 
-                        if ($matches[6])
-                        {
+                        if ($matches[6]) {
                             $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[6], $currentLine);
                         }
                         break;
@@ -194,33 +172,34 @@ class Tokenizer implements TokenizerInterface
                         $multiLineTokenStartLine = $currentLine;
                         break;
                     default:
-                        throw new TokenizerException('Unknown operator: "' . $matches[3] . '"!', 1403084443, NULL, $currentLine);
+                        throw new TokenizerException(
+                            'Unknown operator: "' . $matches[3] . '"!',
+                            1403084443,
+                            null,
+                            $currentLine
+                        );
                 }
 
                 continue;
             }
 
-            if (strlen($line) === 0)
-            {
+            if (strlen($line) === 0) {
                 continue;
             }
 
-            throw new TokenizerException('Cannot tokenize line "' . $line . '"', 1403084444, NULL, $currentLine);
+            throw new TokenizerException('Cannot tokenize line "' . $line . '"', 1403084444, null, $currentLine);
         }
 
-        if ($currentTokenType !== NULL)
-        {
-            throw new TokenizerException('Unterminated ' . $currentTokenType . '!', 1403084445, NULL, $currentLine);
+        if ($currentTokenType !== null) {
+            throw new TokenizerException('Unterminated ' . $currentTokenType . '!', 1403084445, null, $currentLine);
         }
 
         return $tokens;
     }
 
-
-
     /**
      * @param string $inputStream
-     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
+     * @return TokenInterface[]
      */
     public function tokenizeStream($inputStream)
     {
@@ -228,17 +207,14 @@ class Tokenizer implements TokenizerInterface
         return $this->tokenizeString($content);
     }
 
-
-
     /**
      * @param string $operator
      * @return string
-     * @throws \Helmich\TypoScriptParser\Tokenizer\UnknownOperatorException
+     * @throws UnknownOperatorException
      */
     private function getTokenTypeForBinaryOperator($operator)
     {
-        switch ($operator)
-        {
+        switch ($operator) {
             case '=':
                 return TokenInterface::TYPE_OPERATOR_ASSIGNMENT;
             case '<':
@@ -252,8 +228,6 @@ class Tokenizer implements TokenizerInterface
         }
         throw new UnknownOperatorException('Unknown binary operator "' . $operator . '"!');
     }
-
-
 
     private function preprocessContent($content)
     {

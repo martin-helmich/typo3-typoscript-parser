@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * Abstract base class for include statements.
  *
@@ -10,7 +9,5 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 abstract class IncludeStatement extends Statement
 {
-
-
 
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * A nested assignment statement.
  *
@@ -23,27 +22,24 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 class NestedAssignment extends Statement
 {
 
-
-
     /**
      * The object to operate on.
-     * @var \Helmich\TypoScriptParser\Parser\AST\ObjectPath
+     *
+     * @var ObjectPath
      */
     public $object;
 
-
     /**
      * The nested statements.
-     * @var \Helmich\TypoScriptParser\Parser\AST\Statement[]
+     *
+     * @var Statement[]
      */
     public $statements;
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath  $object     The object to operate on.
-     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[] $statements The nested statements.
-     * @param int                                              $sourceLine The original source line.
+     * @param ObjectPath  $object     The object to operate on.
+     * @param Statement[] $statements The nested statements.
+     * @param int         $sourceLine The original source line.
      */
     public function __construct(ObjectPath $object, array $statements, $sourceLine)
     {
@@ -52,4 +48,4 @@ class NestedAssignment extends Statement
         $this->object     = $object;
         $this->statements = $statements;
     }
-} 
+}
