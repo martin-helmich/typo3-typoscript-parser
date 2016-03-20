@@ -9,5 +9,5 @@ return [
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('bar', 'bar'),
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
         2
-    )
+    ),
 ];

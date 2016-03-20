@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * An object path.
  *
@@ -11,22 +10,19 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 class ObjectPath
 {
 
-
-
     /**
      * The relative object path, as specified in the source code.
+     *
      * @var string
      */
     public $relativeName;
 
-
     /**
      * The absolute object path, as evaluated from parent nested statements.
+     *
      * @var
      */
     public $absoluteName;
-
-
 
     /**
      * Constructs a new object path.
@@ -39,7 +35,4 @@ class ObjectPath
         $this->absoluteName = $absoluteName;
         $this->relativeName = $relativeName;
     }
-
-
-
 }

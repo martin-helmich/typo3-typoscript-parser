@@ -1,11 +1,8 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser;
 
-
 interface ParserInterface
 {
-
-
 
     /**
      * Parses a stream resource.
@@ -17,8 +14,6 @@ interface ParserInterface
      */
     public function parseStream($stream);
 
-
-
     /**
      * Parses a TypoScript string.
      *
@@ -26,8 +21,6 @@ interface ParserInterface
      * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
      */
     public function parseString($string);
-
-
 
     /**
      * Parses a token stream.

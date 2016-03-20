@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 /**
  * Object creation statement.
  *
@@ -14,7 +13,5 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
  */
 class ObjectCreation extends Assignment
 {
-
-
 
 }

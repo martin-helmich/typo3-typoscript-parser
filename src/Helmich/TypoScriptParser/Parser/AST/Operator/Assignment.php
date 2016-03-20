@@ -1,10 +1,8 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
-
 
 /**
  * An assignment statement.
@@ -19,24 +17,20 @@ use Helmich\TypoScriptParser\Parser\AST\Scalar;
 class Assignment extends BinaryOperator
 {
 
-
-
     /**
      * The value to be assigned. Should be a scalar value, which MAY contain
      * a constant evaluation expression (like "${foo.bar}").
      *
-     * @var \Helmich\TypoScriptParser\Parser\AST\Scalar
+     * @var Scalar
      */
     public $value;
-
-
 
     /**
      * Constructs an assignment.
      *
-     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath $object     The object to which to assign the value.
-     * @param \Helmich\TypoScriptParser\Parser\AST\Scalar     $value      The value to be assigned.
-     * @param int                                             $sourceLine The source line.
+     * @param ObjectPath $object     The object to which to assign the value.
+     * @param Scalar     $value      The value to be assigned.
+     * @param int        $sourceLine The source line.
      */
     public function __construct(ObjectPath $object, Scalar $value, $sourceLine)
     {
@@ -45,5 +39,4 @@ class Assignment extends BinaryOperator
         $this->object = $object;
         $this->value  = $value;
     }
-
 }

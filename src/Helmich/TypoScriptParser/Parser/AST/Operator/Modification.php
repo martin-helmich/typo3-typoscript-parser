@@ -1,9 +1,7 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
-
 
 /**
  * A modification statement.
@@ -18,23 +16,19 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
  */
 class Modification extends BinaryOperator
 {
-
-
-
     /**
      * The modification call.
-     * @var \Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall
+     *
+     * @var ModificationCall
      */
     public $call;
-
-
 
     /**
      * Constructs a modification statement.
      *
-     * @param \Helmich\TypoScriptParser\Parser\AST\ObjectPath                $object     The object to modify.
-     * @param \Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall $call       The modification call.
-     * @param int                                                            $sourceLine The original source line.
+     * @param ObjectPath       $object     The object to modify.
+     * @param ModificationCall $call       The modification call.
+     * @param int              $sourceLine The original source line.
      */
     public function __construct(ObjectPath $object, ModificationCall $call, $sourceLine)
     {
@@ -43,5 +37,4 @@ class Modification extends BinaryOperator
         $this->object = $object;
         $this->call   = $call;
     }
-
 }

@@ -1,24 +1,17 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-
 class Token implements TokenInterface
 {
-
-
 
     /** @var string */
     private $type;
 
-
     /** @var string */
     private $value;
 
-
     /** @var int */
     private $line;
-
-
 
     /**
      * @param string $type
@@ -32,8 +25,6 @@ class Token implements TokenInterface
         $this->line  = $line;
     }
 
-
-
     /**
      * @return string
      */
@@ -42,8 +33,6 @@ class Token implements TokenInterface
         return $this->type;
     }
 
-
-
     /**
      * @return string
      */
@@ -51,8 +40,6 @@ class Token implements TokenInterface
     {
         return $this->value;
     }
-
-
 
     /**
      * @return int

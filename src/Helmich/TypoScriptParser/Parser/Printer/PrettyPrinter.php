@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
-
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
@@ -12,16 +11,15 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PrettyPrinter implements ASTPrinterInterface
 {
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]  $statements
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param Statement[]     $statements
+     * @param OutputInterface $output
      * @return string
      */
     public function printStatements(array $statements, OutputInterface $output)
@@ -29,74 +27,49 @@ class PrettyPrinter implements ASTPrinterInterface
         $this->printStatementList($statements, $output, 0);
     }
 
-
-
     /**
-     * @param \Helmich\TypoScriptParser\Parser\AST\Statement[]  $statements
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param int                                               $nesting
+     * @param Statement[]     $statements
+     * @param OutputInterface $output
+     * @param int             $nesting
      * @return string
      */
     private function printStatementList(array $statements, OutputInterface $output, $nesting = 0)
     {
-        foreach ($statements as $statement)
-        {
-            if ($statement instanceof NestedAssignment)
-            {
+        $indent = $this->getIndent($nesting);
+        foreach ($statements as $statement) {
+            if ($statement instanceof NestedAssignment) {
                 $this->printNestedAssignment($output, $nesting, $statement);
+                continue;
             }
-            else if ($statement instanceof Assignment)
-            {
-                if (strpos($statement->value->value, "\n") !== false)
-                {
-                    $output->writeln($this->getIndent($nesting) . $statement->object->relativeName .' (');
+
+            if ($statement instanceof Assignment) {
+                if (strpos($statement->value->value, "\n") !== false) {
+                    $output->writeln($indent . $statement->object->relativeName . ' (');
                     $output->writeln(rtrim($statement->value->value));
-                    $output->writeln($this->getIndent($nesting) . ')');
+                    $output->writeln($indent . ')');
+                } else {
+                    $output->writeln($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
                 }
-                else
-                {
-                    $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' = ' . $statement->value->value);
-                }
-            }
-            else if ($statement instanceof BinaryObjectOperator)
-            {
+            } else if ($statement instanceof BinaryObjectOperator) {
                 $this->printBinaryObjectOperator($statement, $output, $nesting);
-            }
-            else if ($statement instanceof Delete)
-            {
-                $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' >');
-            }
-            else if ($statement instanceof Modification)
-            {
-                $output->writeln(
-                    $this->getIndent($nesting) . $statement->object->relativeName . ' := ' . $statement->call->method . '(' . $statement->call->arguments . ')'
-                );
-            }
-            else if ($statement instanceof ConditionalStatement)
-            {
+            } else if ($statement instanceof Delete) {
+                $output->writeln($indent . $statement->object->relativeName . ' >');
+            } else if ($statement instanceof Modification) {
+                $output->writeln($indent . $statement->object->relativeName . ' := ' . $statement->call->method . '(' . $statement->call->arguments . ')');
+            } else if ($statement instanceof ConditionalStatement) {
                 $this->printConditionalStatement($output, $nesting, $statement);
-            }
-            else if ($statement instanceof FileIncludeStatement)
-            {
+            } else if ($statement instanceof FileIncludeStatement) {
                 $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
-            }
-            else if ($statement instanceof DirectoryIncludeStatement)
-            {
-                if ($statement->extensions)
-                {
-                    $output->writeln(
-                        '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">'
-                    );
+            } else if ($statement instanceof DirectoryIncludeStatement) {
+                $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">';
+                if ($statement->extensions) {
+                    $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">';
                 }
-                else
-                {
-                    $output->writeln('<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">');
-                }
+
+                $output->writeln($includeStmt);
             }
         }
     }
-
-
 
     private function getIndent($nesting)
     {
@@ -118,12 +91,10 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-
-
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface     $output
-     * @param                                                       $nesting
-     * @param \Helmich\TypoScriptParser\Parser\AST\NestedAssignment $statement
+     * @param OutputInterface  $output
+     * @param int              $nesting
+     * @param NestedAssignment $statement
      */
     private function printNestedAssignment(OutputInterface $output, $nesting, NestedAssignment $statement)
     {
@@ -132,12 +103,10 @@ class PrettyPrinter implements ASTPrinterInterface
         $output->writeln($this->getIndent($nesting) . '}');
     }
 
-
-
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface         $output
-     * @param int                                                       $nesting
-     * @param \Helmich\TypoScriptParser\Parser\AST\ConditionalStatement $statement
+     * @param OutputInterface      $output
+     * @param int                  $nesting
+     * @param ConditionalStatement $statement
      */
     private function printConditionalStatement(OutputInterface $output, $nesting, $statement)
     {
@@ -145,8 +114,7 @@ class PrettyPrinter implements ASTPrinterInterface
         $output->writeln($statement->condition);
         $this->printStatementList($statement->ifStatements, $output, $nesting);
 
-        if (count($statement->elseStatements) > 0)
-        {
+        if (count($statement->elseStatements) > 0) {
             $output->writeln('[else]');
             $this->printStatementList($statement->elseStatements, $output, $nesting);
         }

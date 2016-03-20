@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser;
 
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -15,8 +14,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class TypoScriptParserExtension implements ExtensionInterface
 {
-
-
 
     /**
      * Loads a specific configuration.
@@ -34,8 +31,6 @@ class TypoScriptParserExtension implements ExtensionInterface
         $loader->load('services.yml');
     }
 
-
-
     /**
      * Returns the namespace to be used for this extension (XML namespace).
      *
@@ -48,8 +43,6 @@ class TypoScriptParserExtension implements ExtensionInterface
         // TODO: Implement getNamespace() method.
     }
 
-
-
     /**
      * Returns the base path for the XSD files.
      *
@@ -61,8 +54,6 @@ class TypoScriptParserExtension implements ExtensionInterface
     {
         // TODO: Implement getXsdValidationBasePath() method.
     }
-
-
 
     /**
      * Returns the recommended alias to use in XML.

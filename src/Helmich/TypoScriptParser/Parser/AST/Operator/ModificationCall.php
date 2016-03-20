@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
-
 /**
  * A modification call (usually on the right-hand side of a modification statement).
  *
@@ -11,22 +10,19 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 class ModificationCall
 {
 
-
-
     /**
      * The method name.
+     *
      * @var string
      */
     public $method;
 
-
     /**
      * The argument list.
+     *
      * @var string
      */
     public $arguments;
-
-
 
     /**
      * Modification call constructor.
@@ -39,6 +35,4 @@ class ModificationCall
         $this->arguments = $arguments;
         $this->method    = $method;
     }
-
-
-} 
+}

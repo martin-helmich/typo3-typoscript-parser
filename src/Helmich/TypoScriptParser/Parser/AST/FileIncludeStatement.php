@@ -2,7 +2,6 @@
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-
 /**
  * Include statements that includes a single TypoScript file.
  *
@@ -12,15 +11,12 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 class FileIncludeStatement extends IncludeStatement
 {
 
-
-
     /**
      * The name of the file to include.
+     *
      * @var string
      */
     public $filename;
-
-
 
     /**
      * Constructs a new include statement.

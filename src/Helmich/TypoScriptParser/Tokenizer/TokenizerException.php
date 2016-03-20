@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-
 /**
  * An exception that represents an error during tokenization.
  *
@@ -13,12 +12,8 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 class TokenizerException extends \Exception
 {
 
-
-
     /** @var int */
     private $sourceLine;
-
-
 
     /**
      * Constructs a new tokenizer exception.
@@ -28,14 +23,12 @@ class TokenizerException extends \Exception
      * @param \Exception $previous   A nested previous exception.
      * @param int        $sourceLine The original source line.
      */
-    public function __construct($message = "", $code = 0, \Exception $previous = NULL, $sourceLine = NULL)
+    public function __construct($message = "", $code = 0, \Exception $previous = null, $sourceLine = null)
     {
         parent::__construct($message, $code, $previous);
 
         $this->sourceLine = $sourceLine;
     }
-
-
 
     /**
      * Gets the original source line.
@@ -46,7 +39,5 @@ class TokenizerException extends \Exception
     {
         return $this->sourceLine;
     }
-
-
 
 }
