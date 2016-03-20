@@ -1,0 +1,9 @@
+[globalVar = GP:foo=1]
+foo {
+    bar = 1
+}
+[else]
+foo {
+    bar = 2
+}
+[global]
