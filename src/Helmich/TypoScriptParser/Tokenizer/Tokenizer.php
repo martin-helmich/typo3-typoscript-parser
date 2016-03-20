@@ -27,12 +27,12 @@ class Tokenizer implements TokenizerInterface
         \)
     $,x';
     const TOKEN_OPERATOR_LINE = ',^
-        ([a-zA-Z0-9_\-\\\\]+(?:\.[a-zA-Z0-9_\-\\\\]+)*)   # Left value (object accessor)
-        (\s*)                                     # Whitespace
-        (=|:=|<=|<|>|\{|\()                       # Operator
-        (\s*)                                     # More whitespace
-        (.*)                                      # Right value
-        (\s*)                                     # Trailing whitespace
+        ([a-zA-Z0-9_\-\\\\]+(?:\.[a-zA-Z0-9_\-\\\\]+)*)  # Left value (object accessor)
+        (\s*)                                            # Whitespace
+        (=|:=|<=|<|>|\{|\()                              # Operator
+        (\s*)                                            # More whitespace
+        (.*)                                             # Right value
+        (\s*)                                            # Trailing whitespace
     $,x';
     const TOKEN_INCLUDE_STATEMENT = ',^
         <INCLUDE_TYPOSCRIPT:\s+
