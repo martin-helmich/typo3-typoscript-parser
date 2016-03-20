@@ -146,24 +146,7 @@ class Parser implements ParserInterface
             );
 
             if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
-                if ($tokens[$i + 2]->getType() === TokenInterface::TYPE_OBJECT_CONSTRUCTOR) {
-                    $statements[] = new ObjectCreation(
-                        $objectPath,
-                        new Scalar($tokens[$i + 2]->getValue()),
-                        $tokens[$i + 2]->getLine()
-                    );
-                    $i += 2;
-                } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_RIGHTVALUE) {
-                    $statements[] = new Assignment(
-                        $objectPath,
-                        new Scalar($tokens[$i + 2]->getValue()),
-                        $tokens[$i + 2]->getLine()
-                    );
-                    $i += 2;
-                } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_WHITESPACE) {
-                    $statements[] = new Assignment($objectPath, new Scalar(''), $tokens[$i]->getLine());
-                    $i += 1;
-                }
+                $this->parseAssignment($tokens, $i, $statements, $objectPath);
             } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY || $tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
                 $targetToken = $tokens[$i + 2];
                 $this->validateCopyOperatorRightValue($targetToken);
@@ -291,6 +274,34 @@ class Parser implements ParserInterface
                 1403011202,
                 $tokens[$i]->getLine()
             );
+        }
+    }
+
+    /**
+     * @param TokenInterface[] $tokens
+     * @param                  $i
+     * @param array            $statements
+     * @param ObjectPath       $objectPath
+     */
+    private function parseAssignment(array $tokens, &$i, array &$statements, ObjectPath $objectPath)
+    {
+        if ($tokens[$i + 2]->getType() === TokenInterface::TYPE_OBJECT_CONSTRUCTOR) {
+            $statements[] = new ObjectCreation(
+                $objectPath,
+                new Scalar($tokens[$i + 2]->getValue()),
+                $tokens[$i + 2]->getLine()
+            );
+            $i += 2;
+        } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_RIGHTVALUE) {
+            $statements[] = new Assignment(
+                $objectPath,
+                new Scalar($tokens[$i + 2]->getValue()),
+                $tokens[$i + 2]->getLine()
+            );
+            $i += 2;
+        } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_WHITESPACE) {
+            $statements[] = new Assignment($objectPath, new Scalar(''), $tokens[$i]->getLine());
+            $i += 1;
         }
     }
 
