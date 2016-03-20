@@ -140,9 +140,10 @@ class Parser implements ParserInterface
     private function parseToken(array $tokens, &$i, array &$statements, ObjectPath $context = null)
     {
         if ($tokens[$i]->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-            $objectPath = $context
-                ? new ObjectPath($context->absoluteName . '.' . $tokens[$i]->getValue(), $tokens[$i]->getValue())
-                : new ObjectPath($tokens[$i]->getValue(), $tokens[$i]->getValue());
+            $objectPath = new ObjectPath(
+                $context ? $context->absoluteName . '.' . $tokens[$i]->getValue() : $tokens[$i]->getValue(),
+                $tokens[$i]->getValue()
+            );
 
             if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
                 if ($tokens[$i + 2]->getType() === TokenInterface::TYPE_OBJECT_CONSTRUCTOR) {
@@ -163,26 +164,21 @@ class Parser implements ParserInterface
                     $statements[] = new Assignment($objectPath, new Scalar(''), $tokens[$i]->getLine());
                     $i += 1;
                 }
-            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY
-                || $tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE
-            ) {
+            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY || $tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
                 $targetToken = $tokens[$i + 2];
                 $this->validateCopyOperatorRightValue($targetToken);
 
+                $absolutePath = $targetToken->getValue();
                 if ($targetToken->getValue()[0] === '.') {
-                    $absolutePath = $context ? "{$context->absoluteName}{$targetToken->getValue()}" : $targetToken->getValue(
-                    );
-                } else {
-                    $absolutePath = $targetToken->getValue();
+                    $absolutePath = $context
+                        ? "{$context->absoluteName}{$targetToken->getValue()}"
+                        : $targetToken->getValue();
                 }
 
-                $target = new ObjectPath($absolutePath, $targetToken->getValue());
+                $target       = new ObjectPath($absolutePath, $targetToken->getValue());
+                $cls          = ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? Copy::class : Reference::class;
+                $statements[] = new $cls($objectPath, $target, $tokens[$i + 1]->getLine());
 
-                if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY) {
-                    $statements[] = new Copy($objectPath, $target, $tokens[$i + 1]->getLine());
-                } else {
-                    $statements[] = new Reference($objectPath, $target, $tokens[$i + 1]->getLine());
-                }
                 $i += 2;
             } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
                 $this->validateModifyOperatorRightValue($tokens[$i + 2]);
@@ -194,14 +190,12 @@ class Parser implements ParserInterface
 
                 $i += 2;
             } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
-                if ($tokens[$i + 2]->getType() !== TokenInterface::TYPE_WHITESPACE) {
-                    throw new ParseError(
-                        'Unexpected token ' . $tokens[$i + 2]->getType(
-                        ) . ' after delete operator (expected line break).',
-                        1403011201,
-                        $tokens[$i]->getLine()
-                    );
-                }
+                $this->triggerParseErrorIf(
+                    $tokens[$i + 2]->getType() !== TokenInterface::TYPE_WHITESPACE,
+                    'Unexpected token ' . $tokens[$i + 2]->getType() . ' after delete operator (expected line break).',
+                    1403011201,
+                    $tokens[$i]->getLine()
+                );
 
                 $statements[] = new Delete($objectPath, $tokens[$i + 1]->getLine());
                 $i += 1;
@@ -214,13 +208,12 @@ class Parser implements ParserInterface
                 $i += 1;
             }
         } else if ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION) {
-            if ($context !== null) {
-                throw new ParseError(
-                    'Found condition statement inside nested assignment.',
-                    1403011203,
-                    $tokens[$i]->getLine()
-                );
-            }
+            $this->triggerParseErrorIf(
+                $context !== null,
+                'Found condition statement inside nested assignment.',
+                1403011203,
+                $tokens[$i]->getLine()
+            );
 
             $count          = count($tokens);
             $ifStatements   = [];
@@ -228,7 +221,9 @@ class Parser implements ParserInterface
 
             $condition     = $tokens[$i]->getValue();
             $conditionLine = $tokens[$i]->getLine();
-            $inElseBranch  = false;
+
+            $inElseBranch      = false;
+            $currentStatements = &$ifStatements;
 
             for ($i++; $i < $count; $i++) {
                 if ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION_END) {
@@ -238,14 +233,15 @@ class Parser implements ParserInterface
                     $i++;
                     break;
                 } elseif ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
-                    if ($inElseBranch) {
-                        throw new ParseError(
-                            sprintf('Duplicate else in conditional statement in line %d.', $tokens[$i]->getLine()),
-                            1403011203,
-                            $tokens[$i]->getLine()
-                        );
-                    }
-                    $inElseBranch = true;
+                    $this->triggerParseErrorIf(
+                        $inElseBranch,
+                        sprintf('Duplicate else in conditional statement in line %d.', $tokens[$i]->getLine()),
+                        1403011203,
+                        $tokens[$i]->getLine()
+                    );
+
+                    $inElseBranch      = true;
+                    $currentStatements = &$elseStatements;
                     $i++;
                 }
 
@@ -253,29 +249,16 @@ class Parser implements ParserInterface
                     $objectPath = new ObjectPath($tokens[$i]->getValue(), $tokens[$i]->getValue());
                     if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_BRACE_OPEN) {
                         $i += 2;
-                        if ($inElseBranch) {
-                            $elseStatements[] = $this->parseNestedStatements(
-                                $objectPath,
-                                $tokens,
-                                $i,
-                                $tokens[$i - 2]->getLine()
-                            );
-                        } else {
-                            $ifStatements[] = $this->parseNestedStatements(
-                                $objectPath,
-                                $tokens,
-                                $i,
-                                $tokens[$i - 2]->getLine()
-                            );
-                        }
+                        $currentStatements[] = $this->parseNestedStatements(
+                            $objectPath,
+                            $tokens,
+                            $i,
+                            $tokens[$i - 2]->getLine()
+                        );
                     }
                 }
 
-                if ($inElseBranch) {
-                    $this->parseToken($tokens, $i, $elseStatements, null);
-                } else {
-                    $this->parseToken($tokens, $i, $ifStatements, null);
-                }
+                $this->parseToken($tokens, $i, $currentStatements, null);
             }
         } else if ($tokens[$i]->getType() === TokenInterface::TYPE_INCLUDE) {
             preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $tokens[$i]->getValue(), $matches);
@@ -292,22 +275,32 @@ class Parser implements ParserInterface
         } else if ($tokens[$i]->getType() === TokenInterface::TYPE_WHITESPACE) {
             // Pass
         } else if ($tokens[$i]->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-            if ($context === null) {
-                throw new ParseError(
-                    sprintf(
-                        'Unexpected token %s when not in nested assignment in line %d.',
-                        $tokens[$i]->getType(),
-                        $tokens[$i]->getLine()
-                    ),
-                    1403011203,
+            $this->triggerParseErrorIf(
+                $context === null,
+                sprintf(
+                    'Unexpected token %s when not in nested assignment in line %d.',
+                    $tokens[$i]->getType(),
                     $tokens[$i]->getLine()
-                );
-            }
+                ),
+                1403011203,
+                $tokens[$i]->getLine()
+            );
         } else {
             throw new ParseError(
                 sprintf('Unexpected token %s in line %d.', $tokens[$i]->getType(), $tokens[$i]->getLine()),
                 1403011202,
                 $tokens[$i]->getLine()
+            );
+        }
+    }
+
+    private function triggerParseErrorIf($condition, $message, $code, $line)
+    {
+        if ($condition) {
+            throw new ParseError(
+                $message,
+                $code,
+                $line
             );
         }
     }
