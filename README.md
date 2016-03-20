@@ -1,6 +1,10 @@
 TypoScript Parser
 =================
 
+[![Build Status](https://travis-ci.org/martin-helmich/typo3-typoscript-parser.svg?branch=master)](https://travis-ci.org/martin-helmich/typo3-typoscript-parser)
+[![Code Climate](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/gpa.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser)
+[![Test Coverage](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/coverage.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/coverage)
+
 Author
 ======
 
