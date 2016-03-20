@@ -16,18 +16,8 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
-class Copy extends BinaryOperator
+class Copy extends BinaryObjectOperator
 {
-
-
-
-    /**
-     * The object path to copy the value from.
-     * @var \Helmich\TypoScriptParser\Parser\AST\ObjectPath
-     */
-    public $target;
-
-
 
     /**
      * Constructs a copy statement.
@@ -43,7 +33,4 @@ class Copy extends BinaryOperator
         $this->object = $object;
         $this->target = $target;
     }
-
-
-
 }

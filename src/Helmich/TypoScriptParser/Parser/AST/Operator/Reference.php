@@ -16,18 +16,8 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
-class Reference extends BinaryOperator
+class Reference extends BinaryObjectOperator
 {
-
-
-
-    /**
-     * The target object to reference to.
-     * @var \Helmich\TypoScriptParser\Parser\AST\ObjectPath
-     */
-    public $target;
-
-
 
     /**
      * Constructs a new reference statement.
@@ -43,6 +33,4 @@ class Reference extends BinaryOperator
         $this->object = $object;
         $this->target = $target;
     }
-
-
-} 
+}
