@@ -7,7 +7,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-
+/**
+ * Class TypoScriptParserExtension
+ *
+ * @package Helmich\TypoScriptParser
+ * @codeCoverageIgnore
+ */
 class TypoScriptParserExtension implements ExtensionInterface
 {
 

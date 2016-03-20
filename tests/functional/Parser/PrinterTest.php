@@ -23,6 +23,11 @@ class PrinterTest extends \PHPUnit_Framework_TestCase
             $astFile = str_replace('.typoscript', '.php', $outputFile);
             $ast = include $astFile;
 
+            $exceptionFile = $outputFile . '.print';
+            if (file_exists($exceptionFile)) {
+                $outputFile = $exceptionFile;
+            }
+
             $output = file_get_contents($outputFile);
             $output = implode("\n", array_filter(explode("\n", $output)));
 
