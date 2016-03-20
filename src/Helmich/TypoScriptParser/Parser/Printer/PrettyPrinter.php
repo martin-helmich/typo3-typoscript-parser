@@ -7,6 +7,7 @@ use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
+use Helmich\TypoScriptParser\Parser\AST\Operator\BinaryObjectOperator;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
@@ -46,15 +47,20 @@ class PrettyPrinter implements ASTPrinterInterface
             }
             else if ($statement instanceof Assignment)
             {
-                $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' = ' . $statement->value->value);
+                if (strpos($statement->value->value, "\n") !== false)
+                {
+                    $output->writeln($this->getIndent($nesting) . $statement->object->relativeName .' (');
+                    $output->writeln(rtrim($statement->value->value));
+                    $output->writeln($this->getIndent($nesting) . ')');
+                }
+                else
+                {
+                    $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' = ' . $statement->value->value);
+                }
             }
-            else if ($statement instanceof Copy)
+            else if ($statement instanceof BinaryObjectOperator)
             {
-                $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' < ' . $statement->target->absoluteName);
-            }
-            else if ($statement instanceof Reference)
-            {
-                $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' <= ' . $statement->target->absoluteName);
+                $this->printBinaryObjectOperator($statement, $output, $nesting);
             }
             else if ($statement instanceof Delete)
             {
@@ -63,9 +69,7 @@ class PrettyPrinter implements ASTPrinterInterface
             else if ($statement instanceof Modification)
             {
                 $output->writeln(
-                    $this->getIndent(
-                        $nesting
-                    ) . $statement->object->relativeName . ' := ' . $statement->call->method . '(' . $statement->call->arguments . ')'
+                    $this->getIndent($nesting) . $statement->object->relativeName . ' := ' . $statement->call->method . '(' . $statement->call->arguments . ')'
                 );
             }
             else if ($statement instanceof ConditionalStatement)
@@ -78,10 +82,10 @@ class PrettyPrinter implements ASTPrinterInterface
             }
             else if ($statement instanceof DirectoryIncludeStatement)
             {
-                if ($statement->extension)
+                if ($statement->extensions)
                 {
                     $output->writeln(
-                        '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extension="' . $statement->extension . '">'
+                        '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">'
                     );
                 }
                 else
@@ -97,6 +101,21 @@ class PrettyPrinter implements ASTPrinterInterface
     private function getIndent($nesting)
     {
         return str_repeat('    ', $nesting);
+    }
+
+    private function printBinaryObjectOperator(BinaryObjectOperator $operator, OutputInterface $output, $nesting)
+    {
+        $sourceObjectPath = explode('.', $operator->object->absoluteName);
+        array_pop($sourceObjectPath);
+        $sourceObjectNamespace = implode('.', $sourceObjectPath);
+
+        $targetObjectPath = str_replace($sourceObjectNamespace, '', $operator->target->absoluteName);
+
+        if ($operator instanceof Copy) {
+            $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' < ' . $targetObjectPath);
+        } elseif ($operator instanceof Reference) {
+            $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' <= ' . $targetObjectPath);
+        }
     }
 
 
