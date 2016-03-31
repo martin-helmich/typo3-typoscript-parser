@@ -108,15 +108,7 @@ class Parser implements ParserInterface
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
                 $this->parseModification($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
-                $this->triggerParseErrorIf(
-                    $context->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE,
-                    'Unexpected token ' . $context->token(2)->getType() . ' after delete operator (expected line break).',
-                    1403011201,
-                    $context->token()->getLine()
-                );
-
-                $context->statements()[] = new Delete($objectPath, $context->token(1)->getLine());
-                $context->next(1);
+                $this->parseDeletion($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
                 $context->statements()[] = new Assignment(
                     $objectPath,
@@ -404,6 +396,23 @@ class Parser implements ParserInterface
         $context->statements()[] = new Modification($context->context(), $call, $context->token(2)->getLine());
 
         $context->next(2);
+    }
+
+    /**
+     * @param ParserContext $context
+     * @throws ParseError
+     */
+    private function parseDeletion(ParserContext $context)
+    {
+        $this->triggerParseErrorIf(
+            $context->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE,
+            'Unexpected token ' . $context->token(2)->getType() . ' after delete operator (expected line break).',
+            1403011201,
+            $context->token()->getLine()
+        );
+
+        $context->statements()[] = new Delete($context->context(), $context->token(1)->getLine());
+        $context->next(1);
     }
 
 }
