@@ -1,9 +1,9 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser;
 
+use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\RootObjectPath;
-use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
 class ParserState
@@ -11,24 +11,24 @@ class ParserState
     /** @var ObjectPath */
     private $context;
 
-    /** @var IteratorState */
-    private $index;
-
-    /** @var \ArrayObject */
+    /** @var ArrayObject */
     private $statements = null;
 
     /** @var TokenInterface[] */
     private $tokens = [];
 
-    public function __construct(\ArrayObject $statements = null, array $tokens = [])
+    public function __construct(ArrayObject $statements = null, TokenStream $tokens = null)
     {
         if ($statements === null) {
-            $statements = new \ArrayObject();
+            $statements = new ArrayObject();
+        }
+
+        if ($tokens === null) {
+            $tokens = new TokenStream([]);
         }
 
         $this->statements = $statements;
         $this->tokens     = $tokens;
-        $this->index      = new IteratorState();
         $this->context    = new RootObjectPath();
     }
 
@@ -46,7 +46,7 @@ class ParserState
         return $clone;
     }
 
-    public function withStatements(\ArrayObject $statements)
+    public function withStatements(ArrayObject $statements)
     {
         $clone = clone $this;
         $clone->statements = $statements;
@@ -67,7 +67,7 @@ class ParserState
      */
     public function token($lookAhead = 0)
     {
-        return $this->tokens[$this->index->value() + $lookAhead];
+        return $this->tokens->current($lookAhead);
     }
 
     /**
@@ -76,11 +76,7 @@ class ParserState
      */
     public function next($increment = 1)
     {
-        if ($this->index->value() < count($this->tokens)) {
-            $this->index->next($increment);
-            return true;
-        }
-        return false;
+        return $this->tokens->next($increment);
     }
 
     /**
@@ -88,7 +84,7 @@ class ParserState
      */
     public function hasNext()
     {
-        return ($this->index->value() + 1) < count($this->tokens);
+        return $this->tokens->valid();
     }
 
     /**
@@ -100,7 +96,7 @@ class ParserState
     }
 
     /**
-     * @return \ArrayObject
+     * @return ArrayObject
      */
     public function statements()
     {
@@ -112,6 +108,6 @@ class ParserState
      */
     public function index()
     {
-        return $this->index->value();
+        return $this->tokens->key();
     }
 }
