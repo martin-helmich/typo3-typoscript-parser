@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser\Traits;
 
-use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
@@ -15,21 +14,38 @@ use Helmich\TypoScriptParser\Parser\ParserContext;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 
+/**
+ * Helper trait that contains all productions rules for operations on TypoScript values
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Parser\Traits
+ */
 trait ValueOperationRules
 {
 
+    /**
+     * @param ParserContext $context
+     * @throws ParseError
+     */
     private function parseValueOperation(ParserContext $context)
     {
-        if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
-            $this->parseAssignment($context);
-        } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY || $context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
-            $this->parseCopyOrReference($context);
-        } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
-            $this->parseModification($context);
-        } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
-            $this->parseDeletion($context);
-        } else if ($context->token(1)->getType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
-            $this->parseMultilineAssigment($context);
+        switch ($context->token(1)->getType()) {
+            case TokenInterface::TYPE_OPERATOR_ASSIGNMENT:
+                $this->parseAssignment($context);
+                break;
+            case TokenInterface::TYPE_OPERATOR_COPY:
+            case TokenInterface::TYPE_OPERATOR_REFERENCE:
+                $this->parseCopyOrReference($context);
+                break;
+            case TokenInterface::TYPE_OPERATOR_MODIFY:
+                $this->parseModification($context);
+                break;
+            case TokenInterface::TYPE_OPERATOR_DELETE:
+                $this->parseDeletion($context);
+                break;
+            case TokenInterface::TYPE_RIGHTVALUE_MULTILINE:
+                $this->parseMultilineAssigment($context);
+                break;
         }
     }
 
@@ -56,7 +72,11 @@ trait ValueOperationRules
                 $context->next(2);
                 break;
             case TokenInterface::TYPE_WHITESPACE:
-                $context->statements()[] = new Assignment($context->context(), new Scalar(''), $context->token()->getLine());
+                $context->statements()[] = new Assignment(
+                    $context->context(),
+                    new Scalar(''),
+                    $context->token()->getLine()
+                );
                 $context->next();
                 break;
         }
@@ -125,6 +145,10 @@ trait ValueOperationRules
         $context->next();
     }
 
+    /**
+     * @param TokenInterface $token
+     * @throws ParseError
+     */
     private function validateModifyOperatorRightValue(TokenInterface $token)
     {
         if ($token->getType() !== TokenInterface::TYPE_RIGHTVALUE) {
@@ -144,6 +168,10 @@ trait ValueOperationRules
         }
     }
 
+    /**
+     * @param TokenInterface $token
+     * @throws ParseError
+     */
     private function validateCopyOperatorRightValue(TokenInterface $token)
     {
         if ($token->getType() !== TokenInterface::TYPE_RIGHTVALUE) {

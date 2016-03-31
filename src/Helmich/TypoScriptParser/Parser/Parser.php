@@ -13,6 +13,12 @@ use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 
+/**
+ * Class Parser
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Parser
+ */
 class Parser implements ParserInterface
 {
     use ValueOperationRules;
@@ -176,7 +182,7 @@ class Parser implements ParserInterface
      * @return NestedAssignment
      * @throws ParseError
      */
-    private function parseNestedStatements(ParserContext $context, $startLine = NULL)
+    private function parseNestedStatements(ParserContext $context, $startLine = null)
     {
         $startLine  = $startLine ?: $context->token()->getLine();
         $statements = new \ArrayObject();
@@ -201,7 +207,11 @@ class Parser implements ParserInterface
             $this->parseToken($subContext);
 
             if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-                $context->statements()[] = new NestedAssignment($context->context(), $statements->getArrayCopy(), $startLine);
+                $context->statements()[] = new NestedAssignment(
+                    $context->context(),
+                    $statements->getArrayCopy(),
+                    $startLine
+                );
                 $context->next();
                 return;
             }
