@@ -70,59 +70,59 @@ class Parser implements ParserInterface
      */
     public function parseTokens(array $tokens)
     {
-        $statements = [];
         $tokens     = $this->filterTokenStream($tokens);
 
-        $count = count($tokens);
+        $context = new ParserContext(null, $tokens);
 
-        for ($i = 0; $i < $count; $i++) {
-            if ($tokens[$i]->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-                $objectPath = new ObjectPath($tokens[$i]->getValue(), $tokens[$i]->getValue());
-                if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $i += 2;
-                    $statements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i]->getLine());
+        for (; $context->hasNext(); $context->next()) {
+            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+                $objectPath = new ObjectPath($context->token()->getValue(), $context->token()->getValue());
+                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $context->next(2);
+                    $this->parseNestedStatements($context->withContext($objectPath), $context->token()->getLine());
                 }
             }
 
-            $this->parseToken($tokens, $i, $statements, null);
+            $this->parseToken($context);
         }
 
-        return $statements;
+        return $context->statements()->getArrayCopy();
     }
 
     /**
-     * @param ObjectPath       $parentObject
-     * @param TokenInterface[] $tokens
-     * @param int              $i
-     * @param int              $startLine
-     * @throws ParseError
+     * @param ParserContext $context
+     * @param int           $startLine
      * @return NestedAssignment
+     * @throws ParseError
      */
-    private function parseNestedStatements(ObjectPath $parentObject, array $tokens, &$i, $startLine)
+    private function parseNestedStatements(ParserContext $context, $startLine)
     {
-        $statements = [];
-        $count      = count($tokens);
+        $statements = new \ArrayObject();
+        $subContext = $context->withStatements($statements);
 
-        for (; $i < $count; $i++) {
-            if ($tokens[$i]->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+        for (; $context->hasNext(); $context->next()) {
+            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
                 $objectPath = new ObjectPath(
-                    $parentObject->absoluteName . '.' . $tokens[$i]->getValue(),
-                    $tokens[$i]->getValue()
+                    $context->context()->absoluteName . '.' . $context->token()->getValue(),
+                    $context->token()->getValue()
                 );
 
-                if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $i += 2;
-                    $statements[] = $this->parseNestedStatements($objectPath, $tokens, $i, $tokens[$i]->getLine());
+                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $context->next(2);
+                    $this->parseNestedStatements(
+                        $context->withContext($objectPath)->withStatements($statements),
+                        $context->token()->getLine()
+                    );
                     continue;
                 }
             }
 
-            $this->parseToken($tokens, $i, $statements, $parentObject);
+            $this->parseToken($subContext);
 
-            if ($tokens[$i]->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-                $statement = new NestedAssignment($parentObject, $statements, $startLine);
-                $i++;
-                return $statement;
+            if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
+                $context->statements()[] = new NestedAssignment($context->context(), $statements->getArrayCopy(), $startLine);
+                $context->next();
+                return;
             }
         }
 
@@ -130,178 +130,175 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ObjectPath       $context
-     * @param TokenInterface[] $tokens
-     * @param int              $i
-     * @param Statement[]      $statements
-     * @throws ParseError
+     * @param ParserContext $context
      * @return NestedAssignment
+     * @throws ParseError
      */
-    private function parseToken(array $tokens, &$i, array &$statements, ObjectPath $context = null)
+    private function parseToken(ParserContext $context)
     {
-        if ($tokens[$i]->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+        if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
             $objectPath = new ObjectPath(
-                $context ? $context->absoluteName . '.' . $tokens[$i]->getValue() : $tokens[$i]->getValue(),
-                $tokens[$i]->getValue()
+                ($context->context() ? $context->context()->absoluteName . '.' : '') . $context->token()->getValue(),
+                $context->token()->getValue()
             );
 
-            if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
-                $this->parseAssignment($tokens, $i, $statements, $objectPath);
-            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY || $tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
-                $targetToken = $tokens[$i + 2];
+            if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
+                $this->parseAssignment($context->withContext($objectPath));
+            } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY || $context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
+                $targetToken = $context->token(2);
                 $this->validateCopyOperatorRightValue($targetToken);
 
                 $absolutePath = $targetToken->getValue();
                 if ($targetToken->getValue()[0] === '.') {
-                    $absolutePath = $context
-                        ? "{$context->absoluteName}{$targetToken->getValue()}"
+                    $absolutePath = $context->context()
+                        ? "{$context->context()->absoluteName}{$targetToken->getValue()}"
                         : $targetToken->getValue();
                 }
 
                 $target       = new ObjectPath($absolutePath, $targetToken->getValue());
-                $cls          = ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? Copy::class : Reference::class;
-                $statements[] = new $cls($objectPath, $target, $tokens[$i + 1]->getLine());
+                $cls          = ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? Copy::class : Reference::class;
+                $context->statements()[] = new $cls($objectPath, $target, $context->token(1)->getLine());
 
-                $i += 2;
-            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
-                $this->validateModifyOperatorRightValue($tokens[$i + 2]);
+                $context->next(2);
+            } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
+                $this->validateModifyOperatorRightValue($context->token(2));
 
-                preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $tokens[$i + 2]->getValue(), $matches);
+                preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $context->token(2)->getValue(), $matches);
 
                 $call         = new ModificationCall($matches['name'], $matches['arguments']);
-                $statements[] = new Modification($objectPath, $call, $tokens[$i + 2]->getLine());
+                $context->statements()[] = new Modification($objectPath, $call, $context->token(2)->getLine());
 
-                $i += 2;
-            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
+                $context->next(2);
+            } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
                 $this->triggerParseErrorIf(
-                    $tokens[$i + 2]->getType() !== TokenInterface::TYPE_WHITESPACE,
-                    'Unexpected token ' . $tokens[$i + 2]->getType() . ' after delete operator (expected line break).',
+                    $context->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE,
+                    'Unexpected token ' . $context->token(2)->getType() . ' after delete operator (expected line break).',
                     1403011201,
-                    $tokens[$i]->getLine()
+                    $context->token()->getLine()
                 );
 
-                $statements[] = new Delete($objectPath, $tokens[$i + 1]->getLine());
-                $i += 1;
-            } else if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
-                $statements[] = new Assignment(
+                $context->statements()[] = new Delete($objectPath, $context->token(1)->getLine());
+                $context->next(1);
+            } else if ($context->token(1)->getType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
+                $context->statements()[] = new Assignment(
                     $objectPath,
-                    new Scalar($tokens[$i + 1]->getValue()),
-                    $tokens[$i + 1]->getLine()
+                    new Scalar($context->token(1)->getValue()),
+                    $context->token(1)->getLine()
                 );
-                $i += 1;
+                $context->next();
             }
-        } else if ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION) {
+        } else if ($context->token()->getType() === TokenInterface::TYPE_CONDITION) {
             $this->triggerParseErrorIf(
-                $context !== null,
+                $context->context() !== null,
                 'Found condition statement inside nested assignment.',
                 1403011203,
-                $tokens[$i]->getLine()
+                $context->token()->getLine()
             );
 
-            $count          = count($tokens);
-            $ifStatements   = [];
-            $elseStatements = [];
+            $ifStatements   = new \ArrayObject();
+            $elseStatements = new \ArrayObject();
 
-            $condition     = $tokens[$i]->getValue();
-            $conditionLine = $tokens[$i]->getLine();
+            $condition     = $context->token()->getValue();
+            $conditionLine = $context->token()->getLine();
 
             $inElseBranch      = false;
             $currentStatements = &$ifStatements;
 
-            for ($i++; $i < $count; $i++) {
-                if ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION_END) {
-                    $statements[] = new ConditionalStatement(
-                        $condition, $ifStatements, $elseStatements, $conditionLine
+            $context->next();
+
+            for (; $context->hasNext(); $context->next()) {
+                if ($context->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
+                    $context->statements()[] = new ConditionalStatement(
+                        $condition, $ifStatements->getArrayCopy(), $elseStatements->getArrayCopy(), $conditionLine
                     );
-                    $i++;
+                    $context->next();
                     break;
-                } elseif ($tokens[$i]->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
+                } elseif ($context->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                     $this->triggerParseErrorIf(
                         $inElseBranch,
-                        sprintf('Duplicate else in conditional statement in line %d.', $tokens[$i]->getLine()),
+                        sprintf('Duplicate else in conditional statement in line %d.', $context->token()->getLine()),
                         1403011203,
-                        $tokens[$i]->getLine()
+                        $context->token()->getLine()
                     );
 
                     $inElseBranch      = true;
                     $currentStatements = &$elseStatements;
-                    $i++;
+                    $context->next();
                 }
 
-                if ($tokens[$i]->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-                    $objectPath = new ObjectPath($tokens[$i]->getValue(), $tokens[$i]->getValue());
-                    if ($tokens[$i + 1]->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                        $i += 2;
-                        $currentStatements[] = $this->parseNestedStatements(
-                            $objectPath,
-                            $tokens,
-                            $i,
-                            $tokens[$i - 2]->getLine()
+                if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+                    $objectPath = new ObjectPath($context->token()->getValue(), $context->token()->getValue());
+                    if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                        $context->next(2);
+                        $this->parseNestedStatements(
+                            $context->withContext($objectPath)->withStatements($currentStatements),
+                            $context->token(-2)->getLine()
                         );
                     }
                 }
 
-                $this->parseToken($tokens, $i, $currentStatements, null);
+                $this->parseToken($context->withStatements($currentStatements));
             }
-        } else if ($tokens[$i]->getType() === TokenInterface::TYPE_INCLUDE) {
-            preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $tokens[$i]->getValue(), $matches);
+        } else if ($context->token()->getType() === TokenInterface::TYPE_INCLUDE) {
+            preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $context->token()->getValue(), $matches);
 
             if ($matches['type'] === 'FILE') {
-                $statements[] = new FileIncludeStatement($matches['filename'], $tokens[$i]->getLine());
+                $context->statements()[] = new FileIncludeStatement($matches['filename'], $context->token()->getLine());
             } else {
-                $statements[] = new DirectoryIncludeStatement(
+                $context->statements()[] = new DirectoryIncludeStatement(
                     $matches['filename'],
                     isset($matches['extensions']) ? $matches['extensions'] : null,
-                    $tokens[$i]->getLine()
+                    $context->token()->getLine()
                 );
             }
-        } else if ($tokens[$i]->getType() === TokenInterface::TYPE_WHITESPACE) {
+        } else if ($context->token()->getType() === TokenInterface::TYPE_WHITESPACE) {
             // Pass
-        } else if ($tokens[$i]->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
+        } else if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
             $this->triggerParseErrorIf(
                 $context === null,
                 sprintf(
                     'Unexpected token %s when not in nested assignment in line %d.',
-                    $tokens[$i]->getType(),
-                    $tokens[$i]->getLine()
+                    $context->token()->getType(),
+                    $context->token()->getLine()
                 ),
                 1403011203,
-                $tokens[$i]->getLine()
+                $context->token()->getLine()
             );
         } else {
             throw new ParseError(
-                sprintf('Unexpected token %s in line %d.', $tokens[$i]->getType(), $tokens[$i]->getLine()),
+                sprintf('Unexpected token %s in line %d.', $context->token()->getType(), $context->token()->getLine()),
                 1403011202,
-                $tokens[$i]->getLine()
+                $context->token()->getLine()
             );
         }
     }
 
     /**
-     * @param TokenInterface[] $tokens
-     * @param                  $i
-     * @param array            $statements
-     * @param ObjectPath       $objectPath
+     * @param ParserContext $context
      */
-    private function parseAssignment(array $tokens, &$i, array &$statements, ObjectPath $objectPath)
+    private function parseAssignment(ParserContext $context)
     {
-        if ($tokens[$i + 2]->getType() === TokenInterface::TYPE_OBJECT_CONSTRUCTOR) {
-            $statements[] = new ObjectCreation(
-                $objectPath,
-                new Scalar($tokens[$i + 2]->getValue()),
-                $tokens[$i + 2]->getLine()
-            );
-            $i += 2;
-        } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_RIGHTVALUE) {
-            $statements[] = new Assignment(
-                $objectPath,
-                new Scalar($tokens[$i + 2]->getValue()),
-                $tokens[$i + 2]->getLine()
-            );
-            $i += 2;
-        } elseif ($tokens[$i + 2]->getType() === TokenInterface::TYPE_WHITESPACE) {
-            $statements[] = new Assignment($objectPath, new Scalar(''), $tokens[$i]->getLine());
-            $i += 1;
+        switch ($context->token(2)->getType()) {
+            case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
+                $context->statements()[] = new ObjectCreation(
+                    $context->context(),
+                    new Scalar($context->token(2)->getValue()),
+                    $context->token(2)->getLine()
+                );
+                $context->next(2);
+                break;
+            case TokenInterface::TYPE_RIGHTVALUE:
+                $context->statements()[] = new Assignment(
+                    $context->context(),
+                    new Scalar($context->token(2)->getValue()),
+                    $context->token(2)->getLine()
+                );
+                $context->next(2);
+                break;
+            case TokenInterface::TYPE_WHITESPACE:
+                $context->statements()[] = new Assignment($context->context(), new Scalar(''), $context->token()->getLine());
+                $context->next();
+                break;
         }
     }
 
