@@ -110,12 +110,7 @@ class Parser implements ParserInterface
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
                 $this->parseDeletion($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
-                $context->statements()[] = new Assignment(
-                    $objectPath,
-                    new Scalar($context->token(1)->getValue()),
-                    $context->token(1)->getLine()
-                );
-                $context->next();
+                $this->parseMultilineAssigment($context->withContext($objectPath));
             }
         } else if ($context->token()->getType() === TokenInterface::TYPE_CONDITION) {
             $this->triggerParseErrorIf(
@@ -413,6 +408,19 @@ class Parser implements ParserInterface
 
         $context->statements()[] = new Delete($context->context(), $context->token(1)->getLine());
         $context->next(1);
+    }
+
+    /**
+     * @param ParserContext $context
+     */
+    private function parseMultilineAssigment(ParserContext $context)
+    {
+        $context->statements()[] = new Assignment(
+            $context->context(),
+            new Scalar($context->token(1)->getValue()),
+            $context->token(1)->getLine()
+        );
+        $context->next();
     }
 
 }
