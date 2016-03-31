@@ -96,10 +96,7 @@ class Parser implements ParserInterface
     private function parseToken(ParserContext $context)
     {
         if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-            $objectPath = new ObjectPath(
-                ($context->context() ? $context->context()->absoluteName . '.' : '') . $context->token()->getValue(),
-                $context->token()->getValue()
-            );
+            $objectPath = $context->context()->append($context->token()->getValue());
 
             if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
                 $this->parseAssignment($context->withContext($objectPath));
@@ -114,7 +111,7 @@ class Parser implements ParserInterface
             }
         } else if ($context->token()->getType() === TokenInterface::TYPE_CONDITION) {
             $this->triggerParseErrorIf(
-                $context->context() !== null,
+                $context->context()->depth() !== 0,
                 'Found condition statement inside nested assignment.',
                 1403011203,
                 $context->token()->getLine()
@@ -180,7 +177,7 @@ class Parser implements ParserInterface
             // Pass
         } else if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
             $this->triggerParseErrorIf(
-                $context->context() === null,
+                $context->context()->depth() === 0,
                 sprintf(
                     'Unexpected token %s when not in nested assignment in line %d.',
                     $context->token()->getType(),

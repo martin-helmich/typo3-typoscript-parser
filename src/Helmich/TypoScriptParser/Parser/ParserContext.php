@@ -2,6 +2,7 @@
 namespace Helmich\TypoScriptParser\Parser;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
+use Helmich\TypoScriptParser\Parser\AST\RootObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
@@ -28,6 +29,7 @@ class ParserContext
         $this->statements = $statements;
         $this->tokens     = $tokens;
         $this->index      = new IteratorState();
+        $this->context    = new RootObjectPath();
     }
 
     public function withContext(ObjectPath $context)

@@ -13,6 +13,11 @@ class RootObjectPath extends ObjectPath
         return $this;
     }
 
+    public function depth()
+    {
+        return 0;
+    }
+
     public function append($name)
     {
         return new ObjectPath(ltrim($name, '.'), $name);

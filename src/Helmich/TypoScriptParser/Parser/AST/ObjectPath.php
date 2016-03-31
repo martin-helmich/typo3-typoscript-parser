@@ -37,6 +37,14 @@ class ObjectPath
     }
 
     /**
+     * @return int
+     */
+    public function depth()
+    {
+        return count(explode('.', $this->absoluteName));
+    }
+
+    /**
      * Builds the path to the parent object.
      *
      * @return ObjectPath The path to the parent object.
