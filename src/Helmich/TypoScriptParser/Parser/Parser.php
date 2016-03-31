@@ -15,6 +15,7 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Tokenizer\Printer\StructuredTokenPrinter;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
@@ -70,8 +71,7 @@ class Parser implements ParserInterface
      */
     public function parseTokens(array $tokens)
     {
-        $tokens     = $this->filterTokenStream($tokens);
-
+        $tokens  = $this->filterTokenStream($tokens);
         $context = new ParserContext(null, $tokens);
 
         for (; $context->hasNext(); $context->next()) {
@@ -79,7 +79,7 @@ class Parser implements ParserInterface
                 $objectPath = new ObjectPath($context->token()->getValue(), $context->token()->getValue());
                 if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
                     $context->next(2);
-                    $this->parseNestedStatements($context->withContext($objectPath), $context->token()->getLine());
+                    $this->parseNestedStatements($context->withContext($objectPath));
                 }
             }
 
@@ -95,8 +95,9 @@ class Parser implements ParserInterface
      * @return NestedAssignment
      * @throws ParseError
      */
-    private function parseNestedStatements(ParserContext $context, $startLine)
+    private function parseNestedStatements(ParserContext $context, $startLine = NULL)
     {
+        $startLine  = $startLine ?: $context->token()->getLine();
         $statements = new \ArrayObject();
         $subContext = $context->withStatements($statements);
 
@@ -110,8 +111,7 @@ class Parser implements ParserInterface
                 if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
                     $context->next(2);
                     $this->parseNestedStatements(
-                        $context->withContext($objectPath)->withStatements($statements),
-                        $context->token()->getLine()
+                        $context->withContext($objectPath)->withStatements($statements)
                     );
                     continue;
                 }
@@ -255,7 +255,7 @@ class Parser implements ParserInterface
             // Pass
         } else if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
             $this->triggerParseErrorIf(
-                $context === null,
+                $context->context() === null,
                 sprintf(
                     'Unexpected token %s when not in nested assignment in line %d.',
                     $context->token()->getType(),
