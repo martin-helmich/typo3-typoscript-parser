@@ -15,7 +15,6 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
-use Helmich\TypoScriptParser\Tokenizer\Printer\StructuredTokenPrinter;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
@@ -91,46 +90,6 @@ class Parser implements ParserInterface
 
     /**
      * @param ParserContext $context
-     * @param int           $startLine
-     * @return NestedAssignment
-     * @throws ParseError
-     */
-    private function parseNestedStatements(ParserContext $context, $startLine = NULL)
-    {
-        $startLine  = $startLine ?: $context->token()->getLine();
-        $statements = new \ArrayObject();
-        $subContext = $context->withStatements($statements);
-
-        for (; $context->hasNext(); $context->next()) {
-            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-                $objectPath = new ObjectPath(
-                    $context->context()->absoluteName . '.' . $context->token()->getValue(),
-                    $context->token()->getValue()
-                );
-
-                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $context->next(2);
-                    $this->parseNestedStatements(
-                        $context->withContext($objectPath)->withStatements($statements)
-                    );
-                    continue;
-                }
-            }
-
-            $this->parseToken($subContext);
-
-            if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-                $context->statements()[] = new NestedAssignment($context->context(), $statements->getArrayCopy(), $startLine);
-                $context->next();
-                return;
-            }
-        }
-
-        throw new ParseError('Unterminated nested statement!');
-    }
-
-    /**
-     * @param ParserContext $context
      * @return NestedAssignment
      * @throws ParseError
      */
@@ -145,30 +104,9 @@ class Parser implements ParserInterface
             if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_ASSIGNMENT) {
                 $this->parseAssignment($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY || $context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_REFERENCE) {
-                $targetToken = $context->token(2);
-                $this->validateCopyOperatorRightValue($targetToken);
-
-                $absolutePath = $targetToken->getValue();
-                if ($targetToken->getValue()[0] === '.') {
-                    $absolutePath = $context->context()
-                        ? "{$context->context()->absoluteName}{$targetToken->getValue()}"
-                        : $targetToken->getValue();
-                }
-
-                $target       = new ObjectPath($absolutePath, $targetToken->getValue());
-                $cls          = ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? Copy::class : Reference::class;
-                $context->statements()[] = new $cls($objectPath, $target, $context->token(1)->getLine());
-
-                $context->next(2);
+                $this->parseCopyOrReference($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_MODIFY) {
-                $this->validateModifyOperatorRightValue($context->token(2));
-
-                preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $context->token(2)->getValue(), $matches);
-
-                $call         = new ModificationCall($matches['name'], $matches['arguments']);
-                $context->statements()[] = new Modification($objectPath, $call, $context->token(2)->getLine());
-
-                $context->next(2);
+                $this->parseModification($context->withContext($objectPath));
             } else if ($context->token(1)->getType() === TokenInterface::TYPE_OPERATOR_DELETE) {
                 $this->triggerParseErrorIf(
                     $context->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE,
@@ -273,35 +211,6 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param ParserContext $context
-     */
-    private function parseAssignment(ParserContext $context)
-    {
-        switch ($context->token(2)->getType()) {
-            case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
-                $context->statements()[] = new ObjectCreation(
-                    $context->context(),
-                    new Scalar($context->token(2)->getValue()),
-                    $context->token(2)->getLine()
-                );
-                $context->next(2);
-                break;
-            case TokenInterface::TYPE_RIGHTVALUE:
-                $context->statements()[] = new Assignment(
-                    $context->context(),
-                    new Scalar($context->token(2)->getValue()),
-                    $context->token(2)->getLine()
-                );
-                $context->next(2);
-                break;
-            case TokenInterface::TYPE_WHITESPACE:
-                $context->statements()[] = new Assignment($context->context(), new Scalar(''), $context->token()->getLine());
-                $context->next();
-                break;
-        }
-    }
-
     private function triggerParseErrorIf($condition, $message, $code, $line)
     {
         if ($condition) {
@@ -390,6 +299,111 @@ class Parser implements ParserInterface
         $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 2);
 
         return $filteredTokens;
+    }
+
+    /**
+     * @param ParserContext $context
+     * @param int           $startLine
+     * @return NestedAssignment
+     * @throws ParseError
+     */
+    private function parseNestedStatements(ParserContext $context, $startLine = NULL)
+    {
+        $startLine  = $startLine ?: $context->token()->getLine();
+        $statements = new \ArrayObject();
+        $subContext = $context->withStatements($statements);
+
+        for (; $context->hasNext(); $context->next()) {
+            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+                $objectPath = new ObjectPath(
+                    $context->context()->absoluteName . '.' . $context->token()->getValue(),
+                    $context->token()->getValue()
+                );
+
+                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $context->next(2);
+                    $this->parseNestedStatements(
+                        $context->withContext($objectPath)->withStatements($statements)
+                    );
+                    continue;
+                }
+            }
+
+            $this->parseToken($subContext);
+
+            if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
+                $context->statements()[] = new NestedAssignment($context->context(), $statements->getArrayCopy(), $startLine);
+                $context->next();
+                return;
+            }
+        }
+
+        throw new ParseError('Unterminated nested statement!');
+    }
+
+    /**
+     * @param ParserContext $context
+     */
+    private function parseAssignment(ParserContext $context)
+    {
+        switch ($context->token(2)->getType()) {
+            case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
+                $context->statements()[] = new ObjectCreation(
+                    $context->context(),
+                    new Scalar($context->token(2)->getValue()),
+                    $context->token(2)->getLine()
+                );
+                $context->next(2);
+                break;
+            case TokenInterface::TYPE_RIGHTVALUE:
+                $context->statements()[] = new Assignment(
+                    $context->context(),
+                    new Scalar($context->token(2)->getValue()),
+                    $context->token(2)->getLine()
+                );
+                $context->next(2);
+                break;
+            case TokenInterface::TYPE_WHITESPACE:
+                $context->statements()[] = new Assignment($context->context(), new Scalar(''), $context->token()->getLine());
+                $context->next();
+                break;
+        }
+    }
+
+    /**
+     * @param ParserContext $c
+     * @throws ParseError
+     */
+    private function parseCopyOrReference(ParserContext $c)
+    {
+        $targetToken = $c->token(2);
+        $this->validateCopyOperatorRightValue($targetToken);
+
+        $target = new ObjectPath($targetToken->getValue(), $targetToken->getValue());
+        if ($targetToken->getValue()[0] === '.') {
+            $target = $c->context()->parent()->append($targetToken->getValue());
+        }
+
+        $cls = ($c->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? Copy::class : Reference::class;
+
+        $c->statements()[] = new $cls($c->context(), $target, $c->token(1)->getLine());
+        $c->next(2);
+    }
+
+    /**
+     * @param ParserContext $context
+     * @throws ParseError
+     */
+    private function parseModification(ParserContext $context)
+    {
+        $this->validateModifyOperatorRightValue($context->token(2));
+
+        preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $context->token(2)->getValue(), $matches);
+
+        $call                    = new ModificationCall($matches['name'], $matches['arguments']);
+        $context->statements()[] = new Modification($context->context(), $call, $context->token(2)->getLine());
+
+        $context->next(2);
     }
 
 }

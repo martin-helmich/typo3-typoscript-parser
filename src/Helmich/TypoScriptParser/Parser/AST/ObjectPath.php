@@ -35,4 +35,31 @@ class ObjectPath
         $this->absoluteName = $absoluteName;
         $this->relativeName = $relativeName;
     }
+
+    /**
+     * Builds the path to the parent object.
+     *
+     * @return ObjectPath The path to the parent object.
+     */
+    public function parent()
+    {
+        $components = explode('.', $this->absoluteName);
+        if (count($components) === 1) {
+            return new RootObjectPath();
+        }
+        array_pop($components);
+        return new static(implode('.', $components), $components[count($components) - 1]);
+    }
+
+    /**
+     * @param string $name
+     * @return static
+     */
+    public function append($name)
+    {
+        if ($name[0] === '.') {
+            return new static($this->absoluteName . $name, $name);
+        }
+        return new static($this->absoluteName . '.' . $name, $name);
+    }
 }
