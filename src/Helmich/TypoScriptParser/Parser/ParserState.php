@@ -6,7 +6,7 @@ use Helmich\TypoScriptParser\Parser\AST\RootObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
-class ParserContext
+class ParserState
 {
     /** @var ObjectPath */
     private $context;

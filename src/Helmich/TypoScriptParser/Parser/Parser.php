@@ -68,61 +68,61 @@ class Parser implements ParserInterface
      */
     public function parseTokens(array $tokens)
     {
-        $tokens  = $this->filterTokenStream($tokens);
-        $context = new ParserContext(null, $tokens);
+        $tokens = $this->filterTokenStream($tokens);
+        $state  = new ParserState(null, $tokens);
 
-        for (; $context->hasNext(); $context->next()) {
-            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-                $objectPath = $this->builder->path($context->token()->getValue(), $context->token()->getValue());
-                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $context->next(2);
-                    $this->parseNestedStatements($context->withContext($objectPath));
+        for (; $state->hasNext(); $state->next()) {
+            if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+                $objectPath = $this->builder->path($state->token()->getValue(), $state->token()->getValue());
+                if ($state->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $state->next(2);
+                    $this->parseNestedStatements($state->withContext($objectPath));
                 }
             }
 
-            $this->parseToken($context);
+            $this->parseToken($state);
         }
 
-        return $context->statements()->getArrayCopy();
+        return $state->statements()->getArrayCopy();
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      * @return void
      * @throws ParseError
      */
-    private function parseToken(ParserContext $context)
+    private function parseToken(ParserState $state)
     {
-        switch ($context->token()->getType()) {
+        switch ($state->token()->getType()) {
             case TokenInterface::TYPE_OBJECT_IDENTIFIER:
-                $objectPath = $context->context()->append($context->token()->getValue());
-                $this->parseValueOperation($context->withContext($objectPath));
+                $objectPath = $state->context()->append($state->token()->getValue());
+                $this->parseValueOperation($state->withContext($objectPath));
                 break;
             case TokenInterface::TYPE_CONDITION:
-                $this->parseCondition($context);
+                $this->parseCondition($state);
                 break;
             case TokenInterface::TYPE_INCLUDE:
-                $this->parseInclude($context);
+                $this->parseInclude($state);
                 break;
             case TokenInterface::TYPE_WHITESPACE:
                 break;
             case TokenInterface::TYPE_BRACE_CLOSE:
                 $this->triggerParseErrorIf(
-                    $context->context()->depth() === 0,
+                    $state->context()->depth() === 0,
                     sprintf(
                         'Unexpected token %s when not in nested assignment in line %d.',
-                        $context->token()->getType(),
-                        $context->token()->getLine()
+                        $state->token()->getType(),
+                        $state->token()->getLine()
                     ),
                     1403011203,
-                    $context->token()->getLine()
+                    $state->token()->getLine()
                 );
                 break;
             default:
                 throw new ParseError(
-                    sprintf('Unexpected token %s in line %d.', $context->token()->getType(), $context->token()->getLine()),
+                    sprintf('Unexpected token %s in line %d.', $state->token()->getType(), $state->token()->getLine()),
                     1403011202,
-                    $context->token()->getLine()
+                    $state->token()->getLine()
                 );
         }
     }
@@ -180,28 +180,28 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserContext $context
-     * @param int           $startLine
+     * @param ParserState $state
+     * @param int         $startLine
      * @return void
      * @throws ParseError
      */
-    private function parseNestedStatements(ParserContext $context, $startLine = null)
+    private function parseNestedStatements(ParserState $state, $startLine = null)
     {
-        $startLine  = $startLine ?: $context->token()->getLine();
+        $startLine  = $startLine ?: $state->token()->getLine();
         $statements = new \ArrayObject();
-        $subContext = $context->withStatements($statements);
+        $subContext = $state->withStatements($statements);
 
-        for (; $context->hasNext(); $context->next()) {
-            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+        for (; $state->hasNext(); $state->next()) {
+            if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
                 $objectPath = $this->builder->path(
-                    $context->context()->absoluteName . '.' . $context->token()->getValue(),
-                    $context->token()->getValue()
+                    $state->context()->absoluteName . '.' . $state->token()->getValue(),
+                    $state->token()->getValue()
                 );
 
-                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $context->next(2);
+                if ($state->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $state->next(2);
                     $this->parseNestedStatements(
-                        $context->withContext($objectPath)->withStatements($statements)
+                        $state->withContext($objectPath)->withStatements($statements)
                     );
                     continue;
                 }
@@ -209,13 +209,13 @@ class Parser implements ParserInterface
 
             $this->parseToken($subContext);
 
-            if ($context->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-                $context->statements()[] = $this->builder->nested(
-                    $context->context(),
+            if ($state->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
+                $state->statements()[] = $this->builder->nested(
+                    $state->context(),
                     $statements->getArrayCopy(),
                     $startLine
                 );
-                $context->next();
+                $state->next();
                 return;
             }
         }
@@ -224,56 +224,56 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      * @throws ParseError
      */
-    private function parseCondition(ParserContext $context)
+    private function parseCondition(ParserState $state)
     {
         $this->triggerParseErrorIf(
-            $context->context()->depth() !== 0,
+            $state->context()->depth() !== 0,
             'Found condition statement inside nested assignment.',
             1403011203,
-            $context->token()->getLine()
+            $state->token()->getLine()
         );
 
         $ifStatements   = new \ArrayObject();
         $elseStatements = new \ArrayObject();
 
-        $condition     = $context->token()->getValue();
-        $conditionLine = $context->token()->getLine();
+        $condition     = $state->token()->getValue();
+        $conditionLine = $state->token()->getLine();
 
         $inElseBranch = false;
-        $subContext   = $context->withStatements($ifStatements);
+        $subContext   = $state->withStatements($ifStatements);
 
-        $context->next();
+        $state->next();
 
-        for (; $context->hasNext(); $context->next()) {
-            if ($context->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
-                $context->statements()[] = $this->builder->condition(
+        for (; $state->hasNext(); $state->next()) {
+            if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
+                $state->statements()[] = $this->builder->condition(
                     $condition,
                     $ifStatements->getArrayCopy(),
                     $elseStatements->getArrayCopy(),
                     $conditionLine
                 );
-                $context->next();
+                $state->next();
                 break;
-            } elseif ($context->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
+            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
                     $inElseBranch,
-                    sprintf('Duplicate else in conditional statement in line %d.', $context->token()->getLine()),
+                    sprintf('Duplicate else in conditional statement in line %d.', $state->token()->getLine()),
                     1403011203,
-                    $context->token()->getLine()
+                    $state->token()->getLine()
                 );
 
                 $inElseBranch = true;
                 $subContext   = $subContext->withStatements($elseStatements);
-                $context->next();
+                $state->next();
             }
 
-            if ($context->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
-                $objectPath = $this->builder->path($context->token()->getValue(), $context->token()->getValue());
-                if ($context->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
-                    $context->next(2);
+            if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
+                $objectPath = $this->builder->path($state->token()->getValue(), $state->token()->getValue());
+                if ($state->token(1)->getType() === TokenInterface::TYPE_BRACE_OPEN) {
+                    $state->next(2);
                     $this->parseNestedStatements(
                         $subContext->withContext($objectPath),
                         $subContext->token(-2)->getLine()
@@ -286,144 +286,144 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      */
-    private function parseInclude(ParserContext $context)
+    private function parseInclude(ParserState $state)
     {
-        preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $context->token()->getValue(), $matches);
+        preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $state->token()->getValue(), $matches);
 
         if ($matches['type'] === 'FILE') {
-            $context->statements()[] = $this->builder->includeFile($matches['filename'], $context->token()->getLine());
+            $state->statements()[] = $this->builder->includeFile($matches['filename'], $state->token()->getLine());
             return;
         }
 
-        $context->statements()[] = $this->builder->includeDirectory(
+        $state->statements()[] = $this->builder->includeDirectory(
             $matches['filename'],
             isset($matches['extensions']) ? $matches['extensions'] : null,
-            $context->token()->getLine()
+            $state->token()->getLine()
         );
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      * @throws ParseError
      */
-    private function parseValueOperation(ParserContext $context)
+    private function parseValueOperation(ParserState $state)
     {
-        switch ($context->token(1)->getType()) {
+        switch ($state->token(1)->getType()) {
             case TokenInterface::TYPE_OPERATOR_ASSIGNMENT:
-                $this->parseAssignment($context);
+                $this->parseAssignment($state);
                 break;
             case TokenInterface::TYPE_OPERATOR_COPY:
             case TokenInterface::TYPE_OPERATOR_REFERENCE:
-                $this->parseCopyOrReference($context);
+                $this->parseCopyOrReference($state);
                 break;
             case TokenInterface::TYPE_OPERATOR_MODIFY:
-                $this->parseModification($context);
+                $this->parseModification($state);
                 break;
             case TokenInterface::TYPE_OPERATOR_DELETE:
-                $this->parseDeletion($context);
+                $this->parseDeletion($state);
                 break;
             case TokenInterface::TYPE_RIGHTVALUE_MULTILINE:
-                $this->parseMultilineAssigment($context);
+                $this->parseMultilineAssigment($state);
                 break;
         }
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      */
-    private function parseAssignment(ParserContext $context)
+    private function parseAssignment(ParserState $state)
     {
-        switch ($context->token(2)->getType()) {
+        switch ($state->token(2)->getType()) {
             case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
-                $context->statements()[] = $this->builder->op()->objectCreation(
-                    $context->context(),
-                    $this->builder->scalar($context->token(2)->getValue()),
-                    $context->token(2)->getLine()
+                $state->statements()[] = $this->builder->op()->objectCreation(
+                    $state->context(),
+                    $this->builder->scalar($state->token(2)->getValue()),
+                    $state->token(2)->getLine()
                 );
-                $context->next(2);
+                $state->next(2);
                 break;
             case TokenInterface::TYPE_RIGHTVALUE:
-                $context->statements()[] = $this->builder->op()->assignment(
-                    $context->context(),
-                    $this->builder->scalar($context->token(2)->getValue()),
-                    $context->token(2)->getLine()
+                $state->statements()[] = $this->builder->op()->assignment(
+                    $state->context(),
+                    $this->builder->scalar($state->token(2)->getValue()),
+                    $state->token(2)->getLine()
                 );
-                $context->next(2);
+                $state->next(2);
                 break;
             case TokenInterface::TYPE_WHITESPACE:
-                $context->statements()[] = $this->builder->op()->assignment(
-                    $context->context(),
+                $state->statements()[] = $this->builder->op()->assignment(
+                    $state->context(),
                     $this->builder->scalar(''),
-                    $context->token()->getLine()
+                    $state->token()->getLine()
                 );
-                $context->next();
+                $state->next();
                 break;
         }
     }
 
     /**
-     * @param ParserContext $c
+     * @param ParserState $state
      * @throws ParseError
      */
-    private function parseCopyOrReference(ParserContext $c)
+    private function parseCopyOrReference(ParserState $state)
     {
-        $targetToken = $c->token(2);
+        $targetToken = $state->token(2);
         $this->validateCopyOperatorRightValue($targetToken);
 
-        $target = $c->context()->parent()->append($targetToken->getValue());
-        $type   = ($c->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? 'copy' : 'reference';
+        $target = $state->context()->parent()->append($targetToken->getValue());
+        $type   = ($state->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? 'copy' : 'reference';
 
-        $c->statements()[] = $this->builder->op()->{$type}($c->context(), $target, $c->token(1)->getLine());
-        $c->next(2);
+        $state->statements()[] = $this->builder->op()->{$type}($state->context(), $target, $state->token(1)->getLine());
+        $state->next(2);
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      * @throws ParseError
      */
-    private function parseModification(ParserContext $context)
+    private function parseModification(ParserState $state)
     {
-        $this->validateModifyOperatorRightValue($context->token(2));
+        $this->validateModifyOperatorRightValue($state->token(2));
 
-        preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $context->token(2)->getValue(), $matches);
+        preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $state->token(2)->getValue(), $matches);
 
-        $call                    = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
-        $context->statements()[] = $this->builder->op()->modification($context->context(), $call, $context->token(2)->getLine());
+        $call                  = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
+        $state->statements()[] = $this->builder->op()->modification($state->context(), $call, $state->token(2)->getLine());
 
-        $context->next(2);
+        $state->next(2);
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      * @throws ParseError
      */
-    private function parseDeletion(ParserContext $context)
+    private function parseDeletion(ParserState $state)
     {
-        if ($context->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE) {
+        if ($state->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE) {
             throw new ParseError(
-                'Unexpected token ' . $context->token(2)->getType() . ' after delete operator (expected line break).',
+                'Unexpected token ' . $state->token(2)->getType() . ' after delete operator (expected line break).',
                 1403011201,
-                $context->token()->getLine()
+                $state->token()->getLine()
             );
         }
 
-        $context->statements()[] = $this->builder->op()->delete($context->context(), $context->token(1)->getLine());
-        $context->next(1);
+        $state->statements()[] = $this->builder->op()->delete($state->context(), $state->token(1)->getLine());
+        $state->next(1);
     }
 
     /**
-     * @param ParserContext $context
+     * @param ParserState $state
      */
-    private function parseMultilineAssigment(ParserContext $context)
+    private function parseMultilineAssigment(ParserState $state)
     {
-        $context->statements()[] = $this->builder->op()->assignment(
-            $context->context(),
-            $this->builder->scalar($context->token(1)->getValue()),
-            $context->token(1)->getLine()
+        $state->statements()[] = $this->builder->op()->assignment(
+            $state->context(),
+            $this->builder->scalar($state->token(1)->getValue()),
+            $state->token(1)->getLine()
         );
-        $context->next();
+        $state->next();
     }
 
     /**
