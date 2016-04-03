@@ -3,7 +3,6 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 
 interface TokenInterface
 {
-
     const TYPE_WHITESPACE = "WS";
     const TYPE_COMMENT_MULTILINE = "COMMENT_MULTILINE";
     const TYPE_COMMENT_ONELINE = "COMMENT";
@@ -37,5 +36,4 @@ interface TokenInterface
      * @return int
      */
     public function getLine();
-
 }

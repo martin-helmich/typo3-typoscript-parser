@@ -9,5 +9,4 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 abstract class IncludeStatement extends Statement
 {
-
 }

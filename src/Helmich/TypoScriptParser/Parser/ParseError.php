@@ -19,5 +19,4 @@ class ParseError extends \Exception
     {
         return $this->sourceLine;
     }
-
 }

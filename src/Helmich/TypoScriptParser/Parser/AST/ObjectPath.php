@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 class ObjectPath
 {
-
     /**
      * The relative object path, as specified in the source code.
      *

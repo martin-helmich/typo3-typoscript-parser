@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class LineGrouper
 {
-
     private $tokensByLine = [];
 
     /**
@@ -32,5 +31,4 @@ class LineGrouper
     {
         return $this->tokensByLine;
     }
-
 }

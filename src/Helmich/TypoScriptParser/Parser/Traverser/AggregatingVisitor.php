@@ -11,7 +11,6 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
  */
 class AggregatingVisitor implements Visitor
 {
-
     /** @var Visitor[] */
     private $visitors = [];
 

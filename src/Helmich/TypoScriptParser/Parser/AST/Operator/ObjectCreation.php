@@ -13,5 +13,4 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
  */
 class ObjectCreation extends Assignment
 {
-
 }

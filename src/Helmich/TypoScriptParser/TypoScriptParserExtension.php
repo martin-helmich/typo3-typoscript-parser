@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class TypoScriptParserExtension implements ExtensionInterface
 {
-
     /**
      * Loads a specific configuration.
      *

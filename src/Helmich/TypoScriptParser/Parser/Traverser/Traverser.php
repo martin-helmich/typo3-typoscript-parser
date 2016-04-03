@@ -13,7 +13,6 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
  */
 class Traverser
 {
-
     /** @var Statement[] */
     private $statements;
 
@@ -53,12 +52,12 @@ class Traverser
      */
     private function walkRecursive(array $statements)
     {
-        foreach ($statements as $key => $statement) {
+        foreach ($statements as $statement) {
             $this->visitors->enterNode($statement);
 
             if ($statement instanceof NestedAssignment) {
                 $statement->statements = $this->walkRecursive($statement->statements);
-            } else if ($statement instanceof ConditionalStatement) {
+            } elseif ($statement instanceof ConditionalStatement) {
                 $statement->ifStatements   = $this->walkRecursive($statement->ifStatements);
                 $statement->elseStatements = $this->walkRecursive($statement->elseStatements);
             }
@@ -67,5 +66,4 @@ class Traverser
         }
         return $statements;
     }
-
 }

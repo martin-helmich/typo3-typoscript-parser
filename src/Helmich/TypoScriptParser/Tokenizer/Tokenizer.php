@@ -148,7 +148,7 @@ class Tokenizer implements TokenizerInterface
 
                         if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5])) {
                             $tokens[] = new Token(TokenInterface::TYPE_OBJECT_CONSTRUCTOR, $matches[5], $currentLine);
-                        } else if (strlen($matches[5])) {
+                        } elseif (strlen($matches[5])) {
                             $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE, $matches[5], $currentLine);
                         }
 
