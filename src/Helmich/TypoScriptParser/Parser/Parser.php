@@ -442,18 +442,10 @@ class Parser implements ParserInterface
      */
     private function validateModifyOperatorRightValue(TokenInterface $token)
     {
-        if ($token->getType() !== TokenInterface::TYPE_RIGHTVALUE) {
+        if ($token->getType() !== TokenInterface::TYPE_OBJECT_MODIFIER) {
             throw new ParseError(
                 'Unexpected token ' . $token->getType() . ' after modify operator.',
                 1403010294,
-                $token->getLine()
-            );
-        }
-
-        if (!preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $token->getValue())) {
-            throw new ParseError(
-                'Right side of modify operator does not look like a modifier: "' . $token->getValue() . '".',
-                1403010700,
                 $token->getLine()
             );
         }
