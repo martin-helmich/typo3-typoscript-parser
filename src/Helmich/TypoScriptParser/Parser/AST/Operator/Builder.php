@@ -21,6 +21,15 @@ class Builder
     public function __call($name, $args)
     {
         $class = __NAMESPACE__ . '\\' . $name;
-        return new $class(...$args);
+        switch (count($args)) {
+            case 0: return new $class();
+            case 1: return new $class($args[0]);
+            case 2: return new $class($args[0], $args[1]);
+            case 3: return new $class($args[0], $args[1], $args[2]);
+            default: return (new \ReflectionClass($class))->newInstanceArgs($args);
+        }
+
+        // Curse you, and fucking die already, PHP 5.5
+        //return new $class(...$args);
     }
 }
