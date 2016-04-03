@@ -12,16 +12,21 @@ class Token implements TokenInterface
     /** @var int */
     private $line;
 
+    /** @var array */
+    private $patternMatches;
+
     /**
      * @param string $type
      * @param string $value
      * @param int    $line
+     * @param array  $patternMatches
      */
-    public function __construct($type, $value, $line)
+    public function __construct($type, $value, $line, array $patternMatches = [])
     {
-        $this->type  = $type;
-        $this->value = $value;
-        $this->line  = $line;
+        $this->type           = $type;
+        $this->value          = $value;
+        $this->line           = $line;
+        $this->patternMatches = $patternMatches;
     }
 
     /**
@@ -38,6 +43,15 @@ class Token implements TokenInterface
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param string $string
+     * @return array
+     */
+    public function getSubMatch($string)
+    {
+        return isset($this->patternMatches[$string]) ? $this->patternMatches[$string] : null;
     }
 
     /**

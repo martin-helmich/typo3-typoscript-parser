@@ -1,11 +1,10 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser;
 
+use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
-use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
-use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 
 /**
@@ -68,8 +67,8 @@ class Parser implements ParserInterface
      */
     public function parseTokens(array $tokens)
     {
-        $tokens = $this->filterTokenStream($tokens);
-        $state  = new ParserState(new TokenStream($tokens));
+        $stream = (new TokenStream($tokens))->normalized();
+        $state  = new ParserState($stream);
 
         for (; $state->hasNext(); $state->next()) {
             if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
@@ -139,47 +138,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param TokenInterface[] $tokens
-     * @return TokenInterface[]
-     */
-    private function filterTokenStream($tokens)
-    {
-        $filteredTokens = [];
-        $ignoredTokens  = [
-            TokenInterface::TYPE_COMMENT_MULTILINE,
-            TokenInterface::TYPE_COMMENT_ONELINE,
-        ];
-
-        $maxLine = 0;
-
-        foreach ($tokens as $token) {
-            $maxLine = max($token->getLine(), $maxLine);
-
-            // Trim unnecessary whitespace, but leave line breaks! These are important!
-            if ($token->getType() === TokenInterface::TYPE_WHITESPACE) {
-                $value = trim($token->getValue(), "\t ");
-                if (strlen($value) > 0) {
-                    $filteredTokens[] = new Token(
-                        TokenInterface::TYPE_WHITESPACE,
-                        $value,
-                        $token->getLine()
-                    );
-                }
-            } elseif (!in_array($token->getType(), $ignoredTokens)) {
-                $filteredTokens[] = $token;
-            }
-        }
-
-        // Add two linebreak tokens; during parsing, we usually do not look more than two
-        // tokens ahead; this hack ensures that there will always be at least two more tokens
-        // present and we do not have to check whether these tokens exists.
-        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 1);
-        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 2);
-
-        return $filteredTokens;
-    }
-
-    /**
      * @param ParserState $state
      * @param int         $startLine
      * @return void
@@ -188,7 +146,7 @@ class Parser implements ParserInterface
     private function parseNestedStatements(ParserState $state, $startLine = null)
     {
         $startLine  = $startLine ?: $state->token()->getLine();
-        $statements = new \ArrayObject();
+        $statements = new ArrayObject();
         $subContext = $state->withStatements($statements);
 
         for (; $state->hasNext(); $state->next()) {
@@ -229,15 +187,16 @@ class Parser implements ParserInterface
      */
     private function parseCondition(ParserState $state)
     {
-        $this->triggerParseErrorIf(
-            $state->context()->depth() !== 0,
-            'Found condition statement inside nested assignment.',
-            1403011203,
-            $state->token()->getLine()
-        );
+        if ($state->context()->depth() !== 0) {
+            throw new ParseError(
+                'Found condition statement inside nested assignment.',
+                1403011203,
+                $state->token()->getLine()
+            );
+        }
 
-        $ifStatements   = new \ArrayObject();
-        $elseStatements = new \ArrayObject();
+        $ifStatements   = new ArrayObject();
+        $elseStatements = new ArrayObject();
 
         $condition     = $state->token()->getValue();
         $conditionLine = $state->token()->getLine();
@@ -290,18 +249,22 @@ class Parser implements ParserInterface
      */
     private function parseInclude(ParserState $state)
     {
-        preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $state->token()->getValue(), $matches);
+        $token = $state->token();
 
-        if ($matches['type'] === 'FILE') {
-            $state->statements()->append($this->builder->includeFile($matches['filename'], $state->token()->getLine()));
-            return;
+        if ($token->getSubMatch('type') === 'FILE') {
+            $node = $this->builder->includeFile(
+                $token->getSubMatch('filename'),
+                $token->getLine()
+            );
+        } else {
+            $node = $this->builder->includeDirectory(
+                $token->getSubMatch('filename'),
+                $token->getSubMatch('extensions'),
+                $token->getLine()
+            );
         }
 
-        $state->statements()->append($this->builder->includeDirectory(
-            $matches['filename'],
-            isset($matches['extensions']) ? $matches['extensions'] : null,
-            $state->token()->getLine()
-        ));
+        $state->statements()->append($node);
     }
 
     /**
@@ -390,15 +353,18 @@ class Parser implements ParserInterface
      */
     private function parseModification(ParserState $state)
     {
-        $this->validateModifyOperatorRightValue($state->token(2));
+        $token = $state->token(2);
+        $this->validateModifyOperatorRightValue($token);
 
-        preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $state->token(2)->getValue(), $matches);
-
-        $call         = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
+        $call = $this->builder->op()->modificationCall(
+            $token->getSubMatch('name'),
+            $token->getSubMatch('arguments')
+        );
+        
         $modification = $this->builder->op()->modification(
             $state->context(),
             $call,
-            $state->token(2)->getLine()
+            $token->getLine()
         );
 
         $state->statements()->append($modification);
@@ -457,18 +423,10 @@ class Parser implements ParserInterface
      */
     private function validateCopyOperatorRightValue(TokenInterface $token)
     {
-        if ($token->getType() !== TokenInterface::TYPE_RIGHTVALUE) {
+        if ($token->getType() !== TokenInterface::TYPE_OBJECT_IDENTIFIER) {
             throw new ParseError(
                 'Unexpected token ' . $token->getType() . ' after copy operator.',
                 1403010294,
-                $token->getLine()
-            );
-        }
-
-        if (!preg_match(Tokenizer::TOKEN_OBJECT_REFERENCE, $token->getValue())) {
-            throw new ParseError(
-                'Right side of copy operator does not look like an object path: "' . $token->getValue() . '".',
-                1403010699,
                 $token->getLine()
             );
         }

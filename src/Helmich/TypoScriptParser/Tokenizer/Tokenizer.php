@@ -118,7 +118,7 @@ class Tokenizer implements TokenizerInterface
 
             foreach ($simpleTokens as $pattern => $type) {
                 if (preg_match($pattern, $line, $matches)) {
-                    $tokens[] = new Token($type, $matches[0], $currentLine);
+                    $tokens[] = new Token($type, $matches[0], $currentLine, $matches);
                     continue 2;
                 }
             }
@@ -146,12 +146,34 @@ class Tokenizer implements TokenizerInterface
                             $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
                         }
 
+                        if (($matches[3] === '<' || $matches[3] === '<=') && preg_match(self::TOKEN_OBJECT_REFERENCE, $matches[5])) {
+                            $tokens[] = new Token(
+                                Token::TYPE_OBJECT_IDENTIFIER,
+                                $matches[5],
+                                $currentLine
+                            );
+                            break;
+                        }
+
                         if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5])) {
-                            $tokens[] = new Token(TokenInterface::TYPE_OBJECT_CONSTRUCTOR, $matches[5], $currentLine);
-                        } elseif (preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5])) {
-                            $tokens[] = new Token(TokenInterface::TYPE_OBJECT_MODIFIER, $matches[5], $currentLine);
+                            $tokens[] = new Token(
+                                Token::TYPE_OBJECT_CONSTRUCTOR,
+                                $matches[5],
+                                $currentLine
+                            );
+                        } elseif (preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5], $subMatches)) {
+                            $tokens[] = new Token(
+                                Token::TYPE_OBJECT_MODIFIER,
+                                $matches[5],
+                                $currentLine,
+                                $subMatches
+                            );
                         } elseif (strlen($matches[5])) {
-                            $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE, $matches[5], $currentLine);
+                            $tokens[] = new Token(
+                                Token::TYPE_RIGHTVALUE,
+                                $matches[5],
+                                $currentLine
+                            );
                         }
 
                         break;

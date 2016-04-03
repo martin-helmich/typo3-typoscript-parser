@@ -34,6 +34,12 @@ interface TokenInterface
     public function getValue();
 
     /**
+     * @param string $name
+     * @return string
+     */
+    public function getSubMatch($name);
+
+    /**
      * @return int
      */
     public function getLine();
