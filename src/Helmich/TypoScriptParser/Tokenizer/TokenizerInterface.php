@@ -1,18 +1,24 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
+/**
+ * Interface TokenizerInterface
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Tokenizer
+ */
 interface TokenizerInterface
 {
 
     /**
      * @param string $inputString
-     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
+     * @return TokenInterface[]
      */
     public function tokenizeString($inputString);
 
     /**
      * @param string $inputStream
-     * @return \Helmich\TypoScriptParser\Tokenizer\TokenInterface[]
+     * @return TokenInterface[]
      */
     public function tokenizeStream($inputStream);
 

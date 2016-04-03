@@ -5,6 +5,7 @@ use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerException;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
+use VirtualFileSystem\FileSystem;
 
 class TokenizerTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,6 +58,19 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
     public function testInputTextIsCorrectlyTokenized($inputText, $expectedTokenStream)
     {
         $tokenStream = $this->tokenizer->tokenizeString($inputText);
+        assertThat($tokenStream, equalTo($expectedTokenStream));
+    }
+
+    /**
+     * @param $inputText
+     * @param $expectedTokenStream
+     * @dataProvider dataValidForTokenizer
+     */
+    public function testInputStreamIsCorrectlyTokenized($inputText, $expectedTokenStream)
+    {
+        $fs = new FileSystem();
+        $fs->createFile('/test.typoscript', $inputText);
+        $tokenStream = $this->tokenizer->tokenizeStream($fs->path('/test.typoscript'));
         assertThat($tokenStream, equalTo($expectedTokenStream));
     }
 
