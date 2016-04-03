@@ -210,11 +210,11 @@ class Parser implements ParserInterface
             $this->parseToken($subContext);
 
             if ($state->token()->getType() === TokenInterface::TYPE_BRACE_CLOSE) {
-                $state->statements()[] = $this->builder->nested(
+                $state->statements()->append($this->builder->nested(
                     $state->context(),
                     $statements->getArrayCopy(),
                     $startLine
-                );
+                ));
                 $state->next();
                 return;
             }
@@ -249,12 +249,12 @@ class Parser implements ParserInterface
 
         for (; $state->hasNext(); $state->next()) {
             if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
-                $state->statements()[] = $this->builder->condition(
+                $state->statements()->append($this->builder->condition(
                     $condition,
                     $ifStatements->getArrayCopy(),
                     $elseStatements->getArrayCopy(),
                     $conditionLine
-                );
+                ));
                 $state->next();
                 break;
             } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
@@ -293,15 +293,15 @@ class Parser implements ParserInterface
         preg_match(Tokenizer::TOKEN_INCLUDE_STATEMENT, $state->token()->getValue(), $matches);
 
         if ($matches['type'] === 'FILE') {
-            $state->statements()[] = $this->builder->includeFile($matches['filename'], $state->token()->getLine());
+            $state->statements()->append($this->builder->includeFile($matches['filename'], $state->token()->getLine()));
             return;
         }
 
-        $state->statements()[] = $this->builder->includeDirectory(
+        $state->statements()->append($this->builder->includeDirectory(
             $matches['filename'],
             isset($matches['extensions']) ? $matches['extensions'] : null,
             $state->token()->getLine()
-        );
+        ));
     }
 
     /**
@@ -337,27 +337,27 @@ class Parser implements ParserInterface
     {
         switch ($state->token(2)->getType()) {
             case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
-                $state->statements()[] = $this->builder->op()->objectCreation(
+                $state->statements()->append($this->builder->op()->objectCreation(
                     $state->context(),
                     $this->builder->scalar($state->token(2)->getValue()),
                     $state->token(2)->getLine()
-                );
+                ));
                 $state->next(2);
                 break;
             case TokenInterface::TYPE_RIGHTVALUE:
-                $state->statements()[] = $this->builder->op()->assignment(
+                $state->statements()->append($this->builder->op()->assignment(
                     $state->context(),
                     $this->builder->scalar($state->token(2)->getValue()),
                     $state->token(2)->getLine()
-                );
+                ));
                 $state->next(2);
                 break;
             case TokenInterface::TYPE_WHITESPACE:
-                $state->statements()[] = $this->builder->op()->assignment(
+                $state->statements()->append($this->builder->op()->assignment(
                     $state->context(),
                     $this->builder->scalar(''),
                     $state->token()->getLine()
-                );
+                ));
                 $state->next();
                 break;
         }
@@ -375,7 +375,11 @@ class Parser implements ParserInterface
         $target = $state->context()->parent()->append($targetToken->getValue());
         $type   = ($state->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? 'copy' : 'reference';
 
-        $state->statements()[] = $this->builder->op()->{$type}($state->context(), $target, $state->token(1)->getLine());
+        $state->statements()->append($this->builder->op()->{$type}(
+            $state->context(),
+            $target,
+            $state->token(1)->getLine())
+        );
         $state->next(2);
     }
 
@@ -390,7 +394,11 @@ class Parser implements ParserInterface
         preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $state->token(2)->getValue(), $matches);
 
         $call                  = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
-        $state->statements()[] = $this->builder->op()->modification($state->context(), $call, $state->token(2)->getLine());
+        $state->statements()->append($this->builder->op()->modification(
+            $state->context(),
+            $call,
+            $state->token(2)->getLine())
+        );
 
         $state->next(2);
     }
@@ -409,7 +417,7 @@ class Parser implements ParserInterface
             );
         }
 
-        $state->statements()[] = $this->builder->op()->delete($state->context(), $state->token(1)->getLine());
+        $state->statements()->append($this->builder->op()->delete($state->context(), $state->token(1)->getLine()));
         $state->next(1);
     }
 
@@ -418,11 +426,11 @@ class Parser implements ParserInterface
      */
     private function parseMultilineAssigment(ParserState $state)
     {
-        $state->statements()[] = $this->builder->op()->assignment(
+        $state->statements()->append($this->builder->op()->assignment(
             $state->context(),
             $this->builder->scalar($state->token(1)->getValue()),
             $state->token(1)->getLine()
-        );
+        ));
         $state->next();
     }
 
