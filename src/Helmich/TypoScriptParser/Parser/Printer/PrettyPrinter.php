@@ -15,6 +15,12 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Printer class that generates TypoScript code from an AST
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Parser\Printer
+ */
 class PrettyPrinter implements ASTPrinterInterface
 {
     /**
