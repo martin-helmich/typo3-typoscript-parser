@@ -39,7 +39,6 @@ class TypoScriptParserExtension implements ExtensionInterface
      */
     public function getNamespace()
     {
-        // TODO: Implement getNamespace() method.
     }
 
     /**
@@ -51,7 +50,6 @@ class TypoScriptParserExtension implements ExtensionInterface
      */
     public function getXsdValidationBasePath()
     {
-        // TODO: Implement getXsdValidationBasePath() method.
     }
 
     /**
