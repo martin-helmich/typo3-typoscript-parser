@@ -10,7 +10,6 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 class FileIncludeStatement extends IncludeStatement
 {
-
     /**
      * The name of the file to include.
      *
@@ -29,4 +28,4 @@ class FileIncludeStatement extends IncludeStatement
         parent::__construct($sourceLine);
         $this->filename = $filename;
     }
-} 
+}

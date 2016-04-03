@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
  */
 class ModificationCall
 {
-
     /**
      * The method name.
      *

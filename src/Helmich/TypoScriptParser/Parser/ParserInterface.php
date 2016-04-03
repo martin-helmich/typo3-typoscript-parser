@@ -3,7 +3,6 @@ namespace Helmich\TypoScriptParser\Parser;
 
 interface ParserInterface
 {
-
     /**
      * Parses a stream resource.
      *

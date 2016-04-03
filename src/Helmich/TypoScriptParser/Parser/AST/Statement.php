@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 abstract class Statement
 {
-
     /**
      * The original source line. Useful for tracing and debugging.
      *

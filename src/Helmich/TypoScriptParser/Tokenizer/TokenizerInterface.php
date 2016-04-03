@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 interface TokenizerInterface
 {
-
     /**
      * @param string $inputString
      * @return TokenInterface[]
@@ -21,5 +20,4 @@ interface TokenizerInterface
      * @return TokenInterface[]
      */
     public function tokenizeStream($inputStream);
-
 }

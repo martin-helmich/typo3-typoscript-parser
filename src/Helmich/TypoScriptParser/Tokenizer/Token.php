@@ -3,7 +3,6 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 
 class Token implements TokenInterface
 {
-
     /** @var string */
     private $type;
 

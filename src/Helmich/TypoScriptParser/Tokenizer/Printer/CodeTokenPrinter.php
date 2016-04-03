@@ -3,7 +3,6 @@ namespace Helmich\TypoScriptParser\Tokenizer\Printer;
 
 class CodeTokenPrinter implements TokenPrinterInterface
 {
-
     /**
      * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
      * @return string

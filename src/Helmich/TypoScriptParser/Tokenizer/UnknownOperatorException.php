@@ -11,5 +11,4 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class UnknownOperatorException extends \Exception
 {
-
 }

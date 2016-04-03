@@ -9,7 +9,6 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 class Scalar
 {
-
     /**
      * The value.
      *

@@ -11,7 +11,6 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class TokenizerException extends \Exception
 {
-
     /** @var int */
     private $sourceLine;
 
@@ -39,5 +38,4 @@ class TokenizerException extends \Exception
     {
         return $this->sourceLine;
     }
-
 }

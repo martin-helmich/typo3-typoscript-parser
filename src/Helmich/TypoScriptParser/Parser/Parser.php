@@ -374,12 +374,13 @@ class Parser implements ParserInterface
 
         $target = $state->context()->parent()->append($targetToken->getValue());
         $type   = ($state->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? 'copy' : 'reference';
-
-        $state->statements()->append($this->builder->op()->{$type}(
+        $node   = $this->builder->op()->{$type}(
             $state->context(),
             $target,
-            $state->token(1)->getLine())
+            $state->token(1)->getLine()
         );
+
+        $state->statements()->append($node);
         $state->next(2);
     }
 
@@ -393,13 +394,14 @@ class Parser implements ParserInterface
 
         preg_match(Tokenizer::TOKEN_OBJECT_MODIFIER, $state->token(2)->getValue(), $matches);
 
-        $call                  = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
-        $state->statements()->append($this->builder->op()->modification(
+        $call         = $this->builder->op()->modificationCall($matches['name'], $matches['arguments']);
+        $modification = $this->builder->op()->modification(
             $state->context(),
             $call,
-            $state->token(2)->getLine())
+            $state->token(2)->getLine()
         );
 
+        $state->statements()->append($modification);
         $state->next(2);
     }
 
@@ -479,5 +481,4 @@ class Parser implements ParserInterface
             );
         }
     }
-
 }

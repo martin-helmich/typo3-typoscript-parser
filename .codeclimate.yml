@@ -9,10 +9,17 @@ engines:
     enabled: true
   phpcodesniffer:
     enabled: true
+    checks:
+      Generic Files LineLength TooLong:
+        enabled: false
   phpmd:
     enabled: true
     checks:
       Naming/LongVariable:
+        enabled: false
+      Naming/ShortVariable:
+        enabled: false
+      Naming/ShortMethodName:
         enabled: false
       UnusedFormalParameter:
         enabled: false
