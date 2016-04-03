@@ -78,11 +78,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
     private function printBinaryObjectOperator(BinaryObjectOperator $operator, OutputInterface $output, $nesting)
     {
-        $sourceObjectPath = explode('.', $operator->object->absoluteName);
-        array_pop($sourceObjectPath);
-        $sourceObjectNamespace = implode('.', $sourceObjectPath);
-
-        $targetObjectPath = str_replace($sourceObjectNamespace, '', $operator->target->absoluteName);
+        $targetObjectPath = $operator->target->relativeName;
 
         if ($operator instanceof Copy) {
             $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' < ' . $targetObjectPath);

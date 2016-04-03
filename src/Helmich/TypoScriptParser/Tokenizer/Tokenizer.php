@@ -31,8 +31,7 @@ class Tokenizer implements TokenizerInterface
         (\s*)                                            # Whitespace
         (=|:=|<=|<|>|\{|\()                              # Operator
         (\s*)                                            # More whitespace
-        (.*)                                             # Right value
-        (\s*)                                            # Trailing whitespace
+        (.*?)                                            # Right value
     $,x';
     const TOKEN_INCLUDE_STATEMENT = ',^
         <INCLUDE_TYPOSCRIPT:\s+
@@ -137,17 +136,11 @@ class Tokenizer implements TokenizerInterface
                     case '<':
                     case '<=':
                     case '>':
-                        try {
-                            $tokens[] = new Token(
-                                $this->getTokenTypeForBinaryOperator($matches[3]),
-                                $matches[3],
-                                $currentLine
-                            );
-                        } catch (UnknownOperatorException $exception) {
-                            throw new TokenizerException(
-                                $exception->getMessage(), 1403084548, $exception, $currentLine
-                            );
-                        }
+                        $tokens[] = new Token(
+                            $this->getTokenTypeForBinaryOperator($matches[3]),
+                            $matches[3],
+                            $currentLine
+                        );
 
                         if ($matches[4]) {
                             $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
@@ -159,9 +152,6 @@ class Tokenizer implements TokenizerInterface
                             $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE, $matches[5], $currentLine);
                         }
 
-                        if ($matches[6]) {
-                            $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[6], $currentLine);
-                        }
                         break;
                     case '{':
                         $tokens[] = new Token(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $currentLine);
@@ -171,13 +161,6 @@ class Tokenizer implements TokenizerInterface
                         $currentTokenType        = TokenInterface::TYPE_RIGHTVALUE_MULTILINE;
                         $multiLineTokenStartLine = $currentLine;
                         break;
-                    default:
-                        throw new TokenizerException(
-                            'Unknown operator: "' . $matches[3] . '"!',
-                            1403084443,
-                            null,
-                            $currentLine
-                        );
                 }
 
                 continue;
@@ -226,7 +209,10 @@ class Tokenizer implements TokenizerInterface
             case '>':
                 return TokenInterface::TYPE_OPERATOR_DELETE;
         }
+        // It should not be possible in any case to reach this point
+        // @codeCoverageIgnoreStart
         throw new UnknownOperatorException('Unknown binary operator "' . $operator . '"!');
+        // @codeCoverageIgnoreEnd
     }
 
     private function preprocessContent($content)
