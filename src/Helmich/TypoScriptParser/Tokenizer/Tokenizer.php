@@ -31,8 +31,7 @@ class Tokenizer implements TokenizerInterface
         (\s*)                                            # Whitespace
         (=|:=|<=|<|>|\{|\()                              # Operator
         (\s*)                                            # More whitespace
-        (.*)                                             # Right value
-        (\s*)                                            # Trailing whitespace
+        (.*?)                                            # Right value
     $,x';
     const TOKEN_INCLUDE_STATEMENT = ',^
         <INCLUDE_TYPOSCRIPT:\s+
@@ -159,9 +158,6 @@ class Tokenizer implements TokenizerInterface
                             $tokens[] = new Token(TokenInterface::TYPE_RIGHTVALUE, $matches[5], $currentLine);
                         }
 
-                        if ($matches[6]) {
-                            $tokens[] = new Token(TokenInterface::TYPE_WHITESPACE, $matches[6], $currentLine);
-                        }
                         break;
                     case '{':
                         $tokens[] = new Token(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $currentLine);

@@ -17,14 +17,10 @@ class ParserState
     /** @var TokenInterface[] */
     private $tokens = [];
 
-    public function __construct(ArrayObject $statements = null, TokenStream $tokens = null)
+    public function __construct(TokenStream $tokens, ArrayObject $statements = null)
     {
         if ($statements === null) {
             $statements = new ArrayObject();
-        }
-
-        if ($tokens === null) {
-            $tokens = new TokenStream([]);
         }
 
         $this->statements = $statements;
@@ -39,26 +35,11 @@ class ParserState
         return $clone;
     }
 
-    public function withoutContext()
-    {
-        $clone = clone $this;
-        $clone->context = null;
-        return $clone;
-    }
-
     public function withStatements(ArrayObject $statements)
     {
         $clone = clone $this;
         $clone->statements = $statements;
         return $clone;
-    }
-
-    /**
-     * @return TokenInterface[]
-     */
-    public function tokens()
-    {
-        return $this->tokens;
     }
 
     /**
@@ -101,13 +82,5 @@ class ParserState
     public function statements()
     {
         return $this->statements;
-    }
-
-    /**
-     * @return int
-     */
-    public function index()
-    {
-        return $this->tokens->key();
     }
 }

@@ -69,7 +69,7 @@ class Parser implements ParserInterface
     public function parseTokens(array $tokens)
     {
         $tokens = $this->filterTokenStream($tokens);
-        $state  = new ParserState(null, new TokenStream($tokens));
+        $state  = new ParserState(new TokenStream($tokens));
 
         for (; $state->hasNext(); $state->next()) {
             if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {

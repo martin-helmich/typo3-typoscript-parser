@@ -1,10 +1,17 @@
 <?php
 namespace Helmich\TypoScriptParser\Parser;
 
+use BadMethodCallException;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Iterator;
 
-class TokenStream implements Iterator
+/**
+ * Helper class that represents a token stream
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Parser
+ */
+class TokenStream implements Iterator, \ArrayAccess
 {
     /** @var array */
     private $tokens;
@@ -23,7 +30,7 @@ class TokenStream implements Iterator
      */
     public function current($lookAhead = 0)
     {
-        return $this->tokens[$this->index + $lookAhead];
+        return $this[$this->index + $lookAhead];
     }
 
     /**
@@ -42,7 +49,7 @@ class TokenStream implements Iterator
      */
     public function valid()
     {
-        return ($this->index + 1) < count($this->tokens);
+        return ($this->index) < count($this->tokens);
     }
 
     /**
@@ -61,4 +68,40 @@ class TokenStream implements Iterator
         return $this->index;
     }
 
+    /**
+     * @param int $offset
+     * @return TokenInterface
+     */
+    public function offsetExists($offset)
+    {
+        return $offset >= 0 && $offset < count($this->tokens);
+    }
+
+    /**
+     * @param int $offset
+     * @return TokenInterface
+     */
+    public function offsetGet($offset)
+    {
+        return $this->tokens[$offset];
+    }
+
+    /**
+     * @param int            $offset
+     * @param TokenInterface $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new BadMethodCallException('changing a token stream is not permitted');
+    }
+
+    /**
+     * @param int $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        throw new BadMethodCallException('changing a token stream is not permitted');
+    }
 }
