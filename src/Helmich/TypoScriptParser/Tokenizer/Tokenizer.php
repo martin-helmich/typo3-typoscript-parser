@@ -39,17 +39,11 @@ class Tokenizer implements TokenizerInterface
         \s*>
     $,x';
     
-    /** @var Scanner */
-    private $scanner;
-
     /**
      * Tokenizer constructor.
-     *
-     * @param Scanner $scanner
      */
-    public function __construct(Scanner $scanner = null)
+    public function __construct()
     {
-        $this->scanner = $scanner ?: new Scanner;
     }
     
     /**
@@ -62,58 +56,44 @@ class Tokenizer implements TokenizerInterface
         $inputString = $this->preprocessContent($inputString);
 
         $tokens = new TokenStreamBuilder();
+        $state  = new MultilineTokenBuilder();
 
-        $currentTokenType  = null;
-        $currentTokenValue = '';
+        $lines   = explode("\n", $inputString);
+        $scanner = new Scanner($lines);
 
-        $lines                   = explode("\n", $inputString);
-        $currentLine             = 0;
-        $multiLineTokenStartLine = 0;
-
-        foreach ($lines as $line) {
-            $currentLine++;
-            if ($currentTokenType === TokenInterface::TYPE_COMMENT_MULTILINE) {
-                if ($matches = $this->scanner->scan($line, self::TOKEN_WHITESPACE)) {
-                    $currentTokenValue .= $matches[0];
+        foreach ($scanner as $line) {
+            if ($state->currentTokenType() === TokenInterface::TYPE_COMMENT_MULTILINE) {
+                if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
+                    $state->appendToToken($matches[0]);
                 }
 
-                if ($matches = $this->scanner->peek($line, self::TOKEN_COMMENT_MULTILINE_END)) {
-                    $currentTokenValue .= $matches[0];
-                    $tokens->append(TokenInterface::TYPE_COMMENT_MULTILINE, $currentTokenValue, $currentLine);
-
-                    $currentTokenValue = null;
-                    $currentTokenType  = null;
+                if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
+                    $token = $state->endMultilineToken($matches[0]);
+                    $tokens->appendToken($token);
                 } else {
-                    $currentTokenValue .= $line;
+                    $state->appendToToken($matches[0]);
                 }
                 continue;
-            } elseif ($currentTokenType === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
-                if ($this->scanner->peek($line, ',^\s*\),')) {
-                    $tokens->append(
-                        TokenInterface::TYPE_RIGHTVALUE_MULTILINE,
-                        rtrim($currentTokenValue),
-                        $multiLineTokenStartLine
-                    );
-
-                    $currentTokenValue = null;
-                    $currentTokenType  = null;
+            } elseif ($state->currentTokenType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
+                if ($line->peek(',^\s*\),')) {
+                    $token = $state->endMultilineToken();
+                    $tokens->appendToken($token);
                 } else {
-                    $currentTokenValue .= $line . "\n";
+                    $state->appendToToken($line . "\n");
                 }
                 continue;
             }
 
             if ($tokens->count() !== 0) {
-                $tokens->append(TokenInterface::TYPE_WHITESPACE, "\n", $currentLine - 1);
+                $tokens->append(TokenInterface::TYPE_WHITESPACE, "\n", $line->index() - 1);
             }
 
-            if ($matches = $this->scanner->scan($line, self::TOKEN_WHITESPACE)) {
-                $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[0], $currentLine);
+            if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
+                $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[0], $line->index());
             }
 
-            if ($this->scanner->peek($line, self::TOKEN_COMMENT_MULTILINE_BEGIN)) {
-                $currentTokenValue = $line;
-                $currentTokenType  = TokenInterface::TYPE_COMMENT_MULTILINE;
+            if ($line->peek(self::TOKEN_COMMENT_MULTILINE_BEGIN)) {
+                $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value(), $line->index());
                 continue;
             }
 
@@ -127,17 +107,17 @@ class Tokenizer implements TokenizerInterface
             ];
 
             foreach ($simpleTokens as $pattern => $type) {
-                if ($matches = $this->scanner->scan($line, $pattern)) {
-                    $tokens->append($type, $matches[0], $currentLine, $matches);
+                if ($matches = $line->scan($pattern)) {
+                    $tokens->append($type, $matches[0], $line->index(), $matches);
                     continue 2;
                 }
             }
 
-            if ($matches = $this->scanner->scan($line, self::TOKEN_OPERATOR_LINE)) {
-                $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $currentLine);
+            if ($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) {
+                $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $line->index());
 
                 if ($matches[2]) {
-                    $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $currentLine);
+                    $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
                 }
 
                 switch ($matches[3]) {
@@ -146,54 +126,13 @@ class Tokenizer implements TokenizerInterface
                     case '<':
                     case '<=':
                     case '>':
-                        $tokens->append(
-                            $this->getTokenTypeForBinaryOperator($matches[3]),
-                            $matches[3],
-                            $currentLine
-                        );
-
-                        if ($matches[4]) {
-                            $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
-                        }
-
-                        if (($matches[3] === '<' || $matches[3] === '<=') && preg_match(self::TOKEN_OBJECT_REFERENCE, $matches[5])) {
-                            $tokens->append(
-                                TokenInterface::TYPE_OBJECT_IDENTIFIER,
-                                $matches[5],
-                                $currentLine
-                            );
-                            break;
-                        }
-
-                        if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5])) {
-                            $tokens->append(
-                                TokenInterface::TYPE_OBJECT_CONSTRUCTOR,
-                                $matches[5],
-                                $currentLine
-                            );
-                        } elseif (preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5], $subMatches)) {
-                            $tokens->append(
-                                TokenInterface::TYPE_OBJECT_MODIFIER,
-                                $matches[5],
-                                $currentLine,
-                                $subMatches
-                            );
-                        } elseif (strlen($matches[5])) {
-                            $tokens->append(
-                                TokenInterface::TYPE_RIGHTVALUE,
-                                $matches[5],
-                                $currentLine
-                            );
-                        }
-
+                        $this->tokenizeObjectOperation($tokens, $matches, $line->index());
                         break;
                     case '{':
-                        $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $currentLine);
+                        $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
                         break;
                     case '(':
-                        $currentTokenValue       = "";
-                        $currentTokenType        = TokenInterface::TYPE_RIGHTVALUE_MULTILINE;
-                        $multiLineTokenStartLine = $currentLine;
+                        $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
                         break;
                 }
 
@@ -204,11 +143,16 @@ class Tokenizer implements TokenizerInterface
                 continue;
             }
 
-            throw new TokenizerException('Cannot tokenize line "' . $line . '"', 1403084444, null, $currentLine);
+            throw new TokenizerException('Cannot tokenize line "' . $line . '"', 1403084444, null, $line->index());
         }
 
-        if ($currentTokenType !== null) {
-            throw new TokenizerException('Unterminated ' . $currentTokenType . '!', 1403084445, null, $currentLine);
+        if ($state->currentTokenType() !== null) {
+            throw new TokenizerException(
+                'Unterminated ' . $state->currentTokenType() . '!',
+                1403084445,
+                null,
+                count($lines) - 1
+            );
         }
 
         return $tokens->build()->getArrayCopy();
@@ -260,5 +204,61 @@ class Tokenizer implements TokenizerInterface
         $content = implode("\n", $lines);
 
         return $content;
+    }
+
+    /**
+     * @param $tokens
+     * @param $matches
+     * @param $currentLine
+     * @throws UnknownOperatorException
+     */
+    private function tokenizeObjectOperation(TokenStreamBuilder $tokens, $matches, $currentLine)
+    {
+        $tokens->append(
+            $this->getTokenTypeForBinaryOperator($matches[3]),
+            $matches[3],
+            $currentLine
+        );
+
+        if ($matches[4]) {
+            $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
+        }
+
+        if (($matches[3] === '<' || $matches[3] === '<=') && preg_match(self::TOKEN_OBJECT_REFERENCE, $matches[5])) {
+            $tokens->append(
+                TokenInterface::TYPE_OBJECT_IDENTIFIER,
+                $matches[5],
+                $currentLine
+            );
+            return;
+        }
+
+        if ($matches[3] == ':=' && preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5], $subMatches)) {
+            $tokens->append(
+                TokenInterface::TYPE_OBJECT_MODIFIER,
+                $matches[5],
+                $currentLine,
+                $subMatches
+            );
+            return;
+        }
+
+        if (preg_match(self::TOKEN_OBJECT_NAME, $matches[5])) {
+            $tokens->append(
+                TokenInterface::TYPE_OBJECT_CONSTRUCTOR,
+                $matches[5],
+                $currentLine
+            );
+            return;
+        }
+
+        if (strlen($matches[5])) {
+            $tokens->append(
+                TokenInterface::TYPE_RIGHTVALUE,
+                $matches[5],
+                $currentLine
+            );
+            return;
+        }
     }
 }

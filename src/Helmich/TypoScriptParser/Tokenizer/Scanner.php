@@ -1,22 +1,45 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
-class Scanner
+/**
+ * Helper class for scanning lines
+ *
+ * @package    Helmich\TypoScriptParser
+ * @subpackage Tokenizer
+ */
+class Scanner implements \Iterator
 {
-    public function scan(&$line, $pattern, $peek = false)
-    {
-        if (preg_match($pattern, $line, $matches)) {
-            if (!$peek) {
-                $line = substr($line, strlen($matches[0]));
-            }
-            return $matches;
-        }
+    /** @var array */
+    private $lines = [];
+    private $index = 0;
 
-        return false;
+    public function __construct(array $lines)
+    {
+        $this->lines = $lines;
     }
 
-    public function peek($line, $pattern)
+    public function current()
     {
-        return $this->scan($line, $pattern, true);
+        return new ScannerLine($this->index + 1, $this->lines[$this->index]);
+    }
+
+    public function next()
+    {
+        $this->index ++;
+    }
+
+    public function key()
+    {
+        return $this->index;
+    }
+
+    public function valid()
+    {
+        return $this->index < count($this->lines);
+    }
+
+    public function rewind()
+    {
+        $this->index = 0;
     }
 }
