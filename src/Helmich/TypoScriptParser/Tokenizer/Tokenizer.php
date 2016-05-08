@@ -38,14 +38,14 @@ class Tokenizer implements TokenizerInterface
         (?:\s+extensions="(?<extensions>[^"]+)")?
         \s*>
     $,x';
-    
+
     /**
      * Tokenizer constructor.
      */
     public function __construct()
     {
     }
-    
+
     /**
      * @param string $inputString
      * @throws TokenizerException
@@ -62,25 +62,7 @@ class Tokenizer implements TokenizerInterface
         $scanner = new Scanner($lines);
 
         foreach ($scanner as $line) {
-            if ($state->currentTokenType() === TokenInterface::TYPE_COMMENT_MULTILINE) {
-                if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
-                    $state->appendToToken($matches[0]);
-                }
-
-                if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
-                    $token = $state->endMultilineToken($matches[0]);
-                    $tokens->appendToken($token);
-                } else {
-                    $state->appendToToken($matches[0]);
-                }
-                continue;
-            } elseif ($state->currentTokenType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
-                if ($line->peek(',^\s*\),')) {
-                    $token = $state->endMultilineToken();
-                    $tokens->appendToken($token);
-                } else {
-                    $state->appendToToken($line . "\n");
-                }
+            if ($this->tokenizeMultilineToken($tokens, $state, $line)) {
                 continue;
             }
 
@@ -97,49 +79,9 @@ class Tokenizer implements TokenizerInterface
                 continue;
             }
 
-            $simpleTokens = [
-                self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
-                self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
-                self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
-                self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
-                self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
-                self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
-            ];
-
-            foreach ($simpleTokens as $pattern => $type) {
-                if ($matches = $line->scan($pattern)) {
-                    $tokens->append($type, $matches[0], $line->index(), $matches);
-                    continue 2;
-                }
-            }
-
-            if ($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) {
-                $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $line->index());
-
-                if ($matches[2]) {
-                    $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
-                }
-
-                switch ($matches[3]) {
-                    case '=':
-                    case ':=':
-                    case '<':
-                    case '<=':
-                    case '>':
-                        $this->tokenizeObjectOperation($tokens, $matches, $line->index());
-                        break;
-                    case '{':
-                        $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
-                        break;
-                    case '(':
-                        $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
-                        break;
-                }
-
-                continue;
-            }
-
-            if (strlen($line) === 0) {
+            if ($this->tokenizeSimpleStatements($tokens, $line) ||
+                $this->tokenizeObjectOperation($tokens, $state, $line) ||
+                strlen($line) === 0) {
                 continue;
             }
 
@@ -212,7 +154,7 @@ class Tokenizer implements TokenizerInterface
      * @param $currentLine
      * @throws UnknownOperatorException
      */
-    private function tokenizeObjectOperation(TokenStreamBuilder $tokens, $matches, $currentLine)
+    private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, $matches, $currentLine)
     {
         $tokens->append(
             $this->getTokenTypeForBinaryOperator($matches[3]),
@@ -260,5 +202,133 @@ class Tokenizer implements TokenizerInterface
             );
             return;
         }
+    }
+
+    /**
+     * @param TokenStreamBuilder    $tokens
+     * @param MultilineTokenBuilder $state
+     * @param ScannerLine           $line
+     * @return bool
+     */
+    private function tokenizeMultilineToken(TokenStreamBuilder $tokens, MultilineTokenBuilder $state, ScannerLine $line)
+    {
+        if ($state->currentTokenType() === TokenInterface::TYPE_COMMENT_MULTILINE) {
+            $this->tokenizeMultilineComment($tokens, $state, $line);
+            return true;
+        }
+
+        if ($state->currentTokenType() === TokenInterface::TYPE_RIGHTVALUE_MULTILINE) {
+            $this->tokenizeMultilineAssignment($tokens, $state, $line);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $line
+     * @param $state
+     * @param $tokens
+     * @return array
+     */
+    private function tokenizeMultilineComment(
+        TokenStreamBuilder $tokens,
+        MultilineTokenBuilder $state,
+        ScannerLine $line
+    ) {
+        if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
+            $state->appendToToken($matches[0]);
+        }
+
+        if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
+            $token = $state->endMultilineToken($matches[0]);
+            $tokens->appendToken($token);
+            return;
+        }
+
+        $state->appendToToken($matches[0]);
+    }
+
+    /**
+     * @param $tokens
+     * @param $state
+     * @param $line
+     */
+    private function tokenizeMultilineAssignment(
+        TokenStreamBuilder $tokens,
+        MultilineTokenBuilder $state,
+        ScannerLine $line
+    ) {
+        if ($line->peek(',^\s*\),')) {
+            $token = $state->endMultilineToken();
+            $tokens->appendToken($token);
+            return;
+        }
+
+        $state->appendToToken($line . "\n");
+    }
+
+    /**
+     * @param TokenStreamBuilder $tokens
+     * @param ScannerLine        $line
+     * @return bool
+     */
+    private function tokenizeSimpleStatements(TokenStreamBuilder $tokens, ScannerLine $line)
+    {
+        $simpleTokens = [
+            self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
+            self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
+            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
+            self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
+            self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
+            self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
+        ];
+
+        foreach ($simpleTokens as $pattern => $type) {
+            if ($matches = $line->scan($pattern)) {
+                $tokens->append($type, $matches[0], $line->index(), $matches);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $tokens
+     * @param $state
+     * @param $line
+     * @return bool
+     */
+    private function tokenizeObjectOperation(
+        TokenStreamBuilder $tokens,
+        MultilineTokenBuilder $state,
+        ScannerLine $line
+    ) {
+        if ($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) {
+            $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $line->index());
+
+            if ($matches[2]) {
+                $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
+            }
+
+            switch ($matches[3]) {
+                case '=':
+                case ':=':
+                case '<':
+                case '<=':
+                case '>':
+                    $this->tokenizeBinaryObjectOperation($tokens, $matches, $line->index());
+                    break;
+                case '{':
+                    $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
+                    break;
+                case '(':
+                    $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
+                    break;
+            }
+            return true;
+        }
+        return false;
     }
 }
