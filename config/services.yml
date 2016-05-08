@@ -7,4 +7,4 @@ services:
     class: Helmich\TypoScriptParser\Tokenizer\Printer\CodeTokenPrinter
   parser:
     class: Helmich\TypoScriptParser\Parser\Parser
-    arguments: [@tokenizer]
+    arguments: ['@tokenizer']
