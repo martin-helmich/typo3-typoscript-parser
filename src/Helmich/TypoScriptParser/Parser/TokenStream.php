@@ -2,6 +2,7 @@
 namespace Helmich\TypoScriptParser\Parser;
 
 use BadMethodCallException;
+use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Iterator;
 
@@ -103,5 +104,55 @@ class TokenStream implements Iterator, \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new BadMethodCallException('changing a token stream is not permitted');
+    }
+
+    /**
+     * Normalizes the token stream.
+     *
+     * This method transforms the token stream in a normalized form. This
+     * includes:
+     *
+     *   - trimming whitespaces (remove leading and trailing whitespaces, as
+     *     those are irrelevant for the parser)
+     *   - remove both one-line and multi-line comments (also irrelevant for the
+     *     parser)
+     *
+     * @return TokenStream
+     */
+    public function normalized()
+    {
+        $filteredTokens = [];
+        $ignoredTokens  = [
+            TokenInterface::TYPE_COMMENT_MULTILINE,
+            TokenInterface::TYPE_COMMENT_ONELINE,
+        ];
+
+        $maxLine = 0;
+
+        foreach ($this->tokens as $token) {
+            $maxLine = max($token->getLine(), $maxLine);
+
+            // Trim unnecessary whitespace, but leave line breaks! These are important!
+            if ($token->getType() === TokenInterface::TYPE_WHITESPACE) {
+                $value = trim($token->getValue(), "\t ");
+                if (strlen($value) > 0) {
+                    $filteredTokens[] = new Token(
+                        TokenInterface::TYPE_WHITESPACE,
+                        $value,
+                        $token->getLine()
+                    );
+                }
+            } elseif (!in_array($token->getType(), $ignoredTokens)) {
+                $filteredTokens[] = $token;
+            }
+        }
+
+        // Add two linebreak tokens; during parsing, we usually do not look more than two
+        // tokens ahead; this hack ensures that there will always be at least two more tokens
+        // present and we do not have to check whether these tokens exists.
+        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 1);
+        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 2);
+
+        return new TokenStream($filteredTokens);
     }
 }
