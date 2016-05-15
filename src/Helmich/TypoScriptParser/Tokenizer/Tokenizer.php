@@ -312,20 +312,13 @@ class Tokenizer implements TokenizerInterface
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
             }
 
-            switch ($matches[3]) {
-                case '=':
-                case ':=':
-                case '<':
-                case '<=':
-                case '>':
-                    $this->tokenizeBinaryObjectOperation($tokens, $matches, $line->index());
-                    break;
-                case '{':
-                    $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
-                    break;
-                case '(':
-                    $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
-                    break;
+            $binaryOperators = ['=', ':=', '<', '<=', '>'];
+            if (in_array($matches[3], $binaryOperators)) {
+                $this->tokenizeBinaryObjectOperation($tokens, $matches, $line->index());
+            } elseif ($matches[3] == '{') {
+                $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
+            } elseif ($matches[3] == '(') {
+                $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
             }
             return true;
         }
