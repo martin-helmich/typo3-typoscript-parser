@@ -17,7 +17,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function dataForParserTest()
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
-        //$files = glob(__DIR__ . '/Fixtures/*/relative_copy.typoscript');
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
             $output     = include $outputFile;
