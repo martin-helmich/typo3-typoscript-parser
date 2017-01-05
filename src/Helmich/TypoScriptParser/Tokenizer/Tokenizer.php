@@ -28,7 +28,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_OPERATOR_LINE = ',^
         ([a-zA-Z0-9_\-\\\\:\$\{\}]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}]+)*)  # Left value (object accessor)
         (\s*)                                                          # Whitespace
-        (=|:=|<=|<|>|\{|\()                                            # Operator
+        (=<|=|:=|<=|<|>|\{|\()                                            # Operator
         (\s*)                                                          # More whitespace
         (.*?)                                                          # Right value
     $,x';
@@ -123,6 +123,7 @@ class Tokenizer implements TokenizerInterface
             case '<':
                 return TokenInterface::TYPE_OPERATOR_COPY;
             case '<=':
+            case '=<':
                 return TokenInterface::TYPE_OPERATOR_REFERENCE;
             case ':=':
                 return TokenInterface::TYPE_OPERATOR_MODIFY;
@@ -166,7 +167,7 @@ class Tokenizer implements TokenizerInterface
             $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[4], $currentLine);
         }
 
-        if (($matches[3] === '<' || $matches[3] === '<=') && preg_match(self::TOKEN_OBJECT_REFERENCE, $matches[5])) {
+        if (($matches[3] === '<' || $matches[3] === '<='  || $matches[3] === '=<') && preg_match(self::TOKEN_OBJECT_REFERENCE, $matches[5])) {
             $tokens->append(
                 TokenInterface::TYPE_OBJECT_IDENTIFIER,
                 $matches[5],
@@ -312,7 +313,7 @@ class Tokenizer implements TokenizerInterface
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
             }
 
-            $binaryOperators = ['=', ':=', '<', '<=', '>'];
+            $binaryOperators = ['=', ':=', '<', '<=', '>', '=<'];
             if (in_array($matches[3], $binaryOperators)) {
                 $this->tokenizeBinaryObjectOperation($tokens, $matches, $line->index());
             } elseif ($matches[3] == '{') {
