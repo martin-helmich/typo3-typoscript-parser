@@ -7,7 +7,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_COMMENT_ONELINE = ',^(#|/)[^\n]*,';
     const TOKEN_COMMENT_MULTILINE_BEGIN = ',^/\*,';
     const TOKEN_COMMENT_MULTILINE_END = ',^\*/,';
-    const TOKEN_CONDITION = ',^(\[(adminUser|browser|version|system|device|useragent|language|IP|hostname|applicationContext|hour|minute|month|year|dayofweek|dayofmonth|dayofyear|usergroup|loginUser|page\|[a-zA-Z0-9_]+|treeLevel|PIDinRootline|PIDupinRootline|compatVersion|globalVar|globalString|userFunc)\s*=\s*(.*?)\](\|\||&&|$))+,';
+    const TOKEN_CONDITION = ',^(\[(adminUser|browser|version|system|device|useragent|language|IP|hostname|applicationContext|hour|minute|month|year|dayofweek|dayofmonth|dayofyear|usergroup|loginUser|page\|[a-zA-Z0-9_]+|treeLevel|PIDinRootline|PIDupinRootline|compatVersion|globalVar|globalString|userFunc|[a-zA-Z\\\]+)\s*=?\s*(.*?)\](\|\||&&|$))+,';
     const TOKEN_CONDITION_ELSE = ',^\[else\],i';
     const TOKEN_CONDITION_END = ',^\[(global|end)\],i';
 
@@ -278,9 +278,9 @@ class Tokenizer implements TokenizerInterface
         $simpleTokens = [
             self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
             self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
-            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
             self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
             self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
+            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
             self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
         ];
 
