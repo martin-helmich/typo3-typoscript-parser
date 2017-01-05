@@ -57,7 +57,7 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
             new Token(Token::TYPE_WHITESPACE, " ", 1),
             new Token(Token::TYPE_OPERATOR_REFERENCE, "=<", 1),
             new Token(Token::TYPE_WHITESPACE, " ", 1),
-            new Token(Token::TYPE_RIGHTVALUE, "bar", 1)
+            new Token(Token::TYPE_OBJECT_IDENTIFIER, "bar", 1)
         ]];
     }
 
