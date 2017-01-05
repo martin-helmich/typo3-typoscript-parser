@@ -278,9 +278,9 @@ class Tokenizer implements TokenizerInterface
         $simpleTokens = [
             self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
             self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
-            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
             self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
             self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
+            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
             self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
         ];
 
