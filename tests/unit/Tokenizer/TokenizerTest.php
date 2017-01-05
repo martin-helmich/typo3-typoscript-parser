@@ -51,6 +51,14 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
             new Token(Token::TYPE_WHITESPACE, " ", 1),
             new Token(Token::TYPE_RIGHTVALUE, "baz", 1)
         ]];
+
+        yield ["foo =< bar", [
+            new Token(Token::TYPE_OBJECT_IDENTIFIER, "foo", 1),
+            new Token(Token::TYPE_WHITESPACE, " ", 1),
+            new Token(Token::TYPE_OPERATOR_REFERENCE, "=<", 1),
+            new Token(Token::TYPE_WHITESPACE, " ", 1),
+            new Token(Token::TYPE_OBJECT_IDENTIFIER, "bar", 1)
+        ]];
     }
 
     public function dataInvalidForTokenizer()

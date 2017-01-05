@@ -81,7 +81,7 @@ class PrettyPrinter implements ASTPrinterInterface
         if ($operator instanceof Copy) {
             $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' < ' . $targetObjectPath);
         } elseif ($operator instanceof Reference) {
-            $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' <= ' . $targetObjectPath);
+            $output->writeln($this->getIndent($nesting) . $operator->object->relativeName . ' =< ' . $targetObjectPath);
         }
     }
 

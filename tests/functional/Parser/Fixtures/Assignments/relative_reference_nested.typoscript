@@ -1,4 +1,4 @@
 foo {
     bar = baz
-    baz <= .bar
+    baz =< .bar
 }
