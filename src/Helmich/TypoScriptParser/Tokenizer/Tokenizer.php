@@ -194,6 +194,15 @@ class Tokenizer implements TokenizerInterface
             return;
         }
 
+        if ($matches[3] == '>' && preg_match(self::TOKEN_COMMENT_ONELINE, $matches[5])) {
+            $tokens->append(
+                TokenInterface::TYPE_COMMENT_ONELINE,
+                $matches[5],
+                $currentLine
+            );
+            return;
+        }
+
         if (strlen($matches[5])) {
             $tokens->append(
                 TokenInterface::TYPE_RIGHTVALUE,
@@ -312,8 +321,8 @@ class Tokenizer implements TokenizerInterface
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[2], $line->index());
             }
 
-            $binaryOperators = ['=', ':=', '<', '<=', '>', '=<'];
-            if (in_array($matches[3], $binaryOperators)) {
+            $operators = ['=', ':=', '<', '<=', '>', '=<'];
+            if (in_array($matches[3], $operators)) {
                 $this->tokenizeBinaryObjectOperation($tokens, $matches, $line->index());
             } elseif ($matches[3] == '{') {
                 $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
