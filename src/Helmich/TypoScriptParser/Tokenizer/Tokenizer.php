@@ -68,9 +68,7 @@ class Tokenizer implements TokenizerInterface
      */
     public function tokenizeString($inputString)
     {
-        if ($this->convertLineendings) {
-            $inputString = $this->preprocessContent($inputString);
-        }
+        $inputString = $this->preprocessContent($inputString);
 
         $tokens = new TokenStreamBuilder();
         $state  = new MultilineTokenBuilder();
@@ -154,6 +152,9 @@ class Tokenizer implements TokenizerInterface
 
     private function preprocessContent($content)
     {
+        if (!$this->convertLineendings) {
+            return $content;
+        }
         // Replace CRLF with LF.
         $content = str_replace("\r\n", "\n", $content);
 
