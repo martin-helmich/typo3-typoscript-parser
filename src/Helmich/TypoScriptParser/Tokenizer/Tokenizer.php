@@ -55,7 +55,7 @@ class Tokenizer implements TokenizerInterface
      * @param string $eolChar Line ending to use for tokenizing.
      * @param bool $convertLineendings Whether to convert lineendings to unix one or not.
      */
-    public function __construct($eolChar = '\n', $convertLineendings = true)
+    public function __construct($eolChar = "\n", $convertLineendings = true)
     {
         $this->eolChar = $eolChar;
         $this->convertLineendings = $convertLineendings;
