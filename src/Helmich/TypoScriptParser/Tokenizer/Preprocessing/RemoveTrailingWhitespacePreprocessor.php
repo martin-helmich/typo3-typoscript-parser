@@ -2,11 +2,11 @@
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
 /**
- * Preprocessor that unifies line endings for a file
+ * Preprocessor that removes trailing whitespaces from a file
  *
  * @package Helmich\TypoScriptParser\Tokenizer\Preprocessing
  */
-class UnifyLineEndings implements Preprocessor
+class RemoveTrailingWhitespacePreprocessor implements Preprocessor
 {
     /** @var string */
     private $eolCharacter;
@@ -22,6 +22,11 @@ class UnifyLineEndings implements Preprocessor
      */
     public function preprocess($contents)
     {
-        return preg_replace(",(\r\n|\r|\n),", $this->eolCharacter, $contents);
+        // Remove trailing whitespaces.
+        $lines   = explode($this->eolCharacter, $contents);
+        $lines   = array_map('rtrim', $lines);
+        $content = implode($this->eolCharacter, $lines);
+
+        return $content;
     }
 }

@@ -6,13 +6,13 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
  *
  * @package Helmich\TypoScriptParser\Tokenizer\Preprocessing
  */
-class Standard extends ProcessorChain
+class StandardPreprocessor extends ProcessorChain
 {
     public function __construct($eolChar = "\n")
     {
         $this->processors = [
-            new UnifyLineEndings($eolChar),
-            new RemoveTrailingWhitespace($eolChar)
+            new UnifyLineEndingsPreprocessor($eolChar),
+            new RemoveTrailingWhitespacePreprocessor($eolChar)
         ];
     }
 }

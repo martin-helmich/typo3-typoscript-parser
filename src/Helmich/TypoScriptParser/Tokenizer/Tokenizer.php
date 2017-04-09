@@ -3,9 +3,9 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 
 use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Preprocessor;
 use Helmich\TypoScriptParser\Tokenizer\Preprocessing\ProcessorChain;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\RemoveTrailingWhitespace;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Standard;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\UnifyLineEndings;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\RemoveTrailingWhitespacePreprocessor;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\StandardPreprocessor;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\UnifyLineEndingsPreprocessor;
 
 class Tokenizer implements TokenizerInterface
 {
@@ -60,7 +60,7 @@ class Tokenizer implements TokenizerInterface
     public function __construct($eolChar = "\n", Preprocessor $preprocessor = null)
     {
         if ($preprocessor === null) {
-            $preprocessor = new Standard($eolChar);
+            $preprocessor = new StandardPreprocessor($eolChar);
         }
 
         $this->eolChar = $eolChar;

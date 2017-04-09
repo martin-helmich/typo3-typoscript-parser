@@ -6,7 +6,7 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
  *
  * @package Helmich\TypoScriptParser\Tokenizer\Preprocessing
  */
-class NoOp implements Preprocessor
+class NoOpPreprocessor implements Preprocessor
 {
     /**
      * @param string $contents Un-processed Typoscript contents
