@@ -1,6 +1,9 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Preprocessor;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\StandardPreprocessor;
+
 class Tokenizer implements TokenizerInterface
 {
     const TOKEN_WHITESPACE = ',^[ \t\n]+,s';
@@ -39,26 +42,26 @@ class Tokenizer implements TokenizerInterface
         \s*>
     $,x';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $eolChar;
 
-    /**
-     * @var bool
-     */
-    protected $convertLineendings;
+    /** @var Preprocessor */
+    protected $preprocessor;
 
     /**
      * Tokenizer constructor.
      *
-     * @param string $eolChar Line ending to use for tokenizing.
-     * @param bool $convertLineendings Whether to convert lineendings to unix one or not.
+     * @param string       $eolChar      Line ending to use for tokenizing.
+     * @param Preprocessor $preprocessor Option to preprocess file contents before actual tokenizing
      */
-    public function __construct($eolChar = "\n", $convertLineendings = true)
+    public function __construct($eolChar = "\n", Preprocessor $preprocessor = null)
     {
+        if ($preprocessor === null) {
+            $preprocessor = new StandardPreprocessor($eolChar);
+        }
+
         $this->eolChar = $eolChar;
-        $this->convertLineendings = $convertLineendings;
+        $this->preprocessor = $preprocessor;
     }
 
     /**
@@ -68,7 +71,7 @@ class Tokenizer implements TokenizerInterface
      */
     public function tokenizeString($inputString)
     {
-        $inputString = $this->preprocessContent($inputString);
+        $inputString = $this->preprocessor->preprocess($inputString);
 
         $tokens = new TokenStreamBuilder();
         $state  = new MultilineTokenBuilder();
@@ -148,22 +151,6 @@ class Tokenizer implements TokenizerInterface
         // @codeCoverageIgnoreStart
         throw new UnknownOperatorException('Unknown binary operator "' . $operator . '"!');
         // @codeCoverageIgnoreEnd
-    }
-
-    private function preprocessContent($content)
-    {
-        if (!$this->convertLineendings) {
-            return $content;
-        }
-        // Replace CRLF with LF.
-        $content = str_replace("\r\n", "\n", $content);
-
-        // Remove trailing whitespaces.
-        $lines   = explode("\n", $content);
-        $lines   = array_map('rtrim', $lines);
-        $content = implode("\n", $lines);
-
-        return $content;
     }
 
     /**
@@ -256,7 +243,7 @@ class Tokenizer implements TokenizerInterface
      * @param $line
      * @param $state
      * @param $tokens
-     * @return array
+     * @return void
      */
     private function tokenizeMultilineComment(
         TokenStreamBuilder $tokens,
