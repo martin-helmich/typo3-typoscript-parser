@@ -16,7 +16,7 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array
+     * @return array|bool
      */
     public function scan($pattern)
     {
@@ -30,7 +30,7 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array
+     * @return array|bool
      */
     public function peek($pattern)
     {
