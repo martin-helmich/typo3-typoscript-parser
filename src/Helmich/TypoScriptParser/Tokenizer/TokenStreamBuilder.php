@@ -28,12 +28,13 @@ class TokenStreamBuilder
      * @param string $type           Token type
      * @param string $value          Token value
      * @param int    $line           Line in source code
+     * @param int    $column         Column in source code
      * @param array  $patternMatches Subpattern matches
      * @return void
      */
-    public function append($type, $value, $line, array $patternMatches = [])
+    public function append($type, $value, $line, $column, array $patternMatches = [])
     {
-        $this->tokens->append(new Token($type, $value, $line, $patternMatches));
+        $this->tokens->append(new Token($type, $value, $line, $column, $patternMatches));
     }
 
     /**

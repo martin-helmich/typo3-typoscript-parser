@@ -12,6 +12,9 @@ class Token implements TokenInterface
     /** @var int */
     private $line;
 
+    /** @var int */
+    private $column;
+
     /** @var array */
     private $patternMatches;
 
@@ -19,13 +22,15 @@ class Token implements TokenInterface
      * @param string $type
      * @param string $value
      * @param int    $line
+     * @param int    $column
      * @param array  $patternMatches
      */
-    public function __construct($type, $value, $line, array $patternMatches = [])
+    public function __construct($type, $value, $line, $column, array $patternMatches = [])
     {
         $this->type           = $type;
         $this->value          = $value;
         $this->line           = $line;
+        $this->column         = $column;
         $this->patternMatches = $patternMatches;
     }
 
@@ -60,5 +65,13 @@ class Token implements TokenInterface
     public function getLine()
     {
         return $this->line;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColumn()
+    {
+        return $this->column;
     }
 }
