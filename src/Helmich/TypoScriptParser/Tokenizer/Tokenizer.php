@@ -1,6 +1,11 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer;
 
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Preprocessor;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\ProcessorChain;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\RemoveTrailingWhitespace;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\UnifyLineEndings;
+
 class Tokenizer implements TokenizerInterface
 {
     const TOKEN_WHITESPACE = ',^[ \t\n]+,s';
@@ -39,15 +44,11 @@ class Tokenizer implements TokenizerInterface
         \s*>
     $,x';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $eolChar;
 
-    /**
-     * @var bool
-     */
-    protected $convertLineendings;
+    /** @var Preprocessor */
+    protected $preprocessor;
 
     /**
      * Tokenizer constructor.
@@ -55,10 +56,16 @@ class Tokenizer implements TokenizerInterface
      * @param string $eolChar Line ending to use for tokenizing.
      * @param bool $convertLineendings Whether to convert lineendings to unix one or not.
      */
-    public function __construct($eolChar = "\n", $convertLineendings = true)
+    public function __construct($eolChar = "\n", Preprocessor $preprocessor = null)
     {
+        if ($preprocessor === null) {
+            $preprocessor = (new ProcessorChain())
+                ->with(new UnifyLineEndings($eolChar))
+                ->with(new RemoveTrailingWhitespace($eolChar));
+        }
+
         $this->eolChar = $eolChar;
-        $this->convertLineendings = $convertLineendings;
+        $this->preprocessor = $preprocessor;
     }
 
     /**
@@ -68,7 +75,7 @@ class Tokenizer implements TokenizerInterface
      */
     public function tokenizeString($inputString)
     {
-        $inputString = $this->preprocessContent($inputString);
+        $inputString = $this->preprocessor->preprocess($inputString);
 
         $tokens = new TokenStreamBuilder();
         $state  = new MultilineTokenBuilder();
@@ -148,22 +155,6 @@ class Tokenizer implements TokenizerInterface
         // @codeCoverageIgnoreStart
         throw new UnknownOperatorException('Unknown binary operator "' . $operator . '"!');
         // @codeCoverageIgnoreEnd
-    }
-
-    private function preprocessContent($content)
-    {
-        if (!$this->convertLineendings) {
-            return $content;
-        }
-        // Replace CRLF with LF.
-        $content = str_replace("\r\n", "\n", $content);
-
-        // Remove trailing whitespaces.
-        $lines   = explode("\n", $content);
-        $lines   = array_map('rtrim', $lines);
-        $content = implode("\n", $lines);
-
-        return $content;
     }
 
     /**
