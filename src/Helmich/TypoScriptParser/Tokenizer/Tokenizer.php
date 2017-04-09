@@ -256,7 +256,7 @@ class Tokenizer implements TokenizerInterface
      * @param $line
      * @param $state
      * @param $tokens
-     * @return array
+     * @return void
      */
     private function tokenizeMultilineComment(
         TokenStreamBuilder $tokens,
