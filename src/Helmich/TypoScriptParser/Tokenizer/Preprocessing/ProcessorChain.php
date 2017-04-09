@@ -9,7 +9,7 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 class ProcessorChain implements Preprocessor
 {
     /** @var Preprocessor[] */
-    private $processors = [];
+    protected $processors = [];
 
     /**
      * @param Preprocessor $next
