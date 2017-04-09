@@ -2,10 +2,7 @@
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Preprocessor;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\ProcessorChain;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\RemoveTrailingWhitespacePreprocessor;
 use Helmich\TypoScriptParser\Tokenizer\Preprocessing\StandardPreprocessor;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\UnifyLineEndingsPreprocessor;
 
 class Tokenizer implements TokenizerInterface
 {
