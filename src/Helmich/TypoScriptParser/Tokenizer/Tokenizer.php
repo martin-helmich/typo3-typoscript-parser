@@ -40,10 +40,25 @@ class Tokenizer implements TokenizerInterface
     $,x';
 
     /**
-     * Tokenizer constructor.
+     * @var string
      */
-    public function __construct()
+    protected $eolChar;
+
+    /**
+     * @var bool
+     */
+    protected $convertLineendings;
+
+    /**
+     * Tokenizer constructor.
+     *
+     * @param string $eolChar Line ending to use for tokenizing.
+     * @param bool $convertLineendings Whether to convert lineendings to unix one or not.
+     */
+    public function __construct($eolChar = "\n", $convertLineendings = true)
     {
+        $this->eolChar = $eolChar;
+        $this->convertLineendings = $convertLineendings;
     }
 
     /**
@@ -58,7 +73,7 @@ class Tokenizer implements TokenizerInterface
         $tokens = new TokenStreamBuilder();
         $state  = new MultilineTokenBuilder();
 
-        $lines   = explode("\n", $inputString);
+        $lines   = explode($this->eolChar, $inputString);
         $scanner = new Scanner($lines);
 
         foreach ($scanner as $line) {
@@ -67,7 +82,7 @@ class Tokenizer implements TokenizerInterface
             }
 
             if ($tokens->count() !== 0) {
-                $tokens->append(TokenInterface::TYPE_WHITESPACE, "\n", $line->index() - 1);
+                $tokens->append(TokenInterface::TYPE_WHITESPACE, $this->eolChar, $line->index() - 1);
             }
 
             if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
@@ -137,6 +152,9 @@ class Tokenizer implements TokenizerInterface
 
     private function preprocessContent($content)
     {
+        if (!$this->convertLineendings) {
+            return $content;
+        }
         // Replace CRLF with LF.
         $content = str_replace("\r\n", "\n", $content);
 
