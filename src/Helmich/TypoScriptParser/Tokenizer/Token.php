@@ -25,7 +25,7 @@ class Token implements TokenInterface
      * @param int    $column
      * @param array  $patternMatches
      */
-    public function __construct($type, $value, $line, $column, array $patternMatches = [])
+    public function __construct($type, $value, $line, $column = 1, array $patternMatches = [])
     {
         $this->type           = $type;
         $this->value          = $value;
