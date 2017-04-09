@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
-
 /**
  * Interface definitions for tokenizer preprocessors.
  *
@@ -18,5 +17,4 @@ interface Preprocessor
      * @return string Processed TypoScript contents
      */
     public function preprocess($contents);
-
 }
