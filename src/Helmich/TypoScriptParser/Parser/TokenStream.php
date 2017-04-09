@@ -71,7 +71,7 @@ class TokenStream implements Iterator, \ArrayAccess
 
     /**
      * @param int $offset
-     * @return TokenInterface
+     * @return bool
      */
     public function offsetExists($offset)
     {
