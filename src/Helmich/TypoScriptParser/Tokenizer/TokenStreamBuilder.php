@@ -14,6 +14,9 @@ class TokenStreamBuilder
     /** @var ArrayObject */
     private $tokens;
 
+    private $currentLine = null;
+    private $currentColumn = null;
+
     /**
      * TokenStreamBuilder constructor.
      */
@@ -28,13 +31,19 @@ class TokenStreamBuilder
      * @param string $type           Token type
      * @param string $value          Token value
      * @param int    $line           Line in source code
-     * @param int    $column         Column in source code
      * @param array  $patternMatches Subpattern matches
      * @return void
      */
-    public function append($type, $value, $line, $column, array $patternMatches = [])
+    public function append($type, $value, $line, array $patternMatches = [])
     {
-        $this->tokens->append(new Token($type, $value, $line, $column, $patternMatches));
+        if ($this->currentLine !== $line) {
+            $this->currentLine = $line;
+            $this->currentColumn = 1;
+        }
+
+        $this->tokens->append(new Token($type, $value, $this->currentLine, $this->currentColumn, $patternMatches));
+
+        $this->currentColumn += strlen($value);
     }
 
     /**
@@ -54,6 +63,14 @@ class TokenStreamBuilder
     public function count()
     {
         return $this->tokens->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function currentColumn()
+    {
+        return $this->currentColumn;
     }
 
     /**
