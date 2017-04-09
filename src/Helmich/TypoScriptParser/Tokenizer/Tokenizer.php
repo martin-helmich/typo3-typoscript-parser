@@ -54,8 +54,8 @@ class Tokenizer implements TokenizerInterface
     /**
      * Tokenizer constructor.
      *
-     * @param string $eolChar Line ending to use for tokenizing.
-     * @param bool $convertLineendings Whether to convert lineendings to unix one or not.
+     * @param string       $eolChar      Line ending to use for tokenizing.
+     * @param Preprocessor $preprocessor Option to preprocess file contents before actual tokenizing
      */
     public function __construct($eolChar = "\n", Preprocessor $preprocessor = null)
     {
