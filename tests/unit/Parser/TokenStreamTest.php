@@ -16,11 +16,11 @@ class TokenStreamTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->tokens = [
-            new Token(Token::TYPE_OBJECT_IDENTIFIER, 'foo', 1),
-            new Token(Token::TYPE_WHITESPACE, ' ', 1),
-            new Token(Token::TYPE_OPERATOR_ASSIGNMENT, '=', 1),
-            new Token(Token::TYPE_WHITESPACE, ' ', 1),
-            new Token(Token::TYPE_RIGHTVALUE, 'bar', 1),
+            new Token(Token::TYPE_OBJECT_IDENTIFIER, 'foo', 1, 1),
+            new Token(Token::TYPE_WHITESPACE, ' ', 1, 4),
+            new Token(Token::TYPE_OPERATOR_ASSIGNMENT, '=', 1, 5),
+            new Token(Token::TYPE_WHITESPACE, ' ', 1, 6),
+            new Token(Token::TYPE_RIGHTVALUE, 'bar', 1, 7),
         ];
         $this->stream = new TokenStream($this->tokens);
     }
@@ -47,7 +47,7 @@ class TokenStreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testCannotSet()
     {
-        $this->stream[3] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1);
+        $this->stream[3] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1, 1);
     }
 
     /**
@@ -55,7 +55,7 @@ class TokenStreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testCannotAppend()
     {
-        $this->stream[] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1);
+        $this->stream[] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1, 1);
     }
 
     /**

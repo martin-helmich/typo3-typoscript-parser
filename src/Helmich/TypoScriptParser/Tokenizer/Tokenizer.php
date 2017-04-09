@@ -80,20 +80,24 @@ class Tokenizer implements TokenizerInterface
         $scanner = new Scanner($lines);
 
         foreach ($scanner as $line) {
+            $column = 1;
+
             if ($this->tokenizeMultilineToken($tokens, $state, $line)) {
                 continue;
             }
 
             if ($tokens->count() !== 0) {
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $this->eolChar, $line->index() - 1);
+                $column += 1;
             }
 
             if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[0], $line->index());
+                $column += strlen($matches[0]);
             }
 
             if ($line->peek(self::TOKEN_COMMENT_MULTILINE_BEGIN)) {
-                $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value(), $line->index());
+                $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value(), $line->index(), $column);
                 continue;
             }
 
@@ -332,7 +336,7 @@ class Tokenizer implements TokenizerInterface
             } elseif ($matches[3] == '{') {
                 $tokens->append(TokenInterface::TYPE_BRACE_OPEN, $matches[3], $line->index());
             } elseif ($matches[3] == '(') {
-                $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index());
+                $state->startMultilineToken(TokenInterface::TYPE_RIGHTVALUE_MULTILINE, '', $line->index(), $tokens->currentColumn());
             }
             return true;
         }

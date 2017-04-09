@@ -20,16 +20,21 @@ class MultilineTokenBuilder
     /** @var int */
     private $startLine = null;
 
+    /** @var int */
+    private $startColumn = null;
+
     /**
-     * @param string $type  Token type, one of `TokenInterface::TYPE_*`
-     * @param string $value Token value
-     * @param int    $line  Starting line in source code
+     * @param string $type   Token type, one of `TokenInterface::TYPE_*`
+     * @param string $value  Token value
+     * @param int    $line   Starting line in source code
+     * @param int    $column Starting column in source code
      */
-    public function startMultilineToken($type, $value, $line)
+    public function startMultilineToken($type, $value, $line, $column)
     {
-        $this->type      = $type;
-        $this->value     = $value;
-        $this->startLine = $line;
+        $this->type        = $type;
+        $this->value       = $value;
+        $this->startLine   = $line;
+        $this->startColumn = $column;
     }
 
     /**
@@ -51,7 +56,8 @@ class MultilineTokenBuilder
         $token = new Token(
             $this->type,
             rtrim($this->value),
-            $this->startLine
+            $this->startLine,
+            $this->startColumn
         );
 
         $this->reset();
@@ -71,8 +77,9 @@ class MultilineTokenBuilder
      */
     private function reset()
     {
-        $this->type      = null;
-        $this->value     = null;
-        $this->startLine = null;
+        $this->type        = null;
+        $this->value       = null;
+        $this->startLine   = null;
+        $this->startColumn = null;
     }
 }

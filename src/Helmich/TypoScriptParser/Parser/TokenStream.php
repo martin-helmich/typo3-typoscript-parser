@@ -71,7 +71,7 @@ class TokenStream implements Iterator, \ArrayAccess
 
     /**
      * @param int $offset
-     * @return TokenInterface
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -139,7 +139,8 @@ class TokenStream implements Iterator, \ArrayAccess
                     $filteredTokens[] = new Token(
                         TokenInterface::TYPE_WHITESPACE,
                         $value,
-                        $token->getLine()
+                        $token->getLine(),
+                        $token->getColumn()
                     );
                 }
             } elseif (!in_array($token->getType(), $ignoredTokens)) {
@@ -150,8 +151,8 @@ class TokenStream implements Iterator, \ArrayAccess
         // Add two linebreak tokens; during parsing, we usually do not look more than two
         // tokens ahead; this hack ensures that there will always be at least two more tokens
         // present and we do not have to check whether these tokens exists.
-        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 1);
-        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 2);
+        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 1, 1);
+        $filteredTokens[] = new Token(TokenInterface::TYPE_WHITESPACE, "\n", $maxLine + 2, 1);
 
         return new TokenStream($filteredTokens);
     }
