@@ -1,4 +1,5 @@
 <?php
+
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
@@ -42,7 +43,11 @@ class PrettyPrinter implements ASTPrinterInterface
     private function printStatementList(array $statements, OutputInterface $output, $nesting = 0)
     {
         $indent = $this->getIndent($nesting);
-        foreach ($statements as $statement) {
+        $count = count($statements);
+        //foreach ($statements as $statement) {
+        for ($i = 0; $i < $count; $i++) {
+            $statement = $statements[$i];
+
             if ($statement instanceof NestedAssignment) {
                 $this->printNestedAssignment($output, $nesting, $statement);
             } elseif ($statement instanceof Assignment) {
@@ -62,7 +67,16 @@ class PrettyPrinter implements ASTPrinterInterface
                     )
                 );
             } elseif ($statement instanceof ConditionalStatement) {
-                $this->printConditionalStatement($output, $nesting, $statement);
+                $next = $i + 1 < $count ? $statements[$i + 1] : null;
+                $previous = $i - 1 >= 0 ? $statements[$i - 1] : null;
+
+                $this->printConditionalStatement(
+                    $output,
+                    $nesting,
+                    $statement,
+                    $next instanceof ConditionalStatement,
+                    $previous instanceof ConditionalStatement
+                );
             } elseif ($statement instanceof IncludeStatement) {
                 $this->printIncludeStatement($output, $statement);
             }
@@ -115,10 +129,15 @@ class PrettyPrinter implements ASTPrinterInterface
      * @param OutputInterface      $output
      * @param int                  $nesting
      * @param ConditionalStatement $statement
+     * @param bool                 $hasNext
+     * @param bool                 $hasPrevious
      */
-    private function printConditionalStatement(OutputInterface $output, $nesting, $statement)
+    private function printConditionalStatement(OutputInterface $output, $nesting, $statement, $hasNext = false, $hasPrevious = false)
     {
-        $output->writeln('');
+        if (!$hasPrevious) {
+            $output->writeln('');
+        }
+
         $output->writeln($statement->condition);
         $this->printStatementList($statement->ifStatements, $output, $nesting);
 
@@ -127,7 +146,9 @@ class PrettyPrinter implements ASTPrinterInterface
             $this->printStatementList($statement->elseStatements, $output, $nesting);
         }
 
-        $output->writeln('[global]');
+        if (!$hasNext) {
+            $output->writeln('[global]');
+        }
     }
 
     /**
