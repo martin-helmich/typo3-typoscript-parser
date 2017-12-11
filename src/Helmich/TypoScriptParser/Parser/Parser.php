@@ -227,6 +227,17 @@ class Parser implements ParserInterface
                 $inElseBranch = true;
                 $subContext   = $subContext->withStatements($elseStatements);
                 $state->next();
+            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION) {
+                $state->statements()->append(
+                    $this->builder->condition(
+                        $condition,
+                        $ifStatements->getArrayCopy(),
+                        $elseStatements->getArrayCopy(),
+                        $conditionLine
+                    )
+                );
+                $this->parseCondition($state);
+                break;
             }
 
             if ($state->token()->getType() === TokenInterface::TYPE_OBJECT_IDENTIFIER) {
