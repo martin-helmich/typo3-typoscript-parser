@@ -41,6 +41,10 @@ class Tokenizer implements TokenizerInterface
         (?:\s+extensions="(?<extensions>[^"]+)")?
         \s*>
     $,x';
+    const TOKEN_INCLUDE_NEW_STATEMENT = ',^
+        @import\s+
+        \'(?<filename>[^\']+)\'
+    $,x';
 
     /** @var string */
     protected $eolChar;
@@ -294,12 +298,13 @@ class Tokenizer implements TokenizerInterface
     private function tokenizeSimpleStatements(TokenStreamBuilder $tokens, ScannerLine $line)
     {
         $simpleTokens = [
-            self::TOKEN_COMMENT_ONELINE   => TokenInterface::TYPE_COMMENT_ONELINE,
-            self::TOKEN_NESTING_END       => TokenInterface::TYPE_BRACE_CLOSE,
-            self::TOKEN_CONDITION_ELSE    => TokenInterface::TYPE_CONDITION_ELSE,
-            self::TOKEN_CONDITION_END     => TokenInterface::TYPE_CONDITION_END,
-            self::TOKEN_CONDITION         => TokenInterface::TYPE_CONDITION,
-            self::TOKEN_INCLUDE_STATEMENT => TokenInterface::TYPE_INCLUDE,
+            self::TOKEN_COMMENT_ONELINE       => TokenInterface::TYPE_COMMENT_ONELINE,
+            self::TOKEN_NESTING_END           => TokenInterface::TYPE_BRACE_CLOSE,
+            self::TOKEN_CONDITION_ELSE        => TokenInterface::TYPE_CONDITION_ELSE,
+            self::TOKEN_CONDITION_END         => TokenInterface::TYPE_CONDITION_END,
+            self::TOKEN_CONDITION             => TokenInterface::TYPE_CONDITION,
+            self::TOKEN_INCLUDE_STATEMENT     => TokenInterface::TYPE_INCLUDE,
+            self::TOKEN_INCLUDE_NEW_STATEMENT => TokenInterface::TYPE_INCLUDE_NEW,
         ];
 
         foreach ($simpleTokens as $pattern => $type) {

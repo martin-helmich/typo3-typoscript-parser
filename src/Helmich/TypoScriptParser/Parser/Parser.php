@@ -4,6 +4,7 @@ namespace Helmich\TypoScriptParser\Parser;
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 
@@ -101,6 +102,7 @@ class Parser implements ParserInterface
                 $this->parseCondition($state);
                 break;
             case TokenInterface::TYPE_INCLUDE:
+            case TokenInterface::TYPE_INCLUDE_NEW:
                 $this->parseInclude($state);
                 break;
             case TokenInterface::TYPE_WHITESPACE:
@@ -262,9 +264,10 @@ class Parser implements ParserInterface
     {
         $token = $state->token();
 
-        if ($token->getSubMatch('type') === 'FILE') {
+        if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
             $node = $this->builder->includeFile(
                 $token->getSubMatch('filename'),
+                $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
                 $token->getLine()
             );
         } else {

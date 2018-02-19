@@ -44,13 +44,14 @@ class Builder
     }
 
     /**
-     * @param string $file
-     * @param int    $line
+     * @param string  $file
+     * @param boolean $newSyntax
+     * @param int     $line
      * @return FileIncludeStatement
      */
-    public function includeFile($file, $line)
+    public function includeFile($file, $newSyntax, $line)
     {
-        return new FileIncludeStatement($file, $line);
+        return new FileIncludeStatement($file, $newSyntax, $line);
     }
 
     /**
