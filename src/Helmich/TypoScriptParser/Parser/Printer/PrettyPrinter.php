@@ -102,7 +102,11 @@ class PrettyPrinter implements ASTPrinterInterface
     private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement)
     {
         if ($statement instanceof FileIncludeStatement) {
-            $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
+            if ($statement->newSyntax) {
+                $output->writeln('@import \'' . $statement->filename . '\'');
+            } else {
+                $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
+            }
         } elseif ($statement instanceof DirectoryIncludeStatement) {
             $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">';
             if ($statement->extensions) {
