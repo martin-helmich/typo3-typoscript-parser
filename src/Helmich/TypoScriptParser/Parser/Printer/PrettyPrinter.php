@@ -102,19 +102,29 @@ class PrettyPrinter implements ASTPrinterInterface
     private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement)
     {
         if ($statement instanceof FileIncludeStatement) {
-            if ($statement->newSyntax) {
-                $output->writeln('@import \'' . $statement->filename . '\'');
-            } else {
-                $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
-            }
+            $this->printFileIncludeStatement($output, $statement);
         } elseif ($statement instanceof DirectoryIncludeStatement) {
-            $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">';
-            if ($statement->extensions) {
-                $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">';
-            }
-
-            $output->writeln($includeStmt);
+            $this->printDirectoryIncludeStatement($output, $statement);
         }
+    }
+
+    private function printFileIncludeStatement(OutputInterface $output, FileIncludeStatement $statement)
+    {
+        if ($statement->newSyntax) {
+            $output->writeln('@import \'' . $statement->filename . '\'');
+        } else {
+            $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
+        }
+    }
+
+    private function printDirectoryIncludeStatement(OutputInterface $output, DirectoryIncludeStatement $statement)
+    {
+        $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">';
+        if ($statement->extensions) {
+            $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">';
+        }
+
+        $output->writeln($includeStmt);
     }
 
     /**
