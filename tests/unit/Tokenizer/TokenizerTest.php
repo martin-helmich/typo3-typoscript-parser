@@ -78,6 +78,17 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
             ]),
         ]];
 
+        // https://github.com/martin-helmich/typo3-typoscript-parser/issues/30
+        yield ["<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">", [
+            new Token(Token::TYPE_INCLUDE, "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">", 1, 1, [
+                0          => "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">",
+                'type'     => 'FILE',
+                1          => 'FILE',
+                'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+            ]),
+        ]];
+
         yield ["@import 'EXT:foo/Configuration/TypoScript/setup.typoscript'", [
             new Token(Token::TYPE_INCLUDE_NEW, "@import 'EXT:foo/Configuration/TypoScript/setup.typoscript'", 1, 1, [
                 0          => "@import 'EXT:foo/Configuration/TypoScript/setup.typoscript'",
