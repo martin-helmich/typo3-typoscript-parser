@@ -43,7 +43,7 @@ class PrettyPrinter implements ASTPrinterInterface
     private function printStatementList(array $statements, OutputInterface $output, $nesting = 0)
     {
         $indent = $this->getIndent($nesting);
-        $count = count($statements);
+        $count  = count($statements);
         //foreach ($statements as $statement) {
         for ($i = 0; $i < $count; $i++) {
             $statement = $statements[$i];
@@ -67,7 +67,7 @@ class PrettyPrinter implements ASTPrinterInterface
                     )
                 );
             } elseif ($statement instanceof ConditionalStatement) {
-                $next = $i + 1 < $count ? $statements[$i + 1] : null;
+                $next     = $i + 1 < $count ? $statements[$i + 1] : null;
                 $previous = $i - 1 >= 0 ? $statements[$i - 1] : null;
 
                 $this->printConditionalStatement(
@@ -113,16 +113,28 @@ class PrettyPrinter implements ASTPrinterInterface
         if ($statement->newSyntax) {
             $output->writeln('@import \'' . $statement->filename . '\'');
         } else {
-            $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '">');
+            $attributes = "";
+
+            if ($statement->condition) {
+                $attributes = ' condition="' . $statement->condition . '"';
+            }
+
+            $output->writeln('<INCLUDE_TYPOSCRIPT: source="FILE:' . $statement->filename . '"' . $attributes . '>');
         }
     }
 
     private function printDirectoryIncludeStatement(OutputInterface $output, DirectoryIncludeStatement $statement)
     {
-        $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '">';
+        $attributes = "";
+
         if ($statement->extensions) {
-            $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '" extensions="' . $statement->extensions . '">';
+            $attributes .= ' extensions="' . $statement->extensions . '"';
         }
+        if ($statement->condition) {
+            $attributes .= ' condition="' . $statement->condition . '"';
+        }
+
+        $includeStmt = '<INCLUDE_TYPOSCRIPT: source="DIR:' . $statement->directory . '"' . $attributes . '>';
 
         $output->writeln($includeStmt);
     }

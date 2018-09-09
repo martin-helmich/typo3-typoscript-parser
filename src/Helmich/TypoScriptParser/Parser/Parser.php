@@ -1,10 +1,10 @@
 <?php
+
 namespace Helmich\TypoScriptParser\Parser;
 
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
-use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 
@@ -218,7 +218,7 @@ class Parser implements ParserInterface
                 ));
                 $state->next();
                 break;
-            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
+            } else if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
                     $inElseBranch,
                     sprintf('Duplicate else in conditional statement in line %d.', $state->token()->getLine()),
@@ -229,7 +229,7 @@ class Parser implements ParserInterface
                 $inElseBranch = true;
                 $subContext   = $subContext->withStatements($elseStatements);
                 $state->next();
-            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION) {
+            } else if ($state->token()->getType() === TokenInterface::TYPE_CONDITION) {
                 $state->statements()->append(
                     $this->builder->condition(
                         $condition,
@@ -264,16 +264,44 @@ class Parser implements ParserInterface
     {
         $token = $state->token();
 
+        $extensions = null;
+        $condition  = null;
+        $optional   = $token->getSubMatch("optional");
+
+        if (preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
+            for ($i = 0; $i < count($matches[0]); $i++) {
+                $key   = $matches['key'][$i];
+                $value = $matches['value'][$i];
+
+                switch ($key) {
+                    case "extensions":
+                        if ($token->getSubMatch('type') === 'FILE') {
+                            throw new ParseError("FILE includes may not have an 'extension' attribute", 0, $token->getLine());
+                        }
+
+                        $extensions = $value;
+                        break;
+                    case "condition":
+                        $condition = $value;
+                        break;
+                    default:
+                        throw new ParseError("unknown attribute '$key' found in INCLUDE statement", 0, $token->getLine());
+                }
+            }
+        }
+
         if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
             $node = $this->builder->includeFile(
                 $token->getSubMatch('filename'),
                 $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
+                $condition,
                 $token->getLine()
             );
         } else {
             $node = $this->builder->includeDirectory(
                 $token->getSubMatch('filename'),
-                $token->getSubMatch('extensions'),
+                $extensions,
+                $condition,
                 $token->getLine()
             );
         }
@@ -374,7 +402,7 @@ class Parser implements ParserInterface
             $token->getSubMatch('name'),
             $token->getSubMatch('arguments')
         );
-        
+
         $modification = $this->builder->op()->modification(
             $state->context(),
             $call,

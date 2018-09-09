@@ -1,4 +1,5 @@
 <?php
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -33,25 +34,27 @@ class Builder
     }
 
     /**
-     * @param string $directory
-     * @param string $extensions
-     * @param int    $line
+     * @param string      $directory
+     * @param string      $extensions
+     * @param string|null $condition
+     * @param int         $line
      * @return DirectoryIncludeStatement
      */
-    public function includeDirectory($directory, $extensions, $line)
+    public function includeDirectory($directory, $extensions, $condition, $line)
     {
-        return new DirectoryIncludeStatement($directory, $extensions, $line);
+        return new DirectoryIncludeStatement($directory, $extensions, $condition, $line);
     }
 
     /**
-     * @param string  $file
-     * @param boolean $newSyntax
-     * @param int     $line
+     * @param string      $file
+     * @param boolean     $newSyntax
+     * @param string|null $condition
+     * @param int         $line
      * @return FileIncludeStatement
      */
-    public function includeFile($file, $newSyntax, $line)
+    public function includeFile($file, $newSyntax, $condition, $line)
     {
-        return new FileIncludeStatement($file, $newSyntax, $line);
+        return new FileIncludeStatement($file, $newSyntax, $condition, $line);
     }
 
     /**
