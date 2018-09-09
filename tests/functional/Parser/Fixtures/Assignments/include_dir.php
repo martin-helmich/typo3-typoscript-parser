@@ -1,9 +1,9 @@
 <?php
 return [
     new \Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
-        'foo/', 'typoscript', 1
+        'foo/', 'typoscript', null, 1
     ),
     new \Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
-        'bar/', '', 2
+        'bar/', '', null, 2
     ),
 ];

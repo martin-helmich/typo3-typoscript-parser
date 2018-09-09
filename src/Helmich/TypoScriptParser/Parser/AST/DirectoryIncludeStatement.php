@@ -1,4 +1,5 @@
 <?php
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -18,6 +19,13 @@ class DirectoryIncludeStatement extends IncludeStatement
     public $directory;
 
     /**
+     * Conditional statement that is attached to this include
+     *
+     * @var string|null
+     */
+    public $condition;
+
+    /**
      * Same as extensions
      *
      * @var string
@@ -35,16 +43,18 @@ class DirectoryIncludeStatement extends IncludeStatement
     /**
      * Constructs a new directory include statement.
      *
-     * @param string $directory  The directory to include from.
-     * @param string $extensions The file extension filter. MAY be NULL.
-     * @param int    $sourceLine The original source line.
+     * @param string      $directory  The directory to include from.
+     * @param string      $extensions The file extension filter. MAY be NULL.
+     * @param string|null $condition  Conditional statement that is attached to this include
+     * @param int         $sourceLine The original source line.
      */
-    public function __construct($directory, $extensions, $sourceLine)
+    public function __construct($directory, $extensions, $condition, $sourceLine)
     {
         parent::__construct($sourceLine);
 
         $this->directory  = $directory;
         $this->extension  = $extensions;
         $this->extensions = $extensions;
+        $this->condition  = $condition;
     }
 }

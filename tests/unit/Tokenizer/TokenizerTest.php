@@ -75,6 +75,8 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
                 1          => 'FILE',
                 'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
                 2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                'optional' => '',
+                3          => '',
             ]),
         ]];
 
@@ -86,6 +88,47 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
                 1          => 'FILE',
                 'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
                 2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                'optional' => '',
+                3          => '',
+            ]),
+        ]];
+
+        // https://github.com/martin-helmich/typo3-typoscript-lint/issues/63
+        yield ["<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\">", [
+            new Token(Token::TYPE_INCLUDE, "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\">", 1, 1, [
+                0          => "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\">",
+                'type'     => 'FILE',
+                1          => 'FILE',
+                'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                'optional' => 'extensions="typoscript"',
+                3          => 'extensions="typoscript"',
+            ]),
+        ]];
+
+        // https://github.com/martin-helmich/typo3-typoscript-lint/issues/63
+        yield ["<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">", [
+            new Token(Token::TYPE_INCLUDE, "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">", 1, 1, [
+                0          => "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">",
+                'type'     => 'FILE',
+                1          => 'FILE',
+                'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                'optional' => 'condition="YourVendor\YourPackage\YourCondition"',
+                3          => 'condition="YourVendor\YourPackage\YourCondition"',
+            ]),
+        ]];
+
+        // https://github.com/martin-helmich/typo3-typoscript-lint/issues/63
+        yield ["<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">", [
+            new Token(Token::TYPE_INCLUDE, "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">", 1, 1, [
+                0          => "<INCLUDE_TYPOSCRIPT:source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\" extensions=\"typoscript\" condition=\"YourVendor\YourPackage\YourCondition\">",
+                'type'     => 'FILE',
+                1          => 'FILE',
+                'filename' => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                2          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
+                'optional' => 'extensions="typoscript" condition="YourVendor\YourPackage\YourCondition"',
+                3          => 'extensions="typoscript" condition="YourVendor\YourPackage\YourCondition"',
             ]),
         ]];
 
