@@ -293,28 +293,30 @@ class Parser implements ParserInterface
      */
     private function parseIncludeOptionals($optional, TokenInterface $token)
     {
+        if (!preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
+            return [null, null];
+        }
+
         $extensions = null;
         $condition  = null;
 
-        if (preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
-            for ($i = 0; $i < count($matches[0]); $i++) {
-                $key   = $matches['key'][$i];
-                $value = $matches['value'][$i];
+        for ($i = 0; $i < count($matches[0]); $i++) {
+            $key   = $matches['key'][$i];
+            $value = $matches['value'][$i];
 
-                switch ($key) {
-                    case "extensions":
-                        if ($token->getSubMatch('type') === 'FILE') {
-                            throw new ParseError("FILE includes may not have an 'extension' attribute", 0, $token->getLine());
-                        }
+            switch ($key) {
+                case "extensions":
+                    if ($token->getSubMatch('type') === 'FILE') {
+                        throw new ParseError("FILE includes may not have an 'extension' attribute", 0, $token->getLine());
+                    }
 
-                        $extensions = $value;
-                        break;
-                    case "condition":
-                        $condition = $value;
-                        break;
-                    default:
-                        throw new ParseError("unknown attribute '$key' found in INCLUDE statement", 0, $token->getLine());
-                }
+                    $extensions = $value;
+                    break;
+                case "condition":
+                    $condition = $value;
+                    break;
+                default:
+                    throw new ParseError("unknown attribute '$key' found in INCLUDE statement", 0, $token->getLine());
             }
         }
 
