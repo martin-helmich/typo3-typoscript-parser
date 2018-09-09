@@ -218,7 +218,7 @@ class Parser implements ParserInterface
                 ));
                 $state->next();
                 break;
-            } else if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
+            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
                     $inElseBranch,
                     sprintf('Duplicate else in conditional statement in line %d.', $state->token()->getLine()),
@@ -229,7 +229,7 @@ class Parser implements ParserInterface
                 $inElseBranch = true;
                 $subContext   = $subContext->withStatements($elseStatements);
                 $state->next();
-            } else if ($state->token()->getType() === TokenInterface::TYPE_CONDITION) {
+            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION) {
                 $state->statements()->append(
                     $this->builder->condition(
                         $condition,
@@ -264,9 +264,37 @@ class Parser implements ParserInterface
     {
         $token = $state->token();
 
+        list($extensions, $condition) = $this->parseIncludeOptionals($token->getSubMatch('optional'), $token);
+
+        if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
+            $node = $this->builder->includeFile(
+                $token->getSubMatch('filename'),
+                $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
+                $condition,
+                $token->getLine()
+            );
+        } else {
+            $node = $this->builder->includeDirectory(
+                $token->getSubMatch('filename'),
+                $extensions,
+                $condition,
+                $token->getLine()
+            );
+        }
+
+        $state->statements()->append($node);
+    }
+
+    /**
+     * @param string         $optional
+     * @param TokenInterface $token
+     * @return array
+     * @throws ParseError
+     */
+    private function parseIncludeOptionals($optional, TokenInterface $token)
+    {
         $extensions = null;
         $condition  = null;
-        $optional   = $token->getSubMatch("optional");
 
         if (preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
             for ($i = 0; $i < count($matches[0]); $i++) {
@@ -290,23 +318,7 @@ class Parser implements ParserInterface
             }
         }
 
-        if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
-            $node = $this->builder->includeFile(
-                $token->getSubMatch('filename'),
-                $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
-                $condition,
-                $token->getLine()
-            );
-        } else {
-            $node = $this->builder->includeDirectory(
-                $token->getSubMatch('filename'),
-                $extensions,
-                $condition,
-                $token->getLine()
-            );
-        }
-
-        $state->statements()->append($node);
+        return [$extensions, $condition];
     }
 
     /**
