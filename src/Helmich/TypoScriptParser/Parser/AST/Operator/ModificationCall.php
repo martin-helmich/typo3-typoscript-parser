@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 /**
@@ -29,7 +30,7 @@ class ModificationCall
      * @param string $method    The method name.
      * @param string $arguments The argument list.
      */
-    public function __construct($method, $arguments)
+    public function __construct(string $method, string $arguments)
     {
         $this->arguments = $arguments;
         $this->method    = $method;

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser;
 
 use BadMethodCallException;
@@ -29,7 +30,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param int $lookAhead
      * @return TokenInterface
      */
-    public function current($lookAhead = 0)
+    public function current(int $lookAhead = 0): TokenInterface
     {
         return $this[$this->index + $lookAhead];
     }
@@ -38,7 +39,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param int $increment
      * @return void
      */
-    public function next($increment = 1)
+    public function next(int $increment = 1): void
     {
         if ($this->index < count($this->tokens)) {
             $this->index += $increment;
@@ -48,7 +49,7 @@ class TokenStream implements Iterator, \ArrayAccess
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return ($this->index) < count($this->tokens);
     }
@@ -56,7 +57,7 @@ class TokenStream implements Iterator, \ArrayAccess
     /**
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
@@ -64,7 +65,7 @@ class TokenStream implements Iterator, \ArrayAccess
     /**
      * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
@@ -73,7 +74,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param int $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $offset >= 0 && $offset < count($this->tokens);
     }
@@ -82,7 +83,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param int $offset
      * @return TokenInterface
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): TokenInterface
     {
         return $this->tokens[$offset];
     }
@@ -119,7 +120,7 @@ class TokenStream implements Iterator, \ArrayAccess
      *
      * @return TokenStream
      */
-    public function normalized()
+    public function normalized(): TokenStream
     {
         $filteredTokens = [];
         $ignoredTokens  = [
@@ -130,7 +131,7 @@ class TokenStream implements Iterator, \ArrayAccess
         $maxLine = 0;
 
         foreach ($this->tokens as $token) {
-            $maxLine = max($token->getLine(), $maxLine);
+            $maxLine = (int)max($token->getLine(), $maxLine);
 
             // Trim unnecessary whitespace, but leave line breaks! These are important!
             if ($token->getType() === TokenInterface::TYPE_WHITESPACE) {

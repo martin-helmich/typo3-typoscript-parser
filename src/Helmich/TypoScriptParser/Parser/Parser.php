@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser;
 
@@ -26,7 +26,7 @@ class Parser implements ParserInterface
      * Parser constructor.
      *
      * @param TokenizerInterface $tokenizer
-     * @param Builder            $astBuilder
+     * @param Builder|null       $astBuilder
      */
     public function __construct(TokenizerInterface $tokenizer, Builder $astBuilder = null)
     {
@@ -42,9 +42,13 @@ class Parser implements ParserInterface
      * @param string $stream The stream resource.
      * @return Statement[] The syntax tree.
      */
-    public function parseStream($stream)
+    public function parseStream(string $stream): array
     {
         $content = file_get_contents($stream);
+        if ($content === false) {
+            throw new \InvalidArgumentException("could not open file '${stream}'");
+        }
+
         return $this->parseString($content);
     }
 
@@ -54,7 +58,7 @@ class Parser implements ParserInterface
      * @param string $content The string to parse.
      * @return Statement[] The syntax tree.
      */
-    public function parseString($content)
+    public function parseString(string $content): array
     {
         $tokens = $this->tokenizer->tokenizeString($content);
         return $this->parseTokens($tokens);
@@ -66,7 +70,7 @@ class Parser implements ParserInterface
      * @param TokenInterface[] $tokens The token stream to parse.
      * @return Statement[] The syntax tree.
      */
-    public function parseTokens(array $tokens)
+    public function parseTokens(array $tokens): array
     {
         $stream = (new TokenStream($tokens))->normalized();
         $state  = new ParserState($stream);
@@ -91,7 +95,7 @@ class Parser implements ParserInterface
      * @return void
      * @throws ParseError
      */
-    private function parseToken(ParserState $state)
+    private function parseToken(ParserState $state): void
     {
         switch ($state->token()->getType()) {
             case TokenInterface::TYPE_OBJECT_IDENTIFIER:
@@ -128,7 +132,7 @@ class Parser implements ParserInterface
         }
     }
 
-    private function triggerParseErrorIf($condition, $message, $code, $line)
+    private function triggerParseErrorIf(bool $condition, string $message, int $code, int $line): void
     {
         if ($condition) {
             throw new ParseError(
@@ -141,11 +145,11 @@ class Parser implements ParserInterface
 
     /**
      * @param ParserState $state
-     * @param int         $startLine
+     * @param int|null    $startLine
      * @return void
      * @throws ParseError
      */
-    private function parseNestedStatements(ParserState $state, $startLine = null)
+    private function parseNestedStatements(ParserState $state, ?int $startLine = null): void
     {
         $startLine  = $startLine ?: $state->token()->getLine();
         $statements = new ArrayObject();
@@ -187,7 +191,7 @@ class Parser implements ParserInterface
      * @param ParserState $state
      * @throws ParseError
      */
-    private function parseCondition(ParserState $state)
+    private function parseCondition(ParserState $state): void
     {
         if ($state->context()->depth() !== 0) {
             throw new ParseError(
@@ -260,22 +264,28 @@ class Parser implements ParserInterface
     /**
      * @param ParserState $state
      */
-    private function parseInclude(ParserState $state)
+    private function parseInclude(ParserState $state): void
     {
         $token = $state->token();
+        $extensions = null;
+        $condition  = null;
+        $filename = $token->getSubMatch('filename') ?? '';
+        $optional = $token->getSubMatch('optional');
 
-        list($extensions, $condition) = $this->parseIncludeOptionals($token->getSubMatch('optional'), $token);
+        if ($optional !== null) {
+            list($extensions, $condition) = $this->parseIncludeOptionals($optional, $token);
+        }
 
         if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
             $node = $this->builder->includeFile(
-                $token->getSubMatch('filename'),
+                $filename,
                 $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
                 $condition,
                 $token->getLine()
             );
         } else {
             $node = $this->builder->includeDirectory(
-                $token->getSubMatch('filename'),
+                $filename,
                 $extensions,
                 $condition,
                 $token->getLine()
@@ -291,7 +301,7 @@ class Parser implements ParserInterface
      * @return array
      * @throws ParseError
      */
-    private function parseIncludeOptionals($optional, TokenInterface $token)
+    private function parseIncludeOptionals(string $optional, TokenInterface $token): array
     {
         if (!preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
             return [null, null];
@@ -327,7 +337,7 @@ class Parser implements ParserInterface
      * @param ParserState $state
      * @throws ParseError
      */
-    private function parseValueOperation(ParserState $state)
+    private function parseValueOperation(ParserState $state): void
     {
         switch ($state->token(1)->getType()) {
             case TokenInterface::TYPE_OPERATOR_ASSIGNMENT:
@@ -352,7 +362,7 @@ class Parser implements ParserInterface
     /**
      * @param ParserState $state
      */
-    private function parseAssignment(ParserState $state)
+    private function parseAssignment(ParserState $state): void
     {
         switch ($state->token(2)->getType()) {
             case TokenInterface::TYPE_OBJECT_CONSTRUCTOR:
@@ -386,7 +396,7 @@ class Parser implements ParserInterface
      * @param ParserState $state
      * @throws ParseError
      */
-    private function parseCopyOrReference(ParserState $state)
+    private function parseCopyOrReference(ParserState $state): void
     {
         $targetToken = $state->token(2);
         $this->validateCopyOperatorRightValue($targetToken);
@@ -407,7 +417,7 @@ class Parser implements ParserInterface
      * @param ParserState $state
      * @throws ParseError
      */
-    private function parseModification(ParserState $state)
+    private function parseModification(ParserState $state): void
     {
         $token = $state->token(2);
         $this->validateModifyOperatorRightValue($token);
@@ -431,7 +441,7 @@ class Parser implements ParserInterface
      * @param ParserState $state
      * @throws ParseError
      */
-    private function parseDeletion(ParserState $state)
+    private function parseDeletion(ParserState $state): void
     {
         if ($state->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE) {
             throw new ParseError(
@@ -448,7 +458,7 @@ class Parser implements ParserInterface
     /**
      * @param ParserState $state
      */
-    private function parseMultilineAssigment(ParserState $state)
+    private function parseMultilineAssigment(ParserState $state): void
     {
         $state->statements()->append($this->builder->op()->assignment(
             $state->context(),
@@ -462,7 +472,7 @@ class Parser implements ParserInterface
      * @param TokenInterface $token
      * @throws ParseError
      */
-    private function validateModifyOperatorRightValue(TokenInterface $token)
+    private function validateModifyOperatorRightValue(TokenInterface $token): void
     {
         if ($token->getType() !== TokenInterface::TYPE_OBJECT_MODIFIER) {
             throw new ParseError(
@@ -477,7 +487,7 @@ class Parser implements ParserInterface
      * @param TokenInterface $token
      * @throws ParseError
      */
-    private function validateCopyOperatorRightValue(TokenInterface $token)
+    private function validateCopyOperatorRightValue(TokenInterface $token): void
     {
         if ($token->getType() !== TokenInterface::TYPE_OBJECT_IDENTIFIER) {
             throw new ParseError(

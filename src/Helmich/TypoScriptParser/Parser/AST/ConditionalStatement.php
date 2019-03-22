@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -39,7 +40,7 @@ class ConditionalStatement extends Statement
      * @param Statement[] $elseStatements The statements in the else-branch (may be empty).
      * @param int         $sourceLine     The original source line.
      */
-    public function __construct($condition, array $ifStatements, array $elseStatements, $sourceLine)
+    public function __construct(string $condition, array $ifStatements, array $elseStatements, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

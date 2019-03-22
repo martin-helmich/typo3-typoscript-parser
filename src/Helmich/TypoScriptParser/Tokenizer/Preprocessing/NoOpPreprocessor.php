@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
 /**
@@ -12,7 +13,7 @@ class NoOpPreprocessor implements Preprocessor
      * @param string $contents Un-processed Typoscript contents
      * @return string Processed TypoScript contents
      */
-    public function preprocess($contents)
+    public function preprocess(string $contents): string
     {
         return $contents;
     }

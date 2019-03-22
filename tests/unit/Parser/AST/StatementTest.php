@@ -2,8 +2,9 @@
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser\AST;
 
 use Helmich\TypoScriptParser\Parser\AST\Statement;
+use PHPUnit\Framework\TestCase;
 
-class StatementTest extends \PHPUnit_Framework_TestCase
+class StatementTest extends TestCase
 {
     public function dataForInvalidSourceLines()
     {
@@ -16,11 +17,11 @@ class StatementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataForInvalidSourceLines
-     * @expectedException \InvalidArgumentException
      * @param $invalidSourceLine
      */
     public function testInvalidSourceLineThrowsException($invalidSourceLine)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $statement = $this
             ->getMockBuilder(Statement::class)
             ->setConstructorArgs([$invalidSourceLine])

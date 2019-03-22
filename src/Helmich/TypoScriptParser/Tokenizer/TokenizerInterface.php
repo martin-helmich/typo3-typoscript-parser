@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 /**
@@ -13,11 +14,11 @@ interface TokenizerInterface
      * @param string $inputString
      * @return TokenInterface[]
      */
-    public function tokenizeString($inputString);
+    public function tokenizeString(string $inputString): array;
 
     /**
      * @param string $inputStream
      * @return TokenInterface[]
      */
-    public function tokenizeStream($inputStream);
+    public function tokenizeStream(string $inputStream): array;
 }

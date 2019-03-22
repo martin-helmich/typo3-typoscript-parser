@@ -17,6 +17,8 @@ engines:
     checks:
       CleanCode/ElseExpression:
         enabled: false
+      CleanCode/BooleanArgumentFlag:
+        enabled: false
       Naming/LongVariable:
         enabled: false
       Naming/ShortVariable:

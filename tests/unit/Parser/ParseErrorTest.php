@@ -2,13 +2,14 @@
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser;
 
 use Helmich\TypoScriptParser\Parser\ParseError;
+use PHPUnit\Framework\TestCase;
 
-class ParseErrorTest extends \PHPUnit_Framework_TestCase
+class ParseErrorTest extends TestCase
 {
     /** @var ParseError */
     private $exc;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->exc = new ParseError('foobar', 1234, 4321);
     }

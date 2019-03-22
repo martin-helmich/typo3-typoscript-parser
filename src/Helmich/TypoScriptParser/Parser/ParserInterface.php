@@ -1,5 +1,8 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser;
+
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 interface ParserInterface
 {
@@ -9,23 +12,23 @@ interface ParserInterface
      * This can be any kind of stream supported by PHP (e.g. a filename or a URL).
      *
      * @param string $stream The stream resource.
-     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
+     * @return Statement[] The syntax tree.
      */
-    public function parseStream($stream);
+    public function parseStream(string $stream): array;
 
     /**
      * Parses a TypoScript string.
      *
      * @param string $string The string to parse.
-     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
+     * @return Statement[] The syntax tree.
      */
-    public function parseString($string);
+    public function parseString(string $string): array;
 
     /**
      * Parses a token stream.
      *
      * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens The token stream to parse.
-     * @return \Helmich\TypoScriptParser\Parser\AST\Statement[] The syntax tree.
+     * @return Statement[] The syntax tree.
      */
-    public function parseTokens(array $tokens);
+    public function parseTokens(array $tokens): array;
 }

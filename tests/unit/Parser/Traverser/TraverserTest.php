@@ -1,7 +1,6 @@
 <?php
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser\Traverser;
 
-use Foo\Bar\TestClassInBar;
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
@@ -9,15 +8,16 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\Traverser\Traverser;
 use Helmich\TypoScriptParser\Parser\Traverser\Visitor;
+use PHPUnit\Framework\TestCase;
 
-class TraverserTest extends \PHPUnit_Framework_TestCase
+class TraverserTest extends TestCase
 {
     private $tree;
 
     /** @var Traverser */
     private $traverser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tree = [
             new Assignment(

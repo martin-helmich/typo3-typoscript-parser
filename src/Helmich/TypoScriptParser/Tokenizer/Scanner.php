@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 /**
@@ -18,27 +19,27 @@ class Scanner implements \Iterator
         $this->lines = $lines;
     }
 
-    public function current()
+    public function current(): ScannerLine
     {
         return new ScannerLine($this->index + 1, $this->lines[$this->index]);
     }
 
-    public function next()
+    public function next(): void
     {
-        $this->index ++;
+        $this->index++;
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->index < count($this->lines);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }

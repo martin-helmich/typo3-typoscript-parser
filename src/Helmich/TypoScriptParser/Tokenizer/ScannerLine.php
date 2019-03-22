@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 class ScannerLine
@@ -7,7 +8,7 @@ class ScannerLine
     private $index;
     private $original;
 
-    public function __construct($index, $line)
+    public function __construct(int $index, string $line)
     {
         $this->line     = $line;
         $this->original = $line;
@@ -16,12 +17,12 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array|bool
+     * @return array|false
      */
-    public function scan($pattern)
+    public function scan(string $pattern)
     {
         if (preg_match($pattern, $this->line, $matches)) {
-            $this->line = substr($this->line, strlen($matches[0]));
+            $this->line = substr($this->line, strlen($matches[0])) ?: "";
             return $matches;
         }
 
@@ -30,9 +31,9 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array|bool
+     * @return string[]|false
      */
-    public function peek($pattern)
+    public function peek(string $pattern)
     {
         if (preg_match($pattern, $this->line, $matches)) {
             return $matches;
@@ -41,17 +42,22 @@ class ScannerLine
         return false;
     }
 
-    public function index()
+    public function index(): int
     {
         return $this->index;
     }
 
-    public function value()
+    public function value(): string
     {
         return $this->line;
     }
 
-    public function __toString()
+    public function length(): int
+    {
+        return strlen($this->line);
+    }
+
+    public function __toString(): string
     {
         return $this->original;
     }

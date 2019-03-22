@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
@@ -25,7 +26,7 @@ abstract class UnaryOperator extends Statement
      * @param ObjectPath $object     The object to operate on.
      * @param int        $sourceLine The original source line.
      */
-    public function __construct(ObjectPath $object, $sourceLine)
+    public function __construct(ObjectPath $object, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

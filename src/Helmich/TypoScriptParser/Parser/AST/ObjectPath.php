@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -19,7 +20,7 @@ class ObjectPath
     /**
      * The absolute object path, as evaluated from parent nested statements.
      *
-     * @var
+     * @var string
      */
     public $absoluteName;
 
@@ -29,7 +30,7 @@ class ObjectPath
      * @param string $absoluteName The absolute object path.
      * @param string $relativeName The relative object path.
      */
-    public function __construct($absoluteName, $relativeName)
+    public function __construct(string $absoluteName, string $relativeName)
     {
         $this->absoluteName = $absoluteName;
         $this->relativeName = $relativeName;
@@ -38,7 +39,7 @@ class ObjectPath
     /**
      * @return int
      */
-    public function depth()
+    public function depth(): int
     {
         return count(explode('.', $this->absoluteName));
     }
@@ -48,7 +49,7 @@ class ObjectPath
      *
      * @return ObjectPath The path to the parent object.
      */
-    public function parent()
+    public function parent(): ObjectPath
     {
         $components = explode('.', $this->absoluteName);
         if (count($components) === 1) {
@@ -62,7 +63,7 @@ class ObjectPath
      * @param string $name
      * @return static
      */
-    public function append($name)
+    public function append(string $name): self
     {
         if ($name[0] === '.') {
             return new static($this->absoluteName . $name, $name);

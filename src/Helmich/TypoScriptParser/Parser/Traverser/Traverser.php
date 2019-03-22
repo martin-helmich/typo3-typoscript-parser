@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\Traverser;
 
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
@@ -31,7 +32,7 @@ class Traverser
     /**
      * @param Visitor $visitor
      */
-    public function addVisitor(Visitor $visitor)
+    public function addVisitor(Visitor $visitor): void
     {
         $this->visitors->addVisitor($visitor);
     }
@@ -39,7 +40,7 @@ class Traverser
     /**
      * @return void
      */
-    public function walk()
+    public function walk(): void
     {
         $this->visitors->enterTree($this->statements);
         $this->walkRecursive($this->statements);
@@ -50,7 +51,7 @@ class Traverser
      * @param Statement[] $statements
      * @return Statement[]
      */
-    private function walkRecursive(array $statements)
+    private function walkRecursive(array $statements): array
     {
         foreach ($statements as $statement) {
             $this->visitors->enterNode($statement);

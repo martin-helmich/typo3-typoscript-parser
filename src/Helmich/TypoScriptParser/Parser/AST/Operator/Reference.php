@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
@@ -23,7 +24,7 @@ class Reference extends BinaryObjectOperator
      * @param ObjectPath $target     The target object.
      * @param int        $sourceLine The original source line.
      */
-    public function __construct(ObjectPath $object, ObjectPath $target, $sourceLine)
+    public function __construct(ObjectPath $object, ObjectPath $target, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

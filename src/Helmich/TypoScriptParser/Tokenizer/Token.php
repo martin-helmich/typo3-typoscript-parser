@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 class Token implements TokenInterface
@@ -25,7 +26,7 @@ class Token implements TokenInterface
      * @param int    $column
      * @param array  $patternMatches
      */
-    public function __construct($type, $value, $line, $column = 1, array $patternMatches = [])
+    public function __construct(string $type, string $value, int $line, int $column = 1, array $patternMatches = [])
     {
         $this->type           = $type;
         $this->value          = $value;
@@ -37,7 +38,7 @@ class Token implements TokenInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -45,16 +46,16 @@ class Token implements TokenInterface
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
      * @param string $string
-     * @return array
+     * @return string|null
      */
-    public function getSubMatch($string)
+    public function getSubMatch(string $string): ?string
     {
         return isset($this->patternMatches[$string]) ? $this->patternMatches[$string] : null;
     }
@@ -62,7 +63,7 @@ class Token implements TokenInterface
     /**
      * @return int
      */
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
@@ -70,7 +71,7 @@ class Token implements TokenInterface
     /**
      * @return int
      */
-    public function getColumn()
+    public function getColumn(): int
     {
         return $this->column;
     }

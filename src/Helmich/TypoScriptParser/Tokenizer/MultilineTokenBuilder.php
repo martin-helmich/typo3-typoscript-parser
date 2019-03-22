@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 /**
@@ -11,16 +12,16 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class MultilineTokenBuilder
 {
-    /** @var string */
+    /** @var string|null */
     private $type = null;
 
-    /** @var string */
+    /** @var string|null */
     private $value = null;
 
-    /** @var int */
+    /** @var int|null */
     private $startLine = null;
 
-    /** @var int */
+    /** @var int|null */
     private $startColumn = null;
 
     /**
@@ -29,7 +30,7 @@ class MultilineTokenBuilder
      * @param int    $line   Starting line in source code
      * @param int    $column Starting column in source code
      */
-    public function startMultilineToken($type, $value, $line, $column)
+    public function startMultilineToken(string $type, string $value, int $line, int $column)
     {
         $this->type        = $type;
         $this->value       = $value;
@@ -40,8 +41,12 @@ class MultilineTokenBuilder
     /**
      * @param string $append Token content to append
      */
-    public function appendToToken($append)
+    public function appendToToken(string $append): void
     {
+        if ($this->value === null) {
+            $this->value = "";
+        }
+
         $this->value .= $append;
     }
 
@@ -49,15 +54,22 @@ class MultilineTokenBuilder
      * @param string $append Token content to append
      * @return TokenInterface
      */
-    public function endMultilineToken($append = '')
+    public function endMultilineToken(string $append = ''): TokenInterface
     {
-        $this->value .= $append;
+        $value       = ($this->value ?? "") . $append;
+        $type        = $this->type;
+        $startLine   = $this->startLine;
+        $startColumn = $this->startColumn;
+
+        if ($type === null || $startLine === null || $startColumn === null) {
+            throw new TokenizerException('cannot call "endMultilineToken" before calling "startMultilineToken"');
+        }
 
         $token = new Token(
-            $this->type,
-            rtrim($this->value),
-            $this->startLine,
-            $this->startColumn
+            $type,
+            rtrim($value),
+            $startLine,
+            $startColumn
         );
 
         $this->reset();
@@ -65,9 +77,9 @@ class MultilineTokenBuilder
     }
 
     /**
-     * @return string Token type (one of `TokenInterface::TYPE_*`)
+     * @return string|null Token type (one of `TokenInterface::TYPE_*`)
      */
-    public function currentTokenType()
+    public function currentTokenType(): ?string
     {
         return $this->type;
     }
@@ -75,7 +87,7 @@ class MultilineTokenBuilder
     /**
      * @return void
      */
-    private function reset()
+    private function reset(): void
     {
         $this->type        = null;
         $this->value       = null;

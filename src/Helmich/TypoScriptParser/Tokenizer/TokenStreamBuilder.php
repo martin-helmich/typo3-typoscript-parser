@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 use ArrayObject;
@@ -14,7 +15,10 @@ class TokenStreamBuilder
     /** @var ArrayObject */
     private $tokens;
 
+    /** @var int */
     private $currentLine = null;
+
+    /** @var int */
     private $currentColumn = null;
 
     /**
@@ -34,10 +38,10 @@ class TokenStreamBuilder
      * @param array  $patternMatches Subpattern matches
      * @return void
      */
-    public function append($type, $value, $line, array $patternMatches = [])
+    public function append(string $type, string $value, int $line, array $patternMatches = []): void
     {
         if ($this->currentLine !== $line) {
-            $this->currentLine = $line;
+            $this->currentLine   = $line;
             $this->currentColumn = 1;
         }
 
@@ -52,7 +56,7 @@ class TokenStreamBuilder
      * @param TokenInterface $token The token to append
      * @return void
      */
-    public function appendToken(TokenInterface $token)
+    public function appendToken(TokenInterface $token): void
     {
         $this->tokens->append($token);
     }
@@ -60,7 +64,7 @@ class TokenStreamBuilder
     /**
      * @return int The length of the token stream
      */
-    public function count()
+    public function count(): int
     {
         return $this->tokens->count();
     }
@@ -68,7 +72,7 @@ class TokenStreamBuilder
     /**
      * @return int
      */
-    public function currentColumn()
+    public function currentColumn(): int
     {
         return $this->currentColumn;
     }
@@ -76,7 +80,7 @@ class TokenStreamBuilder
     /**
      * @return ArrayObject The completed token stream
      */
-    public function build()
+    public function build(): ArrayObject
     {
         return $this->tokens;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
@@ -39,7 +39,7 @@ class FileIncludeStatement extends IncludeStatement
      * @param string|null $condition  Conditional statement that is attached to this include
      * @param int         $sourceLine The original source line.
      */
-    public function __construct($filename, $newSyntax, $condition, $sourceLine)
+    public function __construct(string $filename, bool $newSyntax, ?string $condition, int $sourceLine)
     {
         parent::__construct($sourceLine);
         $this->filename  = $filename;

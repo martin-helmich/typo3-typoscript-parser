@@ -2,13 +2,14 @@
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser\AST;
 
 use Helmich\TypoScriptParser\Parser\AST\RootObjectPath;
+use PHPUnit\Framework\TestCase;
 
-class RootObjectPathTest extends \PHPUnit_Framework_TestCase
+class RootObjectPathTest extends TestCase
 {
     /** @var RootObjectPath */
     private $path;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->path = new RootObjectPath();
     }

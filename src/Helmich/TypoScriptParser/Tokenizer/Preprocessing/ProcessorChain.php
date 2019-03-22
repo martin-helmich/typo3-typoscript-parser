@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
 /**
@@ -15,9 +16,9 @@ class ProcessorChain implements Preprocessor
      * @param Preprocessor $next
      * @return static
      */
-    public function with(Preprocessor $next)
+    public function with(Preprocessor $next): self
     {
-        $new = new static();
+        $new             = new static();
         $new->processors = array_merge($this->processors, [$next]);
         return $new;
     }
@@ -26,7 +27,7 @@ class ProcessorChain implements Preprocessor
      * @param string $contents Un-processed Typoscript contents
      * @return string Processed TypoScript contents
      */
-    public function preprocess($contents)
+    public function preprocess(string $contents): string
     {
         foreach ($this->processors as $p) {
             $contents = $p->preprocess($contents);

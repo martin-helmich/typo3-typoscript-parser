@@ -1,18 +1,20 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer\Printer;
+
+use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
 class CodeTokenPrinter implements TokenPrinterInterface
 {
     /**
-     * @param \Helmich\TypoScriptParser\Tokenizer\TokenInterface[] $tokens
+     * @param TokenInterface[] $tokens
      * @return string
      */
-    public function printTokenStream(array $tokens)
+    public function printTokenStream(array $tokens): string
     {
         $content = '';
 
         foreach ($tokens as $token) {
-            #$content .= sprintf("%20s %s\n", $token->getType(), Yaml::dump($token->getValue()));
             $content .= $token->getValue();
         }
 

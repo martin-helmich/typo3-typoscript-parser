@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser;
 
 use Symfony\Component\Config\FileLocator;
@@ -33,7 +34,7 @@ class TypoScriptParserExtension implements ExtensionInterface
     /**
      * Returns the namespace to be used for this extension (XML namespace).
      *
-     * @return string The XML namespace
+     * @return void The XML namespace
      *
      * @api
      */
@@ -44,7 +45,7 @@ class TypoScriptParserExtension implements ExtensionInterface
     /**
      * Returns the base path for the XSD files.
      *
-     * @return string The XSD base path
+     * @return void The XSD base path
      *
      * @api
      */

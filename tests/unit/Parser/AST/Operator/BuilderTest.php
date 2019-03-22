@@ -6,13 +6,14 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Builder as OperatorBuilder;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use PHPUnit\Framework\TestCase;
 
-class BuilderTest extends \PHPUnit_Framework_TestCase
+class BuilderTest extends TestCase
 {
     /** @var OperatorBuilder */
     private $opBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->opBuilder = new OperatorBuilder();
     }

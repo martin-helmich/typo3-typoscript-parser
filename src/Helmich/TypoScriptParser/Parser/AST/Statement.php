@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -21,7 +22,7 @@ abstract class Statement
      *
      * @param int $sourceLine The original source line.
      */
-    public function __construct($sourceLine)
+    public function __construct(int $sourceLine)
     {
         if ($sourceLine <= 0 || !is_integer($sourceLine)) {
             throw new \InvalidArgumentException(

@@ -3,13 +3,14 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Tokenizer\Printer;
 
 use Helmich\TypoScriptParser\Tokenizer\Printer\CodeTokenPrinter;
 use Helmich\TypoScriptParser\Tokenizer\Token;
+use PHPUnit\Framework\TestCase;
 
-class CodeTokenPrinterTest extends \PHPUnit_Framework_TestCase
+class CodeTokenPrinterTest extends TestCase
 {
     /** @var CodeTokenPrinter */
     private $printer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->printer = new CodeTokenPrinter();
     }

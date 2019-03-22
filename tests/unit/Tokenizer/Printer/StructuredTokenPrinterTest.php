@@ -3,13 +3,14 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Tokenizer\Printer;
 
 use Helmich\TypoScriptParser\Tokenizer\Printer\StructuredTokenPrinter;
 use Helmich\TypoScriptParser\Tokenizer\Token;
+use PHPUnit\Framework\TestCase;
 
-class StructuredTokenPrinterTest extends \PHPUnit_Framework_TestCase
+class StructuredTokenPrinterTest extends TestCase
 {
     /** @var StructuredTokenPrinter */
     private $printer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->printer = new StructuredTokenPrinter();
     }

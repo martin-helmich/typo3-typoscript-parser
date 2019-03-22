@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser;
 
 use ArrayObject;
@@ -14,8 +15,8 @@ class ParserState
     /** @var ArrayObject */
     private $statements = null;
 
-    /** @var TokenInterface[] */
-    private $tokens = [];
+    /** @var TokenStream */
+    private $tokens;
 
     public function __construct(TokenStream $tokens, ArrayObject $statements = null)
     {
@@ -28,16 +29,16 @@ class ParserState
         $this->context    = new RootObjectPath();
     }
 
-    public function withContext(ObjectPath $context)
+    public function withContext(ObjectPath $context): self
     {
-        $clone = clone $this;
+        $clone          = clone $this;
         $clone->context = $context;
         return $clone;
     }
 
-    public function withStatements(ArrayObject $statements)
+    public function withStatements(ArrayObject $statements): self
     {
-        $clone = clone $this;
+        $clone             = clone $this;
         $clone->statements = $statements;
         return $clone;
     }
@@ -46,24 +47,24 @@ class ParserState
      * @param int $lookAhead
      * @return TokenInterface
      */
-    public function token($lookAhead = 0)
+    public function token(int $lookAhead = 0): TokenInterface
     {
         return $this->tokens->current($lookAhead);
     }
 
     /**
      * @param int $increment
-     * @return bool
+     * @return void
      */
-    public function next($increment = 1)
+    public function next(int $increment = 1): void
     {
-        return $this->tokens->next($increment);
+        $this->tokens->next($increment);
     }
 
     /**
      * @return bool
      */
-    public function hasNext()
+    public function hasNext(): bool
     {
         return $this->tokens->valid();
     }
@@ -71,7 +72,7 @@ class ParserState
     /**
      * @return ObjectPath
      */
-    public function context()
+    public function context(): ObjectPath
     {
         return $this->context;
     }
@@ -79,7 +80,7 @@ class ParserState
     /**
      * @return ArrayObject
      */
-    public function statements()
+    public function statements(): ArrayObject
     {
         return $this->statements;
     }
