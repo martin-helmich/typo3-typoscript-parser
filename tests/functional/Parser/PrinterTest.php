@@ -3,14 +3,15 @@ namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class PrinterTest extends \PHPUnit_Framework_TestCase
+class PrinterTest extends TestCase
 {
     /** @var ASTPrinterInterface */
     private $printer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->printer = new PrettyPrinter();
     }
@@ -20,7 +21,8 @@ class PrinterTest extends \PHPUnit_Framework_TestCase
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         foreach ($files as $outputFile) {
             $astFile = str_replace('.typoscript', '.php', $outputFile);
-            $ast     = include $astFile;
+            /** @noinspection PhpIncludeInspection */
+            $ast = include $astFile;
 
             $exceptionFile = $outputFile . '.print';
             if (file_exists($exceptionFile)) {

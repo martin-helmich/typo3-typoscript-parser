@@ -3,8 +3,9 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Tokenizer;
 
 use Helmich\TypoScriptParser\Tokenizer\LineGrouper;
 use Helmich\TypoScriptParser\Tokenizer\Token;
+use PHPUnit\Framework\TestCase;
 
-class LineGrouperTest extends \PHPUnit_Framework_TestCase
+class LineGrouperTest extends TestCase
 {
     public function testTokensAreGroupsByLine()
     {

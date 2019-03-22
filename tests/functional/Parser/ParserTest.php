@@ -1,15 +1,17 @@
 <?php
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
+use Helmich\TypoScriptParser\Parser\ParseError;
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+use PHPUnit\Framework\TestCase;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
     /** @var Parser */
     private $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parser = new Parser(new Tokenizer());
     }
@@ -19,7 +21,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
-            $output     = include $outputFile;
+
+            /** @noinspection PhpIncludeInspection */
+            $output = include $outputFile;
 
             yield [$file, $output];
         }
@@ -53,11 +57,11 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataForParseErrorTest
-     * @expectedException \Helmich\TypoScriptParser\Parser\ParseError
      * @param $inputCode
      */
     public function testBadCodeCausesParserError($inputCode)
     {
+        $this->expectException(ParseError::class);
         $this->parser->parseString($inputCode);
     }
 }

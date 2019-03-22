@@ -4,15 +4,17 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Tokenizer;
 
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+use Helmich\TypoScriptParser\Tokenizer\TokenizerException;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
+use PHPUnit\Framework\TestCase;
 use VirtualFileSystem\FileSystem;
 
-class TokenizerTest extends \PHPUnit_Framework_TestCase
+class TokenizerTest extends TestCase
 {
     /** @var TokenizerInterface */
     private $tokenizer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tokenizer = new Tokenizer();
     }
@@ -180,11 +182,11 @@ class TokenizerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $inputText
-     * @expectedException \Helmich\TypoScriptParser\Tokenizer\TokenizerException
      * @dataProvider dataInvalidForTokenizer
      */
     public function testInvalidInputTestThrowsTokenizerError($inputText)
     {
+        $this->expectException(TokenizerException::class);
         $this->tokenizer->tokenizeString($inputText);
     }
 }

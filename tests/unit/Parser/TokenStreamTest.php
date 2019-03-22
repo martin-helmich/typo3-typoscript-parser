@@ -4,8 +4,9 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Parser;
 use Helmich\TypoScriptParser\Parser\TokenStream;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
+use PHPUnit\Framework\TestCase;
 
-class TokenStreamTest extends \PHPUnit_Framework_TestCase
+class TokenStreamTest extends TestCase
 {
     /** @var tokenStream */
     private $stream;
@@ -13,7 +14,7 @@ class TokenStreamTest extends \PHPUnit_Framework_TestCase
     /** @var TokenInterface[] */
     private $tokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tokens = [
             new Token(Token::TYPE_OBJECT_IDENTIFIER, 'foo', 1, 1),
@@ -42,27 +43,21 @@ class TokenStreamTest extends \PHPUnit_Framework_TestCase
         assertThat($this->stream[4]->getValue(), equalTo('bar'));
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testCannotSet()
     {
+        $this->expectException(\BadMethodCallException::class);
         $this->stream[3] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1, 1);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testCannotAppend()
     {
+        $this->expectException(\BadMethodCallException::class);
         $this->stream[] = new Token(Token::TYPE_OPERATOR_COPY, '<', 1, 1);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testCannotUnset()
     {
+        $this->expectException(\BadMethodCallException::class);
         unset($this->stream[3]);
     }
 }
