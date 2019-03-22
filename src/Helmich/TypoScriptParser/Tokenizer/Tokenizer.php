@@ -287,7 +287,7 @@ class Tokenizer implements TokenizerInterface
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,
         ScannerLine $line
-    ): void{
+    ): void {
         if ($line->peek(',^\s*\),')) {
             $token = $state->endMultilineToken();
             $tokens->appendToken($token);
