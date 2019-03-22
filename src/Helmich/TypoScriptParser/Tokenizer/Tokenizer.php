@@ -56,10 +56,10 @@ class Tokenizer implements TokenizerInterface
     /**
      * Tokenizer constructor.
      *
-     * @param string       $eolChar      Line ending to use for tokenizing.
-     * @param Preprocessor $preprocessor Option to preprocess file contents before actual tokenizing
+     * @param string            $eolChar      Line ending to use for tokenizing.
+     * @param Preprocessor|null $preprocessor Option to preprocess file contents before actual tokenizing
      */
-    public function __construct(string $eolChar = "\n", Preprocessor $preprocessor = null)
+    public function __construct(string $eolChar = "\n", ?Preprocessor $preprocessor = null)
     {
         if ($preprocessor === null) {
             $preprocessor = new StandardPreprocessor($eolChar);
@@ -92,7 +92,7 @@ class Tokenizer implements TokenizerInterface
             }
 
             if ($tokens->count() !== 0) {
-                $tokens->append(TokenInterface::TYPE_WHITESPACE, $this->eolChar, $line->index() - 1);
+                $tokens->append(TokenInterface::TYPE_WHITESPACE, $this->eolChar, (int)($line->index() - 1));
                 $column += 1;
             }
 
@@ -134,6 +134,10 @@ class Tokenizer implements TokenizerInterface
     public function tokenizeStream(string $inputStream): array
     {
         $content = file_get_contents($inputStream);
+        if ($content === false) {
+            throw new \InvalidArgumentException("could not open file '${inputStream}'");
+        }
+
         return $this->tokenizeString($content);
     }
 
@@ -249,9 +253,9 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param $line
-     * @param $state
-     * @param $tokens
+     * @param TokenStreamBuilder    $tokens
+     * @param MultilineTokenBuilder $state
+     * @param ScannerLine           $line
      * @return void
      */
     private function tokenizeMultilineComment(
@@ -269,7 +273,7 @@ class Tokenizer implements TokenizerInterface
             return;
         }
 
-        if ($matches[0] !== null) {
+        if (is_array($matches) && isset($matches[0])) {
             $state->appendToToken($matches[0]);
         }
     }

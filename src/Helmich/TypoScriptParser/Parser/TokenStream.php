@@ -131,7 +131,7 @@ class TokenStream implements Iterator, \ArrayAccess
         $maxLine = 0;
 
         foreach ($this->tokens as $token) {
-            $maxLine = max($token->getLine(), $maxLine);
+            $maxLine = (int)max($token->getLine(), $maxLine);
 
             // Trim unnecessary whitespace, but leave line breaks! These are important!
             if ($token->getType() === TokenInterface::TYPE_WHITESPACE) {

@@ -20,7 +20,7 @@ class ObjectPath
     /**
      * The absolute object path, as evaluated from parent nested statements.
      *
-     * @var
+     * @var string
      */
     public $absoluteName;
 

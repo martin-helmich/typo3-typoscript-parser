@@ -12,16 +12,16 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class MultilineTokenBuilder
 {
-    /** @var string */
+    /** @var string|null */
     private $type = null;
 
-    /** @var string */
+    /** @var string|null */
     private $value = null;
 
-    /** @var int */
+    /** @var int|null */
     private $startLine = null;
 
-    /** @var int */
+    /** @var int|null */
     private $startColumn = null;
 
     /**
@@ -43,6 +43,10 @@ class MultilineTokenBuilder
      */
     public function appendToToken(string $append): void
     {
+        if ($this->value === null) {
+            $this->value = "";
+        }
+
         $this->value .= $append;
     }
 
@@ -52,13 +56,20 @@ class MultilineTokenBuilder
      */
     public function endMultilineToken(string $append = ''): TokenInterface
     {
-        $this->value .= $append;
+        $value       = ($this->value ?? "") . $append;
+        $type        = $this->type;
+        $startLine   = $this->startLine;
+        $startColumn = $this->startColumn;
+
+        if ($type === null || $startLine === null || $startColumn === null) {
+            throw new TokenizerException('cannot call "endMultilineToken" before calling "startMultilineToken"');
+        }
 
         $token = new Token(
-            $this->type,
-            rtrim($this->value),
-            $this->startLine,
-            $this->startColumn
+            $type,
+            rtrim($value),
+            $startLine,
+            $startColumn
         );
 
         $this->reset();
@@ -66,7 +77,7 @@ class MultilineTokenBuilder
     }
 
     /**
-     * @return string Token type (one of `TokenInterface::TYPE_*`)
+     * @return string|null Token type (one of `TokenInterface::TYPE_*`)
      */
     public function currentTokenType(): ?string
     {

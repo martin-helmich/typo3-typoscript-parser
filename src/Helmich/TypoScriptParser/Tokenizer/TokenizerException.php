@@ -12,16 +12,16 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class TokenizerException extends \Exception
 {
-    /** @var int */
+    /** @var int|null */
     private $sourceLine;
 
     /**
      * Constructs a new tokenizer exception.
      *
-     * @param string     $message    The message text.
-     * @param int        $code       The exception code.
-     * @param \Exception $previous   A nested previous exception.
-     * @param int        $sourceLine The original source line.
+     * @param string          $message    The message text.
+     * @param int             $code       The exception code.
+     * @param \Exception|null $previous   A nested previous exception.
+     * @param int|null        $sourceLine The original source line.
      */
     public function __construct(string $message = "", int $code = 0, \Exception $previous = null, int $sourceLine = null)
     {
@@ -33,9 +33,9 @@ class TokenizerException extends \Exception
     /**
      * Gets the original source line.
      *
-     * @return int The original source line.
+     * @return int|null The original source line.
      */
-    public function getSourceLine(): int
+    public function getSourceLine(): ?int
     {
         return $this->sourceLine;
     }

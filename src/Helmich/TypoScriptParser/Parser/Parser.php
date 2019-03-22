@@ -26,7 +26,7 @@ class Parser implements ParserInterface
      * Parser constructor.
      *
      * @param TokenizerInterface $tokenizer
-     * @param Builder            $astBuilder
+     * @param Builder|null       $astBuilder
      */
     public function __construct(TokenizerInterface $tokenizer, Builder $astBuilder = null)
     {
@@ -45,6 +45,10 @@ class Parser implements ParserInterface
     public function parseStream(string $stream): array
     {
         $content = file_get_contents($stream);
+        if ($content === false) {
+            throw new \InvalidArgumentException("could not open file '${stream}'");
+        }
+
         return $this->parseString($content);
     }
 
@@ -141,11 +145,11 @@ class Parser implements ParserInterface
 
     /**
      * @param ParserState $state
-     * @param int         $startLine
+     * @param int|null    $startLine
      * @return void
      * @throws ParseError
      */
-    private function parseNestedStatements(ParserState $state, int $startLine = null): void
+    private function parseNestedStatements(ParserState $state, ?int $startLine = null): void
     {
         $startLine  = $startLine ?: $state->token()->getLine();
         $statements = new ArrayObject();
@@ -263,25 +267,25 @@ class Parser implements ParserInterface
     private function parseInclude(ParserState $state): void
     {
         $token = $state->token();
-
+        $extensions = null;
+        $condition  = null;
+        $filename = $token->getSubMatch('filename') ?? '';
         $optional = $token->getSubMatch('optional');
-        if ($optional) {
-            list($extensions, $condition) = $this->parseIncludeOptionals($token->getSubMatch('optional'), $token);
-        } else {
-            $extensions = null;
-            $condition  = null;
+
+        if ($optional !== null) {
+            list($extensions, $condition) = $this->parseIncludeOptionals($optional, $token);
         }
 
         if ($token->getType() === TokenInterface::TYPE_INCLUDE_NEW || $token->getSubMatch('type') === 'FILE') {
             $node = $this->builder->includeFile(
-                $token->getSubMatch('filename'),
+                $filename,
                 $token->getType() === TokenInterface::TYPE_INCLUDE_NEW,
                 $condition,
                 $token->getLine()
             );
         } else {
             $node = $this->builder->includeDirectory(
-                $token->getSubMatch('filename'),
+                $filename,
                 $extensions,
                 $condition,
                 $token->getLine()

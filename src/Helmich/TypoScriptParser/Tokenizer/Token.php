@@ -53,7 +53,7 @@ class Token implements TokenInterface
 
     /**
      * @param string $string
-     * @return string
+     * @return string|null
      */
     public function getSubMatch(string $string): ?string
     {

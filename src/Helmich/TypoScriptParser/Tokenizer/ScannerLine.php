@@ -17,12 +17,12 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array|bool
+     * @return array|false
      */
     public function scan(string $pattern)
     {
         if (preg_match($pattern, $this->line, $matches)) {
-            $this->line = substr($this->line, strlen($matches[0]));
+            $this->line = substr($this->line, strlen($matches[0])) ?: "";
             return $matches;
         }
 
@@ -31,7 +31,7 @@ class ScannerLine
 
     /**
      * @param string $pattern
-     * @return array|bool
+     * @return string[]|false
      */
     public function peek(string $pattern)
     {

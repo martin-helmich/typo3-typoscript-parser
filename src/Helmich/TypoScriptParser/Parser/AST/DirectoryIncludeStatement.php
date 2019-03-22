@@ -28,7 +28,7 @@ class DirectoryIncludeStatement extends IncludeStatement
     /**
      * Same as extensions
      *
-     * @var string
+     * @var string|null
      * @deprecated Use `extensions` instead
      */
     public $extension = null;
@@ -36,7 +36,7 @@ class DirectoryIncludeStatement extends IncludeStatement
     /**
      * An optional file extension filter. May be NULL.
      *
-     * @var string
+     * @var string|null
      */
     public $extensions = null;
 
@@ -44,7 +44,7 @@ class DirectoryIncludeStatement extends IncludeStatement
      * Constructs a new directory include statement.
      *
      * @param string      $directory  The directory to include from.
-     * @param string      $extensions The file extension filter. MAY be NULL.
+     * @param string|null $extensions The file extension filter. MAY be NULL.
      * @param string|null $condition  Conditional statement that is attached to this include
      * @param int         $sourceLine The original source line.
      */
@@ -53,7 +53,7 @@ class DirectoryIncludeStatement extends IncludeStatement
         parent::__construct($sourceLine);
 
         $this->directory  = $directory;
-        $this->extension  = $extensions;
+        $this->extension  = $extensions; // @phan-suppress-current-line PhanDeprecatedProperty
         $this->extensions = $extensions;
         $this->condition  = $condition;
     }

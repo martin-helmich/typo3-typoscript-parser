@@ -18,6 +18,7 @@ install:
 
 script:
   - bin/phpunit --coverage-clover build/logs/clover.xml
+  - bin/phan -z -S
 
 after_success:
   - bin/test-reporter

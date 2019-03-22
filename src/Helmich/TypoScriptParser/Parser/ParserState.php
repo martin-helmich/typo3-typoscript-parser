@@ -15,8 +15,8 @@ class ParserState
     /** @var ArrayObject */
     private $statements = null;
 
-    /** @var TokenInterface[] */
-    private $tokens = [];
+    /** @var TokenStream */
+    private $tokens;
 
     public function __construct(TokenStream $tokens, ArrayObject $statements = null)
     {

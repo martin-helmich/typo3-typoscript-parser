@@ -35,7 +35,7 @@ class Builder
 
     /**
      * @param string      $directory
-     * @param string      $extensions
+     * @param string|null $extensions
      * @param string|null $condition
      * @param int         $line
      * @return DirectoryIncludeStatement
@@ -70,7 +70,7 @@ class Builder
 
     /**
      * @param string $value
-     * @return Scalar
+     * @return \Helmich\TypoScriptParser\Parser\AST\Scalar
      */
     public function scalar(string $value): Scalar
     {
