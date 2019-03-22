@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 /**
@@ -27,7 +28,7 @@ class LineGrouper
     /**
      * @return TokenInterface[][]
      */
-    public function getLines()
+    public function getLines(): array
     {
         return $this->tokensByLine;
     }

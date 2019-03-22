@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 interface TokenInterface
@@ -24,24 +25,11 @@ interface TokenInterface
     const TYPE_INCLUDE = "INCLUDE";
     const TYPE_INCLUDE_NEW = "INCLUDE_NEW";
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 
-    /**
-     * @return string
-     */
-    public function getValue();
+    public function getValue(): string;
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getSubMatch($name);
+    public function getSubMatch(string $name): ?string;
 
-    /**
-     * @return int
-     */
-    public function getLine();
+    public function getLine(): int;
 }

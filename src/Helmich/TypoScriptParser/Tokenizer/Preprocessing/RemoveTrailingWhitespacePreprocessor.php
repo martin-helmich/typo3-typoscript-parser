@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
 /**
@@ -11,7 +12,7 @@ class RemoveTrailingWhitespacePreprocessor implements Preprocessor
     /** @var string */
     private $eolCharacter;
 
-    public function __construct($eolCharacter = "\n")
+    public function __construct(string $eolCharacter = "\n")
     {
         $this->eolCharacter = $eolCharacter;
     }
@@ -20,7 +21,7 @@ class RemoveTrailingWhitespacePreprocessor implements Preprocessor
      * @param string $contents Un-processed Typoscript contents
      * @return string Processed TypoScript contents
      */
-    public function preprocess($contents)
+    public function preprocess(string $contents): string
     {
         // Remove trailing whitespaces.
         $lines   = explode($this->eolCharacter, $contents);

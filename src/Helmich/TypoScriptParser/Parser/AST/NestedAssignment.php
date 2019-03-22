@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -41,7 +42,7 @@ class NestedAssignment extends Statement
      * @param Statement[] $statements The nested statements.
      * @param int         $sourceLine The original source line.
      */
-    public function __construct(ObjectPath $object, array $statements, $sourceLine)
+    public function __construct(ObjectPath $object, array $statements, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

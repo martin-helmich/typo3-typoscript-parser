@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
@@ -31,7 +32,7 @@ class Assignment extends BinaryOperator
      * @param Scalar     $value      The value to be assigned.
      * @param int        $sourceLine The source line.
      */
-    public function __construct(ObjectPath $object, Scalar $value, $sourceLine)
+    public function __construct(ObjectPath $object, Scalar $value, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

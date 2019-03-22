@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
@@ -48,7 +48,7 @@ class DirectoryIncludeStatement extends IncludeStatement
      * @param string|null $condition  Conditional statement that is attached to this include
      * @param int         $sourceLine The original source line.
      */
-    public function __construct($directory, $extensions, $condition, $sourceLine)
+    public function __construct(string $directory, ?string $extensions, ?string $condition, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

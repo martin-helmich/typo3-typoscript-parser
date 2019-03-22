@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
@@ -28,7 +28,7 @@ class Builder
      * @param int         $line
      * @return ConditionalStatement
      */
-    public function condition($condition, array $if, array $else, $line)
+    public function condition(string $condition, array $if, array $else, int $line): ConditionalStatement
     {
         return new ConditionalStatement($condition, $if, $else, $line);
     }
@@ -40,7 +40,7 @@ class Builder
      * @param int         $line
      * @return DirectoryIncludeStatement
      */
-    public function includeDirectory($directory, $extensions, $condition, $line)
+    public function includeDirectory(string $directory, ?string $extensions, ?string $condition, int $line): DirectoryIncludeStatement
     {
         return new DirectoryIncludeStatement($directory, $extensions, $condition, $line);
     }
@@ -52,7 +52,7 @@ class Builder
      * @param int         $line
      * @return FileIncludeStatement
      */
-    public function includeFile($file, $newSyntax, $condition, $line)
+    public function includeFile(string $file, bool $newSyntax, ?string $condition, int $line): FileIncludeStatement
     {
         return new FileIncludeStatement($file, $newSyntax, $condition, $line);
     }
@@ -63,7 +63,7 @@ class Builder
      * @param int         $line
      * @return NestedAssignment
      */
-    public function nested(ObjectPath $path, array $statements, $line)
+    public function nested(ObjectPath $path, array $statements, int $line): NestedAssignment
     {
         return new NestedAssignment($path, $statements, $line);
     }
@@ -72,7 +72,7 @@ class Builder
      * @param string $value
      * @return Scalar
      */
-    public function scalar($value)
+    public function scalar(string $value): Scalar
     {
         return new Scalar($value);
     }
@@ -82,7 +82,7 @@ class Builder
      * @param string $relative
      * @return ObjectPath
      */
-    public function path($absolute, $relative)
+    public function path(string $absolute, string $relative): ObjectPath
     {
         return new ObjectPath($absolute, $relative);
     }
@@ -90,7 +90,7 @@ class Builder
     /**
      * @return Operator\Builder
      */
-    public function op()
+    public function op(): Operator\Builder
     {
         return $this->operatorBuilder;
     }

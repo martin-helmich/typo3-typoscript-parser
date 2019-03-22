@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
 /**
@@ -8,11 +9,11 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
  */
 class StandardPreprocessor extends ProcessorChain
 {
-    public function __construct($eolChar = "\n")
+    public function __construct(string $eolChar = "\n")
     {
         $this->processors = [
             new UnifyLineEndingsPreprocessor($eolChar),
-            new RemoveTrailingWhitespacePreprocessor($eolChar)
+            new RemoveTrailingWhitespacePreprocessor($eolChar),
         ];
     }
 }

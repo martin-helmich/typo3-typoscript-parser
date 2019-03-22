@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -20,7 +21,7 @@ class RootObjectPath extends ObjectPath
     /**
      * @return ObjectPath
      */
-    public function parent()
+    public function parent(): ObjectPath
     {
         return $this;
     }
@@ -28,7 +29,7 @@ class RootObjectPath extends ObjectPath
     /**
      * @return int
      */
-    public function depth()
+    public function depth(): int
     {
         return 0;
     }
@@ -37,7 +38,7 @@ class RootObjectPath extends ObjectPath
      * @param string $name
      * @return ObjectPath
      */
-    public function append($name)
+    public function append($name): ObjectPath
     {
         return new ObjectPath(ltrim($name, '.'), $name);
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
@@ -27,9 +27,9 @@ class PrettyPrinter implements ASTPrinterInterface
     /**
      * @param Statement[]     $statements
      * @param OutputInterface $output
-     * @return string
+     * @return void
      */
-    public function printStatements(array $statements, OutputInterface $output)
+    public function printStatements(array $statements, OutputInterface $output): void
     {
         $this->printStatementList($statements, $output, 0);
     }
@@ -38,13 +38,13 @@ class PrettyPrinter implements ASTPrinterInterface
      * @param Statement[]     $statements
      * @param OutputInterface $output
      * @param int             $nesting
-     * @return string
+     * @return void
      */
-    private function printStatementList(array $statements, OutputInterface $output, $nesting = 0)
+    private function printStatementList(array $statements, OutputInterface $output, int $nesting = 0): void
     {
         $indent = $this->getIndent($nesting);
         $count  = count($statements);
-        //foreach ($statements as $statement) {
+
         for ($i = 0; $i < $count; $i++) {
             $statement = $statements[$i];
 
@@ -83,12 +83,12 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    private function getIndent($nesting)
+    private function getIndent(int $nesting): string
     {
         return str_repeat('    ', $nesting);
     }
 
-    private function printBinaryObjectOperator(OutputInterface $output, BinaryObjectOperator $operator, $nesting)
+    private function printBinaryObjectOperator(OutputInterface $output, BinaryObjectOperator $operator, int $nesting): void
     {
         $targetObjectPath = $operator->target->relativeName;
 
@@ -99,7 +99,7 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement)
+    private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement): void
     {
         if ($statement instanceof FileIncludeStatement) {
             $this->printFileIncludeStatement($output, $statement);
@@ -108,7 +108,7 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    private function printFileIncludeStatement(OutputInterface $output, FileIncludeStatement $statement)
+    private function printFileIncludeStatement(OutputInterface $output, FileIncludeStatement $statement): void
     {
         if ($statement->newSyntax) {
             $output->writeln('@import \'' . $statement->filename . '\'');
@@ -123,7 +123,7 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    private function printDirectoryIncludeStatement(OutputInterface $output, DirectoryIncludeStatement $statement)
+    private function printDirectoryIncludeStatement(OutputInterface $output, DirectoryIncludeStatement $statement): void
     {
         $attributes = "";
 
@@ -144,7 +144,7 @@ class PrettyPrinter implements ASTPrinterInterface
      * @param int              $nesting
      * @param NestedAssignment $statement
      */
-    private function printNestedAssignment(OutputInterface $output, $nesting, NestedAssignment $statement)
+    private function printNestedAssignment(OutputInterface $output, $nesting, NestedAssignment $statement): void
     {
         $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' {');
         $this->printStatementList($statement->statements, $output, $nesting + 1);
@@ -158,7 +158,7 @@ class PrettyPrinter implements ASTPrinterInterface
      * @param bool                 $hasNext
      * @param bool                 $hasPrevious
      */
-    private function printConditionalStatement(OutputInterface $output, $nesting, $statement, $hasNext = false, $hasPrevious = false)
+    private function printConditionalStatement(OutputInterface $output, int $nesting, ConditionalStatement $statement, bool $hasNext = false, bool $hasPrevious = false): void
     {
         if (!$hasPrevious) {
             $output->writeln('');
@@ -180,9 +180,9 @@ class PrettyPrinter implements ASTPrinterInterface
     /**
      * @param OutputInterface $output
      * @param Assignment      $statement
-     * @param int             $indent
+     * @param string          $indent
      */
-    private function printAssignment(OutputInterface $output, Assignment $statement, $indent)
+    private function printAssignment(OutputInterface $output, Assignment $statement, string $indent): void
     {
         if (strpos($statement->value->value, "\n") !== false) {
             $output->writeln($indent . $statement->object->relativeName . ' (');

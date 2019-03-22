@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 /**
  * Helper class for quickly building operator AST nodes
  *
- * @package Helmich\TypoScriptParser
+ * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  *
  * @method ObjectCreation objectCreation($path, $value, $line)

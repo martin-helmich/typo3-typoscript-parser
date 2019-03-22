@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\Traverser;
 
 use Helmich\TypoScriptParser\Parser\AST\Statement;
@@ -18,7 +19,7 @@ class AggregatingVisitor implements Visitor
      * @param Visitor $visitor
      * @return void
      */
-    public function addVisitor(Visitor $visitor)
+    public function addVisitor(Visitor $visitor): void
     {
         $this->visitors[spl_object_hash($visitor)] = $visitor;
     }
@@ -27,7 +28,7 @@ class AggregatingVisitor implements Visitor
      * @param array $statements
      * @return void
      */
-    public function enterTree(array $statements)
+    public function enterTree(array $statements): void
     {
         foreach ($this->visitors as $visitor) {
             $visitor->enterTree($statements);
@@ -38,7 +39,7 @@ class AggregatingVisitor implements Visitor
      * @param Statement $statement
      * @return void
      */
-    public function enterNode(Statement $statement)
+    public function enterNode(Statement $statement): void
     {
         foreach ($this->visitors as $visitor) {
             $visitor->enterNode($statement);
@@ -49,7 +50,7 @@ class AggregatingVisitor implements Visitor
      * @param Statement $statement
      * @return void
      */
-    public function exitNode(Statement $statement)
+    public function exitNode(Statement $statement): void
     {
         foreach ($this->visitors as $visitor) {
             $visitor->exitNode($statement);
@@ -60,7 +61,7 @@ class AggregatingVisitor implements Visitor
      * @param array $statements
      * @return void
      */
-    public function exitTree(array $statements)
+    public function exitTree(array $statements): void
     {
         foreach ($this->visitors as $visitor) {
             $visitor->exitTree($statements);

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 /**
@@ -22,7 +23,7 @@ class TokenizerException extends \Exception
      * @param \Exception $previous   A nested previous exception.
      * @param int        $sourceLine The original source line.
      */
-    public function __construct($message = "", $code = 0, \Exception $previous = null, $sourceLine = null)
+    public function __construct(string $message = "", int $code = 0, \Exception $previous = null, int $sourceLine = null)
     {
         parent::__construct($message, $code, $previous);
 
@@ -34,7 +35,7 @@ class TokenizerException extends \Exception
      *
      * @return int The original source line.
      */
-    public function getSourceLine()
+    public function getSourceLine(): int
     {
         return $this->sourceLine;
     }

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST;
 
 /**
@@ -21,7 +22,7 @@ class Scalar
      *
      * @param string $value The value.
      */
-    public function __construct($value)
+    public function __construct(string $value)
     {
         $this->value = $value;
     }

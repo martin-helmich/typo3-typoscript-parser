@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
@@ -30,7 +31,7 @@ class Modification extends BinaryOperator
      * @param ModificationCall $call       The modification call.
      * @param int              $sourceLine The original source line.
      */
-    public function __construct(ObjectPath $object, ModificationCall $call, $sourceLine)
+    public function __construct(ObjectPath $object, ModificationCall $call, int $sourceLine)
     {
         parent::__construct($sourceLine);
 

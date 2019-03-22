@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tokenizer;
 
 use Helmich\TypoScriptParser\Tokenizer\Preprocessing\Preprocessor;
@@ -58,13 +59,13 @@ class Tokenizer implements TokenizerInterface
      * @param string       $eolChar      Line ending to use for tokenizing.
      * @param Preprocessor $preprocessor Option to preprocess file contents before actual tokenizing
      */
-    public function __construct($eolChar = "\n", Preprocessor $preprocessor = null)
+    public function __construct(string $eolChar = "\n", Preprocessor $preprocessor = null)
     {
         if ($preprocessor === null) {
             $preprocessor = new StandardPreprocessor($eolChar);
         }
 
-        $this->eolChar = $eolChar;
+        $this->eolChar      = $eolChar;
         $this->preprocessor = $preprocessor;
     }
 
@@ -73,7 +74,7 @@ class Tokenizer implements TokenizerInterface
      * @throws TokenizerException
      * @return TokenInterface[]
      */
-    public function tokenizeString($inputString)
+    public function tokenizeString(string $inputString): array
     {
         $inputString = $this->preprocessor->preprocess($inputString);
 
@@ -107,7 +108,7 @@ class Tokenizer implements TokenizerInterface
 
             if ($this->tokenizeSimpleStatements($tokens, $line) ||
                 $this->tokenizeObjectOperation($tokens, $state, $line) ||
-                strlen($line) === 0) {
+                $line->length() === 0) {
                 continue;
             }
 
@@ -130,7 +131,7 @@ class Tokenizer implements TokenizerInterface
      * @param string $inputStream
      * @return TokenInterface[]
      */
-    public function tokenizeStream($inputStream)
+    public function tokenizeStream(string $inputStream): array
     {
         $content = file_get_contents($inputStream);
         return $this->tokenizeString($content);
@@ -141,7 +142,7 @@ class Tokenizer implements TokenizerInterface
      * @return string
      * @throws UnknownOperatorException
      */
-    private function getTokenTypeForBinaryOperator($operator)
+    private function getTokenTypeForBinaryOperator(string $operator): string
     {
         switch ($operator) {
             case '=':
@@ -167,7 +168,7 @@ class Tokenizer implements TokenizerInterface
      * @param $currentLine
      * @throws UnknownOperatorException
      */
-    private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, $matches, $currentLine)
+    private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, array $matches, int $currentLine): void
     {
         $tokens->append(
             $this->getTokenTypeForBinaryOperator($matches[3]),
@@ -232,7 +233,7 @@ class Tokenizer implements TokenizerInterface
      * @param ScannerLine           $line
      * @return bool
      */
-    private function tokenizeMultilineToken(TokenStreamBuilder $tokens, MultilineTokenBuilder $state, ScannerLine $line)
+    private function tokenizeMultilineToken(TokenStreamBuilder $tokens, MultilineTokenBuilder $state, ScannerLine $line): bool
     {
         if ($state->currentTokenType() === TokenInterface::TYPE_COMMENT_MULTILINE) {
             $this->tokenizeMultilineComment($tokens, $state, $line);
@@ -257,7 +258,7 @@ class Tokenizer implements TokenizerInterface
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,
         ScannerLine $line
-    ) {
+    ): void {
         if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
             $state->appendToToken($matches[0]);
         }
@@ -268,7 +269,9 @@ class Tokenizer implements TokenizerInterface
             return;
         }
 
-        $state->appendToToken($matches[0]);
+        if ($matches[0] !== null) {
+            $state->appendToToken($matches[0]);
+        }
     }
 
     /**
@@ -280,7 +283,7 @@ class Tokenizer implements TokenizerInterface
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,
         ScannerLine $line
-    ) {
+    ): void{
         if ($line->peek(',^\s*\),')) {
             $token = $state->endMultilineToken();
             $tokens->appendToken($token);
@@ -295,7 +298,7 @@ class Tokenizer implements TokenizerInterface
      * @param ScannerLine        $line
      * @return bool
      */
-    private function tokenizeSimpleStatements(TokenStreamBuilder $tokens, ScannerLine $line)
+    private function tokenizeSimpleStatements(TokenStreamBuilder $tokens, ScannerLine $line): bool
     {
         $simpleTokens = [
             self::TOKEN_COMMENT_ONELINE       => TokenInterface::TYPE_COMMENT_ONELINE,
@@ -327,7 +330,7 @@ class Tokenizer implements TokenizerInterface
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,
         ScannerLine $line
-    ) {
+    ): bool {
         if ($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) {
             $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $line->index());
 

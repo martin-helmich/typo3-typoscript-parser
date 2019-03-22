@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser;
 
 use Symfony\Component\Config\FileLocator;
