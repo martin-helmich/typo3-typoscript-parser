@@ -11,7 +11,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_COMMENT_ONELINE = ',^(#|/)[^\n]*,';
     const TOKEN_COMMENT_MULTILINE_BEGIN = ',^/\*,';
     const TOKEN_COMMENT_MULTILINE_END = ',^\*/,';
-    const TOKEN_CONDITION = ',^(\[(adminUser|browser|version|system|device|useragent|language|IP|hostname|applicationContext|hour|minute|month|year|dayofweek|dayofmonth|dayofyear|usergroup|loginUser|page\|[a-zA-Z0-9_]+|treeLevel|PIDinRootline|PIDupinRootline|compatVersion|globalVar|globalString|userFunc|[a-zA-Z\\\]+)\s*=?\s*(.*?)\](\|\||&&|$))+,';
+    const TOKEN_CONDITION = ',^(\[(?<expr>.*?)\](\|\||&&|$))+,';
     const TOKEN_CONDITION_ELSE = ',^\[else\],i';
     const TOKEN_CONDITION_END = ',^\[(global|end)\],i';
 

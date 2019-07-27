@@ -141,6 +141,36 @@ class TokenizerTest extends TestCase
                 1          => 'EXT:foo/Configuration/TypoScript/setup.typoscript',
             ]),
         ]];
+
+        yield ["[globalVar = GP:L = 1]", [
+            new Token(Token::TYPE_CONDITION, "[globalVar = GP:L = 1]", 1, 1, [
+                0      => "[globalVar = GP:L = 1]",
+                1      => "[globalVar = GP:L = 1]",
+                2      => 'globalVar = GP:L = 1',
+                'expr' => 'globalVar = GP:L = 1',
+                3      => '',
+            ]),
+        ]];
+
+        yield ['[siteLanguage("languageId") == "1"]', [
+            new Token(Token::TYPE_CONDITION, '[siteLanguage("languageId") == "1"]', 1, 1, [
+                0      => '[siteLanguage("languageId") == "1"]',
+                1      => '[siteLanguage("languageId") == "1"]',
+                2      => 'siteLanguage("languageId") == "1"',
+                'expr' => 'siteLanguage("languageId") == "1"',
+                3      => '',
+            ]),
+        ]];
+
+        yield ['[1 in tree.rootLineIds]', [
+            new Token(Token::TYPE_CONDITION, '[1 in tree.rootLineIds]', 1, 1, [
+                0      => '[1 in tree.rootLineIds]',
+                1      => '[1 in tree.rootLineIds]',
+                2      => '1 in tree.rootLineIds',
+                'expr' => '1 in tree.rootLineIds',
+                3      => '',
+            ]),
+        ]];
     }
 
     public function dataInvalidForTokenizer()
