@@ -161,6 +161,16 @@ class TokenizerTest extends TestCase
                 3      => '',
             ]),
         ]];
+
+        yield ['[1 in tree.rootLineIds]', [
+            new Token(Token::TYPE_CONDITION, '[1 in tree.rootLineIds]', 1, 1, [
+                0      => '[1 in tree.rootLineIds]',
+                1      => '[1 in tree.rootLineIds]',
+                2      => '1 in tree.rootLineIds',
+                'expr' => '1 in tree.rootLineIds',
+                3      => '',
+            ]),
+        ]];
     }
 
     public function dataInvalidForTokenizer()
