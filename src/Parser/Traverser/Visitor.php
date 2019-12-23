@@ -13,7 +13,7 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
 interface Visitor
 {
     /**
-     * @param array $statements
+     * @param Statement[] $statements
      * @return void
      */
     public function enterTree(array $statements): void;
@@ -31,7 +31,7 @@ interface Visitor
     public function exitNode(Statement $statement): void;
 
     /**
-     * @param array $statements
+     * @param Statement[] $statements
      * @return void
      */
     public function exitTree(array $statements): void;
