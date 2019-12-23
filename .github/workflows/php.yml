@@ -7,6 +7,7 @@ jobs:
     strategy:      
       matrix:
         php-versions: ["7.2", "7.3", "7.4"]
+        symfony-versions: ["~3.0", "~4.0", "~5.0"]
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +22,12 @@ jobs:
     
     - name: Validate composer.json and composer.lock
       run: composer validate
+
+    - name: Declare required Symfony version
+      run: |
+        composer require --no-update symfony/dependency-injection ${{ matrix.symfony-versions }}
+        composer require --no-update symfony/config ${{ matrix.symfony-versions }}
+        composer require --no-update symfony/yaml ${{ matrix.symfony-versions }}
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
