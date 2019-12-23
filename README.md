@@ -1,7 +1,7 @@
 TypoScript Parser
 =================
 
-[![Build Status](https://travis-ci.org/martin-helmich/typo3-typoscript-parser.svg?branch=master)](https://travis-ci.org/martin-helmich/typo3-typoscript-parser)
+![Build Status](https://github.com/martin-helmich/typo3-typoscript-parser/workflows/PHP%20type%20checking%20and%20unit%20testing/badge.svg?branch=master)
 [![Code Climate](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/gpa.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser)
 [![Test Coverage](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/coverage.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/coverage)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=martin-helmich/typo3-typoscript-parser)](https://dependabot.com)
