@@ -24,6 +24,7 @@ class TypoScriptParserExtension implements ExtensionInterface
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      *
      * @api
+     * @psalm-suppress MissingReturnType Signature is determined by Symfony DI -- nothing to fix, here
      */
     public function load(array $config, ContainerBuilder $container)
     {
@@ -34,23 +35,25 @@ class TypoScriptParserExtension implements ExtensionInterface
     /**
      * Returns the namespace to be used for this extension (XML namespace).
      *
-     * @return void The XML namespace
+     * @return string The XML namespace
      *
      * @api
      */
     public function getNamespace()
     {
+        return 'http://example.org/schema/dic/'.$this->getAlias();
     }
 
     /**
      * Returns the base path for the XSD files.
      *
-     * @return void The XSD base path
+     * @return false
      *
      * @api
      */
     public function getXsdValidationBasePath()
     {
+        return false;
     }
 
     /**

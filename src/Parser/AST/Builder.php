@@ -70,7 +70,7 @@ class Builder
 
     /**
      * @param string $value
-     * @return \Helmich\TypoScriptParser\Parser\AST\Scalar
+     * @return Scalar
      */
     public function scalar(string $value): Scalar
     {

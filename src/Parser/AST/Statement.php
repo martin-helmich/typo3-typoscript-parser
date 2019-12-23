@@ -24,7 +24,7 @@ abstract class Statement
      */
     public function __construct(int $sourceLine)
     {
-        if ($sourceLine <= 0 || !is_integer($sourceLine)) {
+        if ($sourceLine <= 0) {
             throw new \InvalidArgumentException(
                 sprintf('Source line must be greater than 0 for %s statement (is: %d)!', get_class($this), $sourceLine)
             );

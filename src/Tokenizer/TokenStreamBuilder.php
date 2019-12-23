@@ -15,11 +15,11 @@ class TokenStreamBuilder
     /** @var ArrayObject */
     private $tokens;
 
-    /** @var int */
+    /** @var int|null */
     private $currentLine = null;
 
     /** @var int */
-    private $currentColumn = null;
+    private $currentColumn = 1;
 
     /**
      * TokenStreamBuilder constructor.
@@ -45,7 +45,7 @@ class TokenStreamBuilder
             $this->currentColumn = 1;
         }
 
-        $this->tokens->append(new Token($type, $value, $this->currentLine, $this->currentColumn, $patternMatches));
+        $this->tokens->append(new Token($type, $value, $line, $this->currentColumn, $patternMatches));
 
         $this->currentColumn += strlen($value);
     }

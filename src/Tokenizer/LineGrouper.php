@@ -10,6 +10,7 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class LineGrouper
 {
+    /** @var TokenInterface[][] */
     private $tokensByLine = [];
 
     /**
