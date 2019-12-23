@@ -23,8 +23,8 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - bin/phpunit --testdox --coverage-clover build/logs/clover.xml
-  - bin/psaln
+  - vendor/bin/phpunit --testdox --coverage-clover build/logs/clover.xml
+  - vendor/bin/psaln
 
 after_script:
   - ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT build/logs/clover.xml
