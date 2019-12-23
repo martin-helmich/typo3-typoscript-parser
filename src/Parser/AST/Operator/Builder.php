@@ -18,12 +18,9 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
  */
 class Builder
 {
-    public function __call($name, $args)
+    public function __call(string $name, array $args)
     {
         $class = __NAMESPACE__ . '\\' . ucfirst($name);
-        return (new \ReflectionClass($class))->newInstanceArgs($args);
-
-        // Curse you, and fucking die already, PHP 5.5
-        //return new $class(...$args);
+        return new $class(...$args);
     }
 }

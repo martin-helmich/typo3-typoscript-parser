@@ -2,16 +2,20 @@
 
 namespace Helmich\TypoScriptParser\Tokenizer;
 
+use Iterator;
+
 /**
  * Helper class for scanning lines
  *
  * @package    Helmich\TypoScriptParser
  * @subpackage Tokenizer
  */
-class Scanner implements \Iterator
+class Scanner implements Iterator
 {
-    /** @var array */
+    /** @var string[] */
     private $lines = [];
+
+    /** @var int */
     private $index = 0;
 
     public function __construct(array $lines)

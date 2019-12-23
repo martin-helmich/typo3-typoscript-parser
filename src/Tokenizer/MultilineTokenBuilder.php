@@ -30,7 +30,7 @@ class MultilineTokenBuilder
      * @param int    $line   Starting line in source code
      * @param int    $column Starting column in source code
      */
-    public function startMultilineToken(string $type, string $value, int $line, int $column)
+    public function startMultilineToken(string $type, string $value, int $line, int $column): void
     {
         $this->type        = $type;
         $this->value       = $value;

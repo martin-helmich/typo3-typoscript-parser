@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 return [
     new \Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
         '[globalVar = GP:foo=1]', [

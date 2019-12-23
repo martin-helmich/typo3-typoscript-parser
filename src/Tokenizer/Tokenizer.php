@@ -115,9 +115,10 @@ class Tokenizer implements TokenizerInterface
             throw new TokenizerException('Cannot tokenize line "' . $line . '"', 1403084444, null, $line->index());
         }
 
-        if ($state->currentTokenType() !== null) {
+        $currentTokenType = $state->currentTokenType();
+        if ($currentTokenType !== null) {
             throw new TokenizerException(
-                'Unterminated ' . $state->currentTokenType() . '!',
+                "Unterminated {$currentTokenType}!",
                 1403084445,
                 null,
                 count($lines) - 1
@@ -271,10 +272,6 @@ class Tokenizer implements TokenizerInterface
             $token = $state->endMultilineToken($matches[0]);
             $tokens->appendToken($token);
             return;
-        }
-
-        if (is_array($matches) && isset($matches[0])) {
-            $state->appendToToken($matches[0]);
         }
     }
 

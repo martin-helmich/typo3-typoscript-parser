@@ -13,7 +13,7 @@ class ParserState
     private $context;
 
     /** @var ArrayObject */
-    private $statements = null;
+    private $statements;
 
     /** @var TokenStream */
     private $tokens;
