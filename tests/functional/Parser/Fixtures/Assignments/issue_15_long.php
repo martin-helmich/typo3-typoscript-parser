@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;

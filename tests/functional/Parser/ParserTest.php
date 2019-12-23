@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\ParseError;
@@ -53,6 +53,7 @@ class ParserTest extends TestCase
     {
         $ast = $this->parser->parseStream($inputFile);
         $this->assertEquals($expectedAST, $ast);
+//        $this->assertSame($expectedAST, $ast);
     }
 
     /**

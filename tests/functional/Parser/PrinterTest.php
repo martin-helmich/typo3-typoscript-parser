@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
