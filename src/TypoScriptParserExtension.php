@@ -28,7 +28,7 @@ class TypoScriptParserExtension implements ExtensionInterface
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../../config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
         $loader->load('services.yml');
     }
 
