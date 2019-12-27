@@ -32,4 +32,6 @@ interface TokenInterface
     public function getSubMatch(string $name): ?string;
 
     public function getLine(): int;
+
+    public function getColumn(): int;
 }
