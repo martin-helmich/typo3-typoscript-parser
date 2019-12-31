@@ -44,7 +44,7 @@ class Tokenizer implements TokenizerInterface
     $,x';
     const TOKEN_INCLUDE_NEW_STATEMENT = ',^
         @import\s+
-        \'(?<filename>[^\']+)\'
+        [\'"](?<filename>[^\']+)[\'"]
     $,x';
 
     /** @var string */
