@@ -19,14 +19,17 @@ class ParserTest extends TestCase
     public function dataForParserTest()
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        $testCases = [];
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
 
             /** @noinspection PhpIncludeInspection */
             $output = include $outputFile;
 
-            yield [$file, $output];
+            $testCases[str_replace(".typoscript", "", basename($file))] = [$file, $output];
         }
+
+        return $testCases;
     }
 
     public function dataForParseErrorTest()
@@ -46,6 +49,7 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider dataForParserTest
+     * @testdox Code is parsed into correct AST
      * @param $inputFile
      * @param $expectedAST
      */
