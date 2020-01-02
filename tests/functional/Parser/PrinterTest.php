@@ -19,6 +19,8 @@ class PrinterTest extends TestCase
     public function dataForPrinterTest()
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        $testCases = [];
+
         foreach ($files as $outputFile) {
             $astFile = str_replace('.typoscript', '.php', $outputFile);
             /** @noinspection PhpIncludeInspection */
@@ -32,8 +34,10 @@ class PrinterTest extends TestCase
             $output = file_get_contents($outputFile);
             $output = implode("\n", array_filter(explode("\n", $output)));
 
-            yield [$ast, $output];
+            $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }
+
+        return $testCases;
     }
 
     /**
