@@ -123,6 +123,9 @@ class Parser implements ParserInterface
                     $state->token()->getLine()
                 );
                 break;
+            case TokenInterface::TYPE_COMMENT_ONELINE:
+                $state->statements()->append($this->builder->comment($state->token()->getValue(), $state->token()->getLine()));
+                break;
             default:
                 throw new ParseError(
                     sprintf('Unexpected token %s in line %d.', $state->token()->getType(), $state->token()->getLine()),
@@ -443,7 +446,9 @@ class Parser implements ParserInterface
      */
     private function parseDeletion(ParserState $state): void
     {
-        if ($state->token(2)->getType() !== TokenInterface::TYPE_WHITESPACE) {
+        $allowedTypesInDeletion = [TokenInterface::TYPE_WHITESPACE, TokenInterface::TYPE_COMMENT_ONELINE];
+
+        if (!in_array($state->token(2)->getType(), $allowedTypesInDeletion, true)) {
             throw new ParseError(
                 'Unexpected token ' . $state->token(2)->getType() . ' after delete operator (expected line break).',
                 1403011201,

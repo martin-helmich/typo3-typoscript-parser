@@ -33,6 +33,11 @@ class Builder
         return new ConditionalStatement($condition, $if, $else, $line);
     }
 
+    public function comment(string $comment, int $line): Comment
+    {
+        return new Comment($comment, $line);
+    }
+
     /**
      * @param string      $directory
      * @param string|null $extensions
