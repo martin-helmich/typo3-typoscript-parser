@@ -124,7 +124,7 @@ class TokenStream implements Iterator, \ArrayAccess
     {
         $filteredTokens = [];
         $ignoredTokens  = [
-            TokenInterface::TYPE_COMMENT_MULTILINE,
+            TokenInterface::TYPE_COMMENT_LINE,
         ];
 
         $maxLine = 0;
