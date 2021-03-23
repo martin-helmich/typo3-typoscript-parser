@@ -38,6 +38,11 @@ class Builder
         return new Comment($comment, $line);
     }
 
+    public function multilineComment(string $comment, int $line): MultilineComment
+    {
+        return new MultilineComment($comment, $line);
+    }
+
     /**
      * @param string      $directory
      * @param string|null $extensions
