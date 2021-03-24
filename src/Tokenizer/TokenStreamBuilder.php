@@ -12,7 +12,7 @@ use ArrayObject;
  */
 class TokenStreamBuilder
 {
-    /** @var ArrayObject|TokenInterface[] */
+    /** @var ArrayObject */
     private $tokens;
 
     /** @var int|null */
@@ -78,7 +78,7 @@ class TokenStreamBuilder
     }
 
     /**
-     * @return ArrayObject|TokenInterface[] The completed token stream
+     * @return ArrayObject The completed token stream
      */
     public function build(): ArrayObject
     {
