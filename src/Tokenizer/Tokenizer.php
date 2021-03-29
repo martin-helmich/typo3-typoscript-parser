@@ -269,26 +269,12 @@ class Tokenizer implements TokenizerInterface
         }
 
         if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
-
-            $values = [''];
-            foreach ($tokens->build() as $commentLine) {
-                $values[] = $commentLine->getValue();
-            }
-            $values[] = $matches[0];
-
-            $token = $state->endMultilineToken(implode("\n", $values));
-
+            $token = $state->endMultilineToken("\n". $matches[0]);
             $tokens->appendToken($token);
             return;
         }
 
-        $token = new Token(
-            TokenInterface::TYPE_COMMENT_LINE,
-            $line->value(),
-            $line->index()
-        );
-
-        $tokens->appendToken($token);
+        $state->appendToToken("\n". $line->value());
     }
 
     /**
