@@ -1,9 +1,7 @@
 <?php declare(strict_types=1);
 
-use Helmich\TypoScriptParser\Parser\AST\MultilineComment;
-
 return [
-    new MultilineComment('/*
+    new \Helmich\TypoScriptParser\Parser\AST\MultilineComment('/*
 Hello
 World
 */', 1),
