@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 
@@ -14,11 +16,11 @@ class ProcessorChain implements Preprocessor
 
     /**
      * @param Preprocessor $next
-     * @return static
+     * @return self
      */
     public function with(Preprocessor $next): self
     {
-        $new             = new static();
+        $new             = new self();
         $new->processors = array_merge($this->processors, [$next]);
         return $new;
     }

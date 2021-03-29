@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
@@ -56,18 +58,18 @@ class ObjectPath
             return new RootObjectPath();
         }
         array_pop($components);
-        return new static(implode('.', $components), $components[count($components) - 1]);
+        return new self(implode('.', $components), $components[count($components) - 1]);
     }
 
     /**
      * @param string $name
-     * @return static
+     * @return self
      */
     public function append(string $name): self
     {
         if ($name[0] === '.') {
-            return new static($this->absoluteName . $name, $name);
+            return new self($this->absoluteName . $name, $name);
         }
-        return new static($this->absoluteName . '.' . $name, $name);
+        return new self($this->absoluteName . '.' . $name, $name);
     }
 }

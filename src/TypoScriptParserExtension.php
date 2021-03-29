@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser;
 
@@ -18,7 +20,7 @@ class TypoScriptParserExtension implements ExtensionInterface
     /**
      * Loads a specific configuration.
      *
-     * @param array            $config    An array of configuration values
+     * @param array            $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
@@ -26,7 +28,7 @@ class TypoScriptParserExtension implements ExtensionInterface
      * @api
      * @psalm-suppress MissingReturnType Signature is determined by Symfony DI -- nothing to fix, here
      */
-    public function load(array $config, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
         $loader->load('services.yml');
@@ -41,7 +43,7 @@ class TypoScriptParserExtension implements ExtensionInterface
      */
     public function getNamespace()
     {
-        return 'http://example.org/schema/dic/'.$this->getAlias();
+        return 'http://example.org/schema/dic/' . $this->getAlias();
     }
 
     /**
