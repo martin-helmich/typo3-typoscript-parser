@@ -82,9 +82,9 @@ class PrettyPrinter implements ASTPrinterInterface
             } elseif ($statement instanceof IncludeStatement) {
                 $this->printIncludeStatement($output, $statement);
             } elseif ($statement instanceof Comment) {
-                $output->writeln($statement->comment);
+                $output->writeln($indent . $statement->comment);
             } elseif ($statement instanceof MultilineComment) {
-                $output->writeln($statement->comment);
+                $output->writeln($indent . $statement->comment);
             }
         }
     }
