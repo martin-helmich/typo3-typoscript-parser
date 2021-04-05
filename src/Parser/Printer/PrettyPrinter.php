@@ -2,10 +2,12 @@
 
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
+use Helmich\TypoScriptParser\Parser\AST\Comment;
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\IncludeStatement;
+use Helmich\TypoScriptParser\Parser\AST\MultilineComment;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\BinaryObjectOperator;
@@ -79,6 +81,10 @@ class PrettyPrinter implements ASTPrinterInterface
                 );
             } elseif ($statement instanceof IncludeStatement) {
                 $this->printIncludeStatement($output, $statement);
+            } elseif ($statement instanceof Comment) {
+                $output->writeln($indent . $statement->comment);
+            } elseif ($statement instanceof MultilineComment) {
+                $output->writeln($indent . $statement->comment);
             }
         }
     }

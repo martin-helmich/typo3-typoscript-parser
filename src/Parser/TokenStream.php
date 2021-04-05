@@ -123,10 +123,6 @@ class TokenStream implements Iterator, \ArrayAccess
     public function normalized(): TokenStream
     {
         $filteredTokens = [];
-        $ignoredTokens  = [
-            TokenInterface::TYPE_COMMENT_MULTILINE,
-            TokenInterface::TYPE_COMMENT_ONELINE,
-        ];
 
         $maxLine = 0;
 
@@ -144,7 +140,7 @@ class TokenStream implements Iterator, \ArrayAccess
                         $token->getColumn()
                     );
                 }
-            } elseif (!in_array($token->getType(), $ignoredTokens)) {
+            } else {
                 $filteredTokens[] = $token;
             }
         }

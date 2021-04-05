@@ -1,4 +1,6 @@
 <?php declare(strict_types=1);
+
+use Helmich\TypoScriptParser\Parser\AST\Comment;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
@@ -9,6 +11,7 @@ return [
         new ObjectPath('config.tx_extbase', 'config.tx_extbase'), [
             new NestedAssignment(
                 new ObjectPath('config.tx_extbase.view', 'view'), [
+                    new Comment('# Configure where to look for widget templates', 3),
                     new NestedAssignment(
                         new ObjectPath('config.tx_extbase.view.widget', 'widget'), [
                             new NestedAssignment(
