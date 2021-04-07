@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Tokenizer;
 
@@ -26,7 +28,7 @@ class Tokenizer implements TokenizerInterface
         (?<name>[a-zA-Z0-9]+)  # Modifier name
         (?:\s)*
         \(
-        (?<arguments>[^\)]*)   # Argument list
+        (?<arguments>.*)   # Argument list
         \)
     $,x';
     const TOKEN_OPERATOR_LINE = ',^
@@ -106,9 +108,11 @@ class Tokenizer implements TokenizerInterface
                 continue;
             }
 
-            if ($this->tokenizeSimpleStatements($tokens, $line) ||
+            if (
+                $this->tokenizeSimpleStatements($tokens, $line) ||
                 $this->tokenizeObjectOperation($tokens, $state, $line) ||
-                $line->length() === 0) {
+                $line->length() === 0
+            ) {
                 continue;
             }
 
@@ -269,12 +273,12 @@ class Tokenizer implements TokenizerInterface
         }
 
         if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
-            $token = $state->endMultilineToken("\n". $matches[0]);
+            $token = $state->endMultilineToken("\n" . $matches[0]);
             $tokens->appendToken($token);
             return;
         }
 
-        $state->appendToToken("\n". $line->value());
+        $state->appendToToken("\n" . $line->value());
     }
 
     /**
