@@ -71,6 +71,22 @@ class TokenizerTest extends TestCase
                 new Token(Token::TYPE_COMMENT_ONELINE, "# Something", 1, 7),
             ]],
 
+            // https://github.com/martin-helmich/typo3-typoscript-parser/issues/58
+            // https://github.com/martin-helmich/typo3-typoscript-parser/issues/50
+            "modification with brace" => ["foo := addToList(bar())", [
+                new Token(Token::TYPE_OBJECT_IDENTIFIER, "foo", 1, 1),
+                new Token(Token::TYPE_WHITESPACE, " ", 1, 4),
+                new Token(Token::TYPE_OPERATOR_MODIFY, ":=", 1, 5),
+                new Token(Token::TYPE_WHITESPACE, " ", 1, 7),
+                new Token(Token::TYPE_OBJECT_MODIFIER, "addToList(bar())", 1, 8, [
+                    0           => 'addToList(bar())',
+                    'name'      => 'addToList',
+                    1           => 'addToList',
+                    'arguments' => 'bar()',
+                    2           => 'bar()',
+                ]),
+            ]],
+
             "include file, old syntax"                                 => ["<INCLUDE_TYPOSCRIPT: source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">", [
                 new Token(Token::TYPE_INCLUDE, "<INCLUDE_TYPOSCRIPT: source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">", 1, 1, [
                     0          => "<INCLUDE_TYPOSCRIPT: source=\"FILE:EXT:foo/Configuration/TypoScript/setup.typoscript\">",
