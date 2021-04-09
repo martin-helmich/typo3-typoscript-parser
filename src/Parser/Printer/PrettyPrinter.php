@@ -27,6 +27,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PrettyPrinter implements ASTPrinterInterface
 {
     /**
+     * @var PrettyPrinterConfiguration
+     */
+    private $prettyPrinterConfiguration;
+
+    public function __construct(PrettyPrinterConfiguration $prettyPrinterConfiguration = null)
+    {
+        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration ?? new PrettyPrinterConfiguration(false, false);
+    }
+
+
+    /**
      * @param Statement[]     $statements
      * @param OutputInterface $output
      * @return void
@@ -178,7 +189,7 @@ class PrettyPrinter implements ASTPrinterInterface
             $this->printStatementList($statement->elseStatements, $output, $nesting);
         }
 
-        if (!$hasNext) {
+        if (!$hasNext || $this->prettyPrinterConfiguration->isAddClosingGlobal()) {
             $output->writeln('[global]');
         }
     }
