@@ -3,6 +3,7 @@ namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -13,7 +14,7 @@ class PrinterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->printer = new PrettyPrinter();
+        $this->printer = new PrettyPrinter(new PrettyPrinterConfiguration(true, false));
     }
 
     public function dataForPrinterTest()

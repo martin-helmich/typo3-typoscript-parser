@@ -13,14 +13,14 @@ return [
         new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
             new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
             new \Helmich\TypoScriptParser\Parser\AST\Scalar('bar2'),
-            4
+            5
         ),
     ], [
             new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
                 new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
                 new \Helmich\TypoScriptParser\Parser\AST\Scalar('baz'),
-                6
+                7
             ),
-        ], 3
+        ], 4
     ),
 ];

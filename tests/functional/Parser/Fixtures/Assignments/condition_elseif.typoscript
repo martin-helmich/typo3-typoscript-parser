@@ -1,5 +1,6 @@
 [globalVar = GP:foo=1]
 foo = bar
+[global]
 [globalVar = GP:foo=2]
 foo = bar2
 [else]
