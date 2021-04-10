@@ -33,7 +33,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
     public function __construct(PrettyPrinterConfiguration $prettyPrinterConfiguration = null)
     {
-        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration ?? new PrettyPrinterConfiguration(false, false);
+        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration ?? PrettyPrinterConfiguration::getDefault();
     }
 
 
@@ -102,7 +102,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
     private function getIndent(int $nesting): string
     {
-        return str_repeat('    ', $nesting);
+        return str_repeat($this->prettyPrinterConfiguration->getIndentation(), $nesting);
     }
 
     private function printBinaryObjectOperator(OutputInterface $output, BinaryObjectOperator $operator, int $nesting): void
