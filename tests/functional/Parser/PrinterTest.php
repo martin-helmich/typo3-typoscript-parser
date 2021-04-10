@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
@@ -14,12 +15,14 @@ class PrinterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->printer = new PrettyPrinter(new PrettyPrinterConfiguration(true, false));
+        $this->printer = new PrettyPrinter(
+            new PrettyPrinterConfiguration(true, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_SPACES)
+        );
     }
 
     public function dataForPrinterTest()
     {
-        $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        $files = glob(__DIR__.'/Fixtures/*/*.typoscript');
         $testCases = [];
 
         foreach ($files as $outputFile) {
@@ -27,7 +30,7 @@ class PrinterTest extends TestCase
             /** @noinspection PhpIncludeInspection */
             $ast = include $astFile;
 
-            $exceptionFile = $outputFile . '.print';
+            $exceptionFile = $outputFile.'.print';
             if (file_exists($exceptionFile)) {
                 $outputFile = $exceptionFile;
             }
@@ -43,6 +46,7 @@ class PrinterTest extends TestCase
 
     /**
      * @dataProvider dataForPrinterTest
+     *
      * @param $ast
      * @param $expectedOutput
      */
