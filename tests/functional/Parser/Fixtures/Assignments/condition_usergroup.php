@@ -17,6 +17,6 @@ return [
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('baz', 'baz'),
         new \Helmich\TypoScriptParser\Parser\AST\Scalar('foo'),
-        6
+        5
     ),
 ];

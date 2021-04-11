@@ -192,7 +192,7 @@ class PrettyPrinter implements ASTPrinterInterface
             $this->printStatementList($statement->elseStatements, $output, $nesting);
         }
 
-        if (!$hasNext || $this->prettyPrinterConfiguration->isAddClosingGlobal()) {
+        if ($this->closeCondition($hasNext)) {
             $output->writeln('[global]');
         }
     }
@@ -219,5 +219,10 @@ class PrettyPrinter implements ASTPrinterInterface
         if($this->prettyPrinterConfiguration->isIncludeEmptyLineBreaks()) {
             $output->writeln('');
         }
+    }
+
+    private function closeCondition(bool $hasNext): bool
+    {
+        return !$hasNext || $this->prettyPrinterConfiguration->isAddClosingGlobal();
     }
 }
