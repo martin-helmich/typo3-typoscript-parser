@@ -9,6 +9,7 @@ use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\IncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\MultilineComment;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\NopStatement;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\BinaryObjectOperator;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
@@ -96,6 +97,8 @@ class PrettyPrinter implements ASTPrinterInterface
                 $output->writeln($indent . $statement->comment);
             } elseif ($statement instanceof MultilineComment) {
                 $output->writeln($indent . $statement->comment);
+            } elseif ($statement instanceof NopStatement) {
+                $this->printNopStatement($output);
             }
         }
     }
@@ -209,5 +212,12 @@ class PrettyPrinter implements ASTPrinterInterface
         }
 
         $output->writeln($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+    }
+
+    private function printNopStatement(OutputInterface $output): void
+    {
+        if($this->prettyPrinterConfiguration->isIncludeEmptyLineBreaks()) {
+            $output->writeln('');
+        }
     }
 }

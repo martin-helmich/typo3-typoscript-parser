@@ -16,7 +16,7 @@ class PrinterTest extends TestCase
     public function setUp(): void
     {
         $this->printer = new PrettyPrinter(
-            new PrettyPrinterConfiguration(true, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_SPACES)
+            new PrettyPrinterConfiguration(true, true, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_SPACES)
         );
     }
 
@@ -36,7 +36,8 @@ class PrinterTest extends TestCase
             }
 
             $output = file_get_contents($outputFile);
-            $output = implode("\n", array_filter(explode("\n", $output)));
+
+            $output = implode("\n", explode("\n", $output));
 
             $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }

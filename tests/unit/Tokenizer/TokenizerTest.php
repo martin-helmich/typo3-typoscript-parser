@@ -22,6 +22,15 @@ class TokenizerTest extends TestCase
     public function dataValidForTokenizer()
     {
         return [
+            "assignment with line breaks"                          => ["foo = bar\n\n", [
+                new Token(Token::TYPE_OBJECT_IDENTIFIER, "foo", 1, 1),
+                new Token(Token::TYPE_WHITESPACE, " ", 1, 4),
+                new Token(Token::TYPE_OPERATOR_ASSIGNMENT, "=", 1, 5),
+                new Token(Token::TYPE_WHITESPACE, " ", 1, 6),
+                new Token(Token::TYPE_RIGHTVALUE, "bar", 1, 7),
+                new Token(Token::TYPE_EMPTY_LINE, "\n", 2, 1),
+                new Token(Token::TYPE_EMPTY_LINE, "\n", 3, 1),
+            ]],
             "assignment"                          => ["foo = bar", [
                 new Token(Token::TYPE_OBJECT_IDENTIFIER, "foo", 1, 1),
                 new Token(Token::TYPE_WHITESPACE, " ", 1, 4),

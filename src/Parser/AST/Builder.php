@@ -2,6 +2,8 @@
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
+use PhpParser\Node\Stmt\Nop;
+
 /**
  * Helper class for quickly building AST nodes
  *
@@ -41,6 +43,11 @@ class Builder
     public function multilineComment(string $comment, int $line): MultilineComment
     {
         return new MultilineComment($comment, $line);
+    }
+
+    public function nop(int $line): NopStatement
+    {
+        return new NopStatement($line);
     }
 
     /**
