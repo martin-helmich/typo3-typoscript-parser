@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
 use InvalidArgumentException;
+use LogicException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -24,7 +25,11 @@ final class PrettyPrinterConfiguration
      * @var string
      */
     public const INDENTATION_STYLE_TABS = 'tabs';
-    const ALLOWED_INDENTATION_STYLES = [self::INDENTATION_STYLE_TABS, self::INDENTATION_STYLE_SPACES];
+
+    /**
+     * @var array
+     */
+    private const ALLOWED_INDENTATION_STYLES = [self::INDENTATION_STYLE_TABS, self::INDENTATION_STYLE_SPACES];
 
     /**
      * @var bool
@@ -53,6 +58,14 @@ final class PrettyPrinterConfiguration
                 sprintf('Indentation style must be one of %s but got %s',
                     implode(',', self::ALLOWED_INDENTATION_STYLES),
                     $indentationStyle
+                )
+            );
+        }
+
+        if($indentationSize > 0 && $indentationStyle === self::INDENTATION_STYLE_TABS) {
+            throw new LogicException(
+                sprintf('Indentation size should be zero for tab style but got %d',
+                    $indentationSize
                 )
             );
         }
