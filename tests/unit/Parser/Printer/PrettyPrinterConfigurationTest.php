@@ -4,6 +4,7 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Parser\Printer;
 
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 final class PrettyPrinterConfigurationTest extends TestCase
@@ -14,9 +15,15 @@ final class PrettyPrinterConfigurationTest extends TestCase
         new PrettyPrinterConfiguration(false, false, 4, 'foo');
     }
 
+    public function testTabsWithIndentationSizeThrowsException(): void
+    {
+        $this->expectException(LogicException::class);
+        new PrettyPrinterConfiguration(false, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_TABS);
+    }
+
     public function testTabsIndentationStyle(): void
     {
-        $prettyPrinterConfiguration = new PrettyPrinterConfiguration(false, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_TABS);
+        $prettyPrinterConfiguration = new PrettyPrinterConfiguration(false, false, 0, PrettyPrinterConfiguration::INDENTATION_STYLE_TABS);
         self::assertSame("\t", $prettyPrinterConfiguration->getIndentation());
     }
 
