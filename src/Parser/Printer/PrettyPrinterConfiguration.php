@@ -27,58 +27,67 @@ final class PrettyPrinterConfiguration
     public const INDENTATION_STYLE_TABS = 'tabs';
 
     /**
-     * @var array
+     * @var bool
      */
-    private const ALLOWED_INDENTATION_STYLES = [self::INDENTATION_STYLE_TABS, self::INDENTATION_STYLE_SPACES];
+    private $addClosingGlobal = false;
 
     /**
      * @var bool
      */
-    private $addClosingGlobal;
-
-    /**
-     * @var bool
-     */
-    private $includeEmptyLineBreaks;
+    private $includeEmptyLineBreaks = false;
 
     /**
      * @var int
      */
-    private $indentationSize;
+    private $indentationSize = 4;
 
     /**
      * @var string
      */
-    private $indentationStyle;
+    private $indentationStyle = self::INDENTATION_STYLE_SPACES;
 
-    public function __construct(bool $addClosingGlobal, bool $includeEmptyLineBreaks, int $indentationSize, string $indentationStyle)
+    private function __construct()
     {
-        if(!in_array($indentationStyle, self::ALLOWED_INDENTATION_STYLES)) {
-            throw new InvalidArgumentException(
-                sprintf('Indentation style must be one of %s but got %s',
-                    implode(',', self::ALLOWED_INDENTATION_STYLES),
-                    $indentationStyle
-                )
-            );
-        }
-
-        if($indentationSize > 0 && $indentationStyle === self::INDENTATION_STYLE_TABS) {
-            throw new LogicException(
-                sprintf('Indentation size should be zero for tab style but got %d',
-                    $indentationSize
-                )
-            );
-        }
-
-        $this->addClosingGlobal = $addClosingGlobal;
-        $this->includeEmptyLineBreaks = $includeEmptyLineBreaks;
-        $this->indentationSize = $indentationSize;
-        $this->indentationStyle = $indentationStyle;
     }
 
-    public static function getDefault(): self
+    public static function create(): self
     {
-        return new self(false, false, 4, self::INDENTATION_STYLE_SPACES);
+        return new self();
+    }
+
+    public function withTabs(): self
+    {
+        $clone = clone $this;
+        $clone->indentationStyle = self::INDENTATION_STYLE_TABS;
+        $clone->indentationSize = 1;
+
+        return $clone;
+    }
+
+    public function withSpaceIndentation(int $size): self
+    {
+        $clone = clone $this;
+        $clone->indentationStyle = self::INDENTATION_STYLE_SPACES;
+        $clone->indentationSize = $size;
+
+        return $clone;
+    }
+
+
+    public function withClosingGlobalStatement(): self
+    {
+        $clone = clone $this;
+        $clone->addClosingGlobal = true;
+
+        return $clone;
+    }
+
+    public function withEmptyLineBreaks(): self
+    {
+        $clone = clone $this;
+        $clone->includeEmptyLineBreaks = true;
+
+        return $clone;
     }
 
     public function isAddClosingGlobal(): bool

@@ -9,27 +9,27 @@ use PHPUnit\Framework\TestCase;
 
 final class PrettyPrinterConfigurationTest extends TestCase
 {
-    public function testWrongIndentationStyleThrowsException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new PrettyPrinterConfiguration(false, false, 4, 'foo');
-    }
-
-    public function testTabsWithIndentationSizeThrowsException(): void
-    {
-        $this->expectException(LogicException::class);
-        new PrettyPrinterConfiguration(false, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_TABS);
-    }
-
     public function testTabsIndentationStyle(): void
     {
-        $prettyPrinterConfiguration = new PrettyPrinterConfiguration(false, false, 0, PrettyPrinterConfiguration::INDENTATION_STYLE_TABS);
+        $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withTabs();
         self::assertSame("\t", $prettyPrinterConfiguration->getIndentation());
     }
 
     public function testSpacesIndentationStyle(): void
     {
-        $prettyPrinterConfiguration = new PrettyPrinterConfiguration(false, false, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_SPACES);
+        $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withSpaceIndentation(4);
         self::assertSame("    ", $prettyPrinterConfiguration->getIndentation());
+    }
+
+    public function testWithGlobalStatement(): void
+    {
+        $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withClosingGlobalStatement();
+        self::assertTrue($prettyPrinterConfiguration->isAddClosingGlobal());
+    }
+
+    public function testWithEmptyLineBreaks(): void
+    {
+        $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withEmptyLineBreaks();
+        self::assertTrue($prettyPrinterConfiguration->isIncludeEmptyLineBreaks());
     }
 }
