@@ -16,7 +16,10 @@ class PrinterTest extends TestCase
     public function setUp(): void
     {
         $this->printer = new PrettyPrinter(
-            new PrettyPrinterConfiguration(true, true, 4, PrettyPrinterConfiguration::INDENTATION_STYLE_SPACES)
+            PrettyPrinterConfiguration::create()
+            #->withClosingGlobalStatement()
+            ->withEmptyLineBreaks()
+            ->withSpaceIndentation(4)
         );
     }
 
