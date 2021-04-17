@@ -17,7 +17,6 @@ class PrinterTest extends TestCase
     {
         $this->printer = new PrettyPrinter(
             PrettyPrinterConfiguration::create()
-            #->withClosingGlobalStatement()
             ->withEmptyLineBreaks()
             ->withSpaceIndentation(4)
         );
