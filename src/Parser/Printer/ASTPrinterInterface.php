@@ -12,4 +12,9 @@ interface ASTPrinterInterface
      * @return void
      */
     public function printStatements(array $statements, OutputInterface $output): void;
+
+    /**
+     * @param PrettyPrinterConfiguration $prettyPrinterConfiguration
+     */
+    public function setPrettyPrinterConfiguration(PrettyPrinterConfiguration $prettyPrinterConfiguration): void;
 }
