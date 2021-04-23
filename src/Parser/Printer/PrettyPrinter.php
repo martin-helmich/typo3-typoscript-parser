@@ -37,6 +37,10 @@ class PrettyPrinter implements ASTPrinterInterface
         $this->prettyPrinterConfiguration = $prettyPrinterConfiguration ?? PrettyPrinterConfiguration::create();
     }
 
+    public function setPrettyPrinterConfiguration(PrettyPrinterConfiguration $prettyPrinterConfiguration)
+    {
+        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration;
+    }
 
     /**
      * @param Statement[]     $statements
