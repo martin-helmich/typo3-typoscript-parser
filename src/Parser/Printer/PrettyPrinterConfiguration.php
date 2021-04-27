@@ -90,12 +90,12 @@ final class PrettyPrinterConfiguration
         return $clone;
     }
 
-    public function isAddClosingGlobal(): bool
+    public function shouldAddClosingGlobal(): bool
     {
         return $this->addClosingGlobal;
     }
 
-    public function isIncludeEmptyLineBreaks(): bool
+    public function shouldIncludeEmptyLineBreaks(): bool
     {
         return $this->includeEmptyLineBreaks;
     }

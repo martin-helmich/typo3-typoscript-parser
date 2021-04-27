@@ -24,12 +24,12 @@ final class PrettyPrinterConfigurationTest extends TestCase
     public function testWithGlobalStatement(): void
     {
         $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withClosingGlobalStatement();
-        self::assertTrue($prettyPrinterConfiguration->isAddClosingGlobal());
+        self::assertTrue($prettyPrinterConfiguration->shouldAddClosingGlobal());
     }
 
     public function testWithEmptyLineBreaks(): void
     {
         $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withEmptyLineBreaks();
-        self::assertTrue($prettyPrinterConfiguration->isIncludeEmptyLineBreaks());
+        self::assertTrue($prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks());
     }
 }

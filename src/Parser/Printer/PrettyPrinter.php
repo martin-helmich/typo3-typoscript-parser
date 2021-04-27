@@ -220,13 +220,13 @@ class PrettyPrinter implements ASTPrinterInterface
 
     private function printNopStatement(OutputInterface $output): void
     {
-        if($this->prettyPrinterConfiguration->isIncludeEmptyLineBreaks()) {
+        if($this->prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks()) {
             $output->writeln('');
         }
     }
 
     private function closeCondition(bool $hasNext): bool
     {
-        return !$hasNext || $this->prettyPrinterConfiguration->isAddClosingGlobal();
+        return !$hasNext || $this->prettyPrinterConfiguration->shouldAddClosingGlobal();
     }
 }
