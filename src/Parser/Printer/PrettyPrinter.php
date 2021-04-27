@@ -9,6 +9,7 @@ use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\IncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\MultilineComment;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\NopStatement;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Operator\BinaryObjectOperator;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
@@ -26,6 +27,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PrettyPrinter implements ASTPrinterInterface
 {
+    /**
+     * @var PrettyPrinterConfiguration
+     */
+    private $prettyPrinterConfiguration;
+
+    public function __construct(PrettyPrinterConfiguration $prettyPrinterConfiguration = null)
+    {
+        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration ?? PrettyPrinterConfiguration::create();
+    }
+
+    public function setPrettyPrinterConfiguration(PrettyPrinterConfiguration $prettyPrinterConfiguration): void
+    {
+        $this->prettyPrinterConfiguration = $prettyPrinterConfiguration;
+    }
+
     /**
      * @param Statement[]     $statements
      * @param OutputInterface $output
@@ -85,13 +101,15 @@ class PrettyPrinter implements ASTPrinterInterface
                 $output->writeln($indent . $statement->comment);
             } elseif ($statement instanceof MultilineComment) {
                 $output->writeln($indent . $statement->comment);
+            } elseif ($statement instanceof NopStatement) {
+                $this->printNopStatement($output);
             }
         }
     }
 
     private function getIndent(int $nesting): string
     {
-        return str_repeat('    ', $nesting);
+        return str_repeat($this->prettyPrinterConfiguration->getIndentation(), $nesting);
     }
 
     private function printBinaryObjectOperator(OutputInterface $output, BinaryObjectOperator $operator, int $nesting): void
@@ -178,7 +196,7 @@ class PrettyPrinter implements ASTPrinterInterface
             $this->printStatementList($statement->elseStatements, $output, $nesting);
         }
 
-        if (!$hasNext) {
+        if ($this->closeCondition($hasNext)) {
             $output->writeln('[global]');
         }
     }
@@ -198,5 +216,17 @@ class PrettyPrinter implements ASTPrinterInterface
         }
 
         $output->writeln($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+    }
+
+    private function printNopStatement(OutputInterface $output): void
+    {
+        if($this->prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks()) {
+            $output->writeln('');
+        }
+    }
+
+    private function closeCondition(bool $hasNext): bool
+    {
+        return !$hasNext || $this->prettyPrinterConfiguration->shouldAddClosingGlobal();
     }
 }

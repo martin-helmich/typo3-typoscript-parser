@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
+
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -13,12 +15,16 @@ class PrinterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->printer = new PrettyPrinter();
+        $this->printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+            ->withEmptyLineBreaks()
+            ->withSpaceIndentation(4)
+        );
     }
 
     public function dataForPrinterTest()
     {
-        $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        $files = glob(__DIR__.'/Fixtures/*/*.typoscript');
         $testCases = [];
 
         foreach ($files as $outputFile) {
@@ -26,13 +32,14 @@ class PrinterTest extends TestCase
             /** @noinspection PhpIncludeInspection */
             $ast = include $astFile;
 
-            $exceptionFile = $outputFile . '.print';
+            $exceptionFile = $outputFile.'.print';
             if (file_exists($exceptionFile)) {
                 $outputFile = $exceptionFile;
             }
 
             $output = file_get_contents($outputFile);
-            $output = implode("\n", array_filter(explode("\n", $output)));
+
+            $output = implode("\n", explode("\n", $output));
 
             $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }
@@ -42,6 +49,7 @@ class PrinterTest extends TestCase
 
     /**
      * @dataProvider dataForPrinterTest
+     *
      * @param $ast
      * @param $expectedOutput
      */

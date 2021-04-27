@@ -24,6 +24,7 @@ interface TokenInterface
     const TYPE_OPERATOR_DELETE = "OP_DELETE";
     const TYPE_INCLUDE = "INCLUDE";
     const TYPE_INCLUDE_NEW = "INCLUDE_NEW";
+    const TYPE_EMPTY_LINE = 'NOP';
 
     public function getType(): string;
 

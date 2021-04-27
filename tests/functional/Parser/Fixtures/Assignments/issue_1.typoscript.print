@@ -1,4 +1,5 @@
 config.tx_extbase {
+
     view {
         # Configure where to look for widget templates
         widget {

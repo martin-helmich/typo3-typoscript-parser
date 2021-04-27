@@ -93,6 +93,11 @@ class Tokenizer implements TokenizerInterface
                 continue;
             }
 
+            if(trim($line->value()) === '') {
+                $tokens->append(TokenInterface::TYPE_EMPTY_LINE, $this->eolChar, $line->index());
+                continue;
+            }
+
             if ($tokens->count() !== 0) {
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $this->eolChar, (int)($line->index() - 1));
                 $column += 1;
