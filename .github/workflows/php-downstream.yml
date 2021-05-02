@@ -1,11 +1,6 @@
 name: Unit tests of downstream project
 
 on:
-  push:
-    branches:
-      - 'master'
-    tags:
-      - '*'
   pull_request:
 
 jobs:
