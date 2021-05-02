@@ -1,0 +1,52 @@
+name: Unit tests of downstream project
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - '*'
+  pull_request:
+
+jobs:
+  build:
+    strategy:      
+      matrix:
+        php-versions: ["7.2", "7.3", "7.4", "8.0"]
+        symfony-versions: ["~3.0", "~4.0", "~5.0"]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out downstream project (typoscript-lint)
+      uses: actions/checkout@v2
+      with:
+        repository: martin-helmich/typo3-typoscript-lint
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl, json
+        coverage: pcov
+      env:
+        COMPOSER_TOKEN: ${{ github.token }}
+    
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Declare required Symfony version
+      run: |
+        composer require --no-update symfony/dependency-injection ${{ matrix.symfony-versions }}
+        composer require --no-update symfony/config ${{ matrix.symfony-versions }}
+        composer require --no-update symfony/yaml ${{ matrix.symfony-versions }}
+
+    - name: Require the "version under test" with Composer
+      run: |
+        composer config repositories.pull-request vcs git://github.com/${{ github.repository }}.git
+        composer require --no-update helmich/typo3-typoscript-parser:dev-${{ github.head_ref }}#${{ github.sha }}
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run unit tests
+      run: ./vendor/bin/phpunit --testdox
