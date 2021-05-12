@@ -2,7 +2,7 @@
 return [
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('bar', 'bar'),
-        new \Helmich\TypoScriptParser\Parser\AST\Scalar('baz'),
+        new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('baz'),
         1
     ),
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Reference(

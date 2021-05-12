@@ -2,7 +2,7 @@
 return [
     new \Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
-        new \Helmich\TypoScriptParser\Parser\AST\Scalar('TEXT'),
+        new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('TEXT'),
         1
     ),
 ];

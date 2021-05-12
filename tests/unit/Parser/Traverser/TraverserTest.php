@@ -5,7 +5,7 @@ use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
-use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\AST\ScalarValue;
 use Helmich\TypoScriptParser\Parser\Traverser\Traverser;
 use Helmich\TypoScriptParser\Parser\Traverser\Visitor;
 use PHPUnit\Framework\TestCase;
@@ -22,18 +22,18 @@ class TraverserTest extends TestCase
         $this->tree = [
             new Assignment(
                 new ObjectPath('foo', 'foo'),
-                new Scalar('bar'),
+                new ScalarValue('bar'),
                 1
             ),
             new ConditionalStatement(
                 '[globalVar = GP:foo=1]',
-                [new Assignment(new ObjectPath('foo', 'foo'), new Scalar('bar'), 2)],
-                [new Assignment(new ObjectPath('foo', 'foo'), new Scalar('baz'), 4)],
+                [new Assignment(new ObjectPath('foo', 'foo'), new ScalarValue('bar'), 2)],
+                [new Assignment(new ObjectPath('foo', 'foo'), new ScalarValue('baz'), 4)],
                 2
             ),
             new NestedAssignment(
                 new ObjectPath('bar', 'bar'),
-                [new Assignment(new ObjectPath('bar.baz', 'baz'), new Scalar('foo'), 1)],
+                [new Assignment(new ObjectPath('bar.baz', 'baz'), new ScalarValue('foo'), 1)],
                 3
             )
         ];

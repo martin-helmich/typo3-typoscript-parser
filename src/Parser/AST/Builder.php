@@ -87,11 +87,12 @@ class Builder
 
     /**
      * @param string $value
-     * @return Scalar
+     *
+     * @return ScalarValue
      */
-    public function scalar(string $value): Scalar
+    public function scalar(string $value): ScalarValue
     {
-        return new Scalar($value);
+        return new ScalarValue($value);
     }
 
     /**

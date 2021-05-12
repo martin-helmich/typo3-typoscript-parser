@@ -6,7 +6,7 @@ return [
             new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'), [
             new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
                 new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo.bar', 'bar'),
-                new \Helmich\TypoScriptParser\Parser\AST\Scalar('1'),
+                new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('1'),
                 3
             ),
         ], 2
@@ -24,7 +24,7 @@ World
                 new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'), [
                 new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
                     new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo.bar', 'bar'),
-                    new \Helmich\TypoScriptParser\Parser\AST\Scalar('2'),
+                    new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('2'),
                     15
                 ),
             ], 14

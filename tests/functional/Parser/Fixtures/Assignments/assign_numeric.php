@@ -5,12 +5,12 @@ return [
         [
             new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
                 new \Helmich\TypoScriptParser\Parser\AST\ObjectPath("foo.0", "0"),
-                new \Helmich\TypoScriptParser\Parser\AST\Scalar("hello"),
+                new \Helmich\TypoScriptParser\Parser\AST\ScalarValue("hello"),
                 2
             ),
             new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
                 new \Helmich\TypoScriptParser\Parser\AST\ObjectPath("foo.1", "1"),
-                new \Helmich\TypoScriptParser\Parser\AST\Scalar("world"),
+                new \Helmich\TypoScriptParser\Parser\AST\ScalarValue("world"),
                 3
             ),
         ],

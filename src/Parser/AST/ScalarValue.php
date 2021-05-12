@@ -8,7 +8,7 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
-class Scalar
+class ScalarValue
 {
     /**
      * The value.

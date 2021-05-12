@@ -4,7 +4,7 @@ return [
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'), [
         new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
             new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo.bar', 'bar'),
-            new \Helmich\TypoScriptParser\Parser\AST\Scalar('baz'),
+            new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('baz'),
             2
         ),
         new \Helmich\TypoScriptParser\Parser\AST\Operator\Copy(

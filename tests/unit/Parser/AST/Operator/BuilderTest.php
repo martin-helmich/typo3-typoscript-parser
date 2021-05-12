@@ -5,7 +5,7 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Builder as OperatorBuilder;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
-use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\AST\ScalarValue;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -22,7 +22,7 @@ class BuilderTest extends TestCase
     {
         $op = $this->opBuilder->objectCreation(
             $foo = new ObjectPath('foo', 'foo'),
-            $text = new Scalar('TEXT'),
+            $text = new ScalarValue('TEXT'),
             1
         );
 

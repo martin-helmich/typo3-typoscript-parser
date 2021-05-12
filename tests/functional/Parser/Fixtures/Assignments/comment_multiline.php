@@ -7,7 +7,7 @@ World
 */', 1),
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
-        new \Helmich\TypoScriptParser\Parser\AST\Scalar('bar'),
+        new \Helmich\TypoScriptParser\Parser\AST\ScalarValue('bar'),
         5
     ),
 ];

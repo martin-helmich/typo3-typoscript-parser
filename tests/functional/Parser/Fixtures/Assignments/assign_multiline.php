@@ -7,7 +7,7 @@ return [
     new \Helmich\TypoScriptParser\Parser\AST\Comment('############################', 3),
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),
-        new \Helmich\TypoScriptParser\Parser\AST\Scalar("    Hallo\n    Welt"),
+        new \Helmich\TypoScriptParser\Parser\AST\ScalarValue("    Hallo\n    Welt"),
         4
     ),
 ];

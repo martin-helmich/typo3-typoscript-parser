@@ -5,7 +5,7 @@ use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
 use Helmich\TypoScriptParser\Parser\AST\NopStatement;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
-use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\AST\ScalarValue;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 return [
@@ -21,7 +21,7 @@ return [
                                 new ObjectPath('config.tx_extbase.view.widget.TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper', 'TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper'), [
                                     new Assignment(
                                         new ObjectPath('config.tx_extbase.view.widget.TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper.templateRootPath', 'templateRootPath'),
-                                        new Scalar('EXT:ext_key/Resources/Private/Templates'),
+                                        new ScalarValue('EXT:ext_key/Resources/Private/Templates'),
                                         7
                                     )
                                 ],
