@@ -14,6 +14,6 @@ final class MultilineComment extends Statement
     public function __construct(string $comment, int $sourceLine)
     {
         parent::__construct($sourceLine);
-        $this->comment = preg_replace('/[ \0\r\x0B\t]/', '', $comment);
+        $this->comment = preg_replace('/[\0\r\x0B\t]/', '', $comment);
     }
 }
