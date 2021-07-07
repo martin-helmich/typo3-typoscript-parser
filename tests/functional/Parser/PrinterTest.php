@@ -39,8 +39,6 @@ class PrinterTest extends TestCase
 
             $output = file_get_contents($outputFile);
 
-            $output = implode("\n", explode("\n", $output));
-
             $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }
 
@@ -49,11 +47,8 @@ class PrinterTest extends TestCase
 
     /**
      * @dataProvider dataForPrinterTest
-     *
-     * @param $ast
-     * @param $expectedOutput
      */
-    public function testParsedCodeIsCorrectlyPrinted($ast, $expectedOutput)
+    public function testParsedCodeIsCorrectlyPrinted(array $ast, string $expectedOutput)
     {
         $output = new BufferedOutput();
         $this->printer->printStatements($ast, $output);
