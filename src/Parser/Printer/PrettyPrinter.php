@@ -92,8 +92,7 @@ class PrettyPrinter implements ASTPrinterInterface
                     $output,
                     $nesting,
                     $statement,
-                    $next instanceof ConditionalStatement,
-                    $previous instanceof ConditionalStatement
+                    $next instanceof ConditionalStatement
                 );
             } elseif ($statement instanceof IncludeStatement) {
                 $this->printIncludeStatement($output, $statement);
@@ -180,14 +179,9 @@ class PrettyPrinter implements ASTPrinterInterface
      * @param int                  $nesting
      * @param ConditionalStatement $statement
      * @param bool                 $hasNext
-     * @param bool                 $hasPrevious
      */
-    private function printConditionalStatement(OutputInterface $output, int $nesting, ConditionalStatement $statement, bool $hasNext = false, bool $hasPrevious = false): void
+    private function printConditionalStatement(OutputInterface $output, int $nesting, ConditionalStatement $statement, bool $hasNext = false): void
     {
-        if (!$hasPrevious) {
-            $output->writeln('');
-        }
-
         $output->writeln($statement->condition);
         $this->printStatementList($statement->ifStatements, $output, $nesting);
 
