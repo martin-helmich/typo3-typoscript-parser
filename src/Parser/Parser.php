@@ -55,12 +55,12 @@ class Parser implements ParserInterface
     /**
      * Parses a TypoScript string.
      *
-     * @param string $content The string to parse.
+     * @param string $string The string to parse.
      * @return Statement[] The syntax tree.
      */
-    public function parseString(string $content): array
+    public function parseString(string $string): array
     {
-        $tokens = $this->tokenizer->tokenizeString($content);
+        $tokens = $this->tokenizer->tokenizeString($string);
         return $this->parseTokens($tokens);
     }
 
