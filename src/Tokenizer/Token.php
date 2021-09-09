@@ -52,12 +52,12 @@ class Token implements TokenInterface
     }
 
     /**
-     * @param string $string
+     * @param string $name
      * @return string|null
      */
-    public function getSubMatch(string $string): ?string
+    public function getSubMatch(string $name): ?string
     {
-        return isset($this->patternMatches[$string]) ? $this->patternMatches[$string] : null;
+        return isset($this->patternMatches[$name]) ? $this->patternMatches[$name] : null;
     }
 
     /**
