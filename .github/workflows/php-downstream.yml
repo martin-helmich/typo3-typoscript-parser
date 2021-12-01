@@ -18,6 +18,11 @@ jobs:
       with:
         repository: martin-helmich/typo3-typoscript-lint
 
+    - name: Checkout PR
+      uses: actions/checkout@v2
+      with:
+        path: .dev/typo3-typoscript-parser
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -38,8 +43,8 @@ jobs:
 
     - name: Require the "version under test" with Composer
       run: |
-        composer config repositories.pull-request vcs git://github.com/${{ github.repository }}.git
-        composer require --no-update helmich/typo3-typoscript-parser:dev-${{ github.head_ref }}#${{ github.sha }}
+        composer config repositories.pull-request path .dev/typo3-typoscript-parser
+        composer require --no-update 'helmich/typo3-typoscript-parser:*'
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
