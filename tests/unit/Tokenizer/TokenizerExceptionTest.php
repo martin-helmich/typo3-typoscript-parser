@@ -4,6 +4,9 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Tokenizer;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerException;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
+
 class TokenizerExceptionTest extends TestCase
 {
     public function testCanGetSourceLine()
