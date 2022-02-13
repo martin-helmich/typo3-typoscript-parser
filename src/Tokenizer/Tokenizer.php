@@ -276,7 +276,7 @@ class Tokenizer implements TokenizerInterface
         ScannerLine $line
     ): void {
         if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
-            $state->appendToToken($matches[0]);
+            $state->appendToToken(trim($matches[0]));
         }
 
         if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {

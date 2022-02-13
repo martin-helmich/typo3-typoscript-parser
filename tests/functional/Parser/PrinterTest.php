@@ -44,8 +44,6 @@ class PrinterTest extends TestCase
 
             $output = file_get_contents($outputFile);
 
-            $output = implode("\n", explode("\n", $output));
-
             $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }
 
