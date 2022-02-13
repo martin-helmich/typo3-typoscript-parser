@@ -23,8 +23,12 @@ class ParserTest extends TestCase
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
 
-            /** @noinspection PhpIncludeInspection */
-            $output = include $outputFile;
+            $output = null;
+
+            if (file_exists($outputFile)) {
+                /** @noinspection PhpIncludeInspection */
+                $output = include $outputFile;
+            }
 
             $testCases[str_replace(".typoscript", "", basename($file))] = [$file, $output];
         }
@@ -38,7 +42,6 @@ class ParserTest extends TestCase
         yield ["foo > bar"];
         yield ["foo {\n    [globalString = GP:foo=1]\n    bar =1 \n    [global]\n}"];
         yield ["[globalString = GP:foo=1]\nbar = 1\n[else]\nbar = 2\n[else]\nbar = 3\n[global]"];
-        //yield ["[globalString = GP:foo=1]\nbar = 1\n[else][else]\nbar = 3\n[global]"];
         yield ["foo = 1\n}"];
         yield ["foo = 1\n[end]"];
         yield ["foo :="];
@@ -56,8 +59,15 @@ class ParserTest extends TestCase
     public function testCodeIsParsedIntoCorrectAST($inputFile, $expectedAST)
     {
         $ast = $this->parser->parseStream($inputFile);
+
+        // this happens on incomplete test cases
+        $isIncompleteTestCase = $expectedAST === null;
+        if ($isIncompleteTestCase) {
+            $this->markTestIncomplete(var_export($ast, true));
+            return;
+        }
+
         $this->assertEquals($expectedAST, $ast);
-//        $this->assertSame($expectedAST, $ast);
     }
 
     /**

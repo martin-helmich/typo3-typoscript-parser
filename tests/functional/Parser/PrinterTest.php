@@ -28,9 +28,13 @@ class PrinterTest extends TestCase
         $testCases = [];
 
         foreach ($files as $outputFile) {
+            $ast = null;
             $astFile = str_replace('.typoscript', '.php', $outputFile);
-            /** @noinspection PhpIncludeInspection */
-            $ast = include $astFile;
+
+            if (file_exists($astFile)) {
+                /** @noinspection PhpIncludeInspection */
+                $ast = include $astFile;
+            }
 
             $exceptionFile = $outputFile.'.print';
             if (file_exists($exceptionFile)) {
@@ -55,6 +59,11 @@ class PrinterTest extends TestCase
      */
     public function testParsedCodeIsCorrectlyPrinted($ast, $expectedOutput)
     {
+        if ($ast === null) {
+            $this->markTestIncomplete("no output AST provided");
+            return;
+        }
+
         $output = new BufferedOutput();
         $this->printer->printStatements($ast, $output);
 

@@ -1,0 +1,9 @@
+TCEFORM {
+    tt_content {
+        space_before_class {
+            altLabels {
+                . = LLL:EXT:theme/Resources/Private/Language/locallang_db.xlf:general.noGap
+            }
+        }
+    }
+}
