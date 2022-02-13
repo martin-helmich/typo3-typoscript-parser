@@ -5,18 +5,27 @@ on:
 
 jobs:
   build:
-    strategy:      
+    strategy:
       matrix:
-        php-versions: ["7.2", "7.3", "7.4", "8.0"]
-        symfony-versions: ["~3.0", "~4.0", "~5.0"]
+        php-versions: ["7.4", "8.0", "8.1"]
+        symfony-versions: ["~3.0", "~4.0", "~5.0", "~6.0"]
+        exclude:
+          - php-versions: "7.4"
+            symfony-versions: "~6.0"
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
     - name: Check out downstream project (typoscript-lint)
       uses: actions/checkout@v2
       with:
         repository: martin-helmich/typo3-typoscript-lint
-    
+
+    - name: Checkout PR
+      uses: actions/checkout@v2
+      with:
+        path: .dev/typo3-typoscript-parser
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -25,7 +34,7 @@ jobs:
         coverage: pcov
       env:
         COMPOSER_TOKEN: ${{ github.token }}
-    
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -37,8 +46,8 @@ jobs:
 
     - name: Require the "version under test" with Composer
       run: |
-        composer config repositories.pull-request vcs git://github.com/${{ github.repository }}.git
-        composer require --no-update helmich/typo3-typoscript-parser:dev-${{ github.head_ref }}#${{ github.sha }}
+        composer config repositories.pull-request path .dev/typo3-typoscript-parser
+        composer require --no-update 'helmich/typo3-typoscript-parser:*'
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest

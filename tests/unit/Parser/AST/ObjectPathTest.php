@@ -5,6 +5,9 @@ namespace Helmich\TypoScriptParser\Tests\Unit\Parser\AST;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\identicalTo;
+
 class ObjectPathTest extends TestCase
 {
     public function testPathsRemainStrings()

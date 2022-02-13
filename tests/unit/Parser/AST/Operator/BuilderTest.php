@@ -8,6 +8,10 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\identicalTo;
+use function PHPUnit\Framework\isInstanceOf;
+
 class BuilderTest extends TestCase
 {
     /** @var OperatorBuilder */

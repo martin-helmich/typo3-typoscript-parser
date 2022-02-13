@@ -9,8 +9,6 @@ class StatementTest extends TestCase
     public function dataForInvalidSourceLines()
     {
         yield [0];
-        yield [0.1];
-        yield [-0.1];
         yield [-1];
         yield [-PHP_INT_MAX];
     }
