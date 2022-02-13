@@ -3,9 +3,10 @@
 namespace Helmich\TypoScriptParser\Tests\Unit\Parser\Printer;
 
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
-use InvalidArgumentException;
-use LogicException;
 use PHPUnit\Framework\TestCase;
+
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\isTrue;
 
 final class PrettyPrinterConfigurationTest extends TestCase
 {
@@ -31,5 +32,11 @@ final class PrettyPrinterConfigurationTest extends TestCase
     {
         $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withEmptyLineBreaks();
         self::assertTrue($prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks());
+    }
+
+    public function testWithIndentConditions(): void
+    {
+        $prettyPrinterConfiguration = PrettyPrinterConfiguration::create()->withIndentConditions();
+        assertThat($prettyPrinterConfiguration->shouldIndentConditions(), isTrue());
     }
 }
