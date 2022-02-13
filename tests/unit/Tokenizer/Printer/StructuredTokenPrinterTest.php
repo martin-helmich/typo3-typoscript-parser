@@ -5,6 +5,9 @@ use Helmich\TypoScriptParser\Tokenizer\Printer\StructuredTokenPrinter;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
+
 class StructuredTokenPrinterTest extends TestCase
 {
     /** @var StructuredTokenPrinter */

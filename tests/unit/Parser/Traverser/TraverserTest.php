@@ -9,9 +9,12 @@ use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\Traverser\Traverser;
 use Helmich\TypoScriptParser\Parser\Traverser\Visitor;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class TraverserTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $tree;
 
     /** @var Traverser */
