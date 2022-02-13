@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
@@ -10,21 +12,20 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class PrinterTest extends TestCase
 {
-    /** @var ASTPrinterInterface */
-    private $printer;
+    private ASTPrinterInterface $printer;
 
     public function setUp(): void
     {
         $this->printer = new PrettyPrinter(
             PrettyPrinterConfiguration::create()
-            ->withEmptyLineBreaks()
-            ->withSpaceIndentation(4)
+                ->withEmptyLineBreaks()
+                ->withSpaceIndentation(4)
         );
     }
 
-    public function dataForPrinterTest()
+    public function dataForPrinterTest(): array
     {
-        $files = glob(__DIR__.'/Fixtures/*/*.typoscript');
+        $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         $testCases = [];
 
         foreach ($files as $outputFile) {
@@ -36,7 +37,7 @@ class PrinterTest extends TestCase
                 $ast = include $astFile;
             }
 
-            $exceptionFile = $outputFile.'.print';
+            $exceptionFile = $outputFile . '.print';
             if (file_exists($exceptionFile)) {
                 $outputFile = $exceptionFile;
             }
@@ -53,11 +54,8 @@ class PrinterTest extends TestCase
 
     /**
      * @dataProvider dataForPrinterTest
-     *
-     * @param $ast
-     * @param $expectedOutput
      */
-    public function testParsedCodeIsCorrectlyPrinted($ast, $expectedOutput)
+    public function testParsedCodeIsCorrectlyPrinted(array $ast, string $expectedOutput): void
     {
         if ($ast === null) {
             $this->markTestIncomplete("no output AST provided");
