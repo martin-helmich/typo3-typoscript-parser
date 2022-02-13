@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     public function setUp(): void
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Helmich\TypoScriptParser\Parser\Printer;
 
@@ -17,6 +19,7 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Tokenizer\Preprocessing\NoOpPreprocessor;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -52,6 +55,17 @@ class PrettyPrinter implements ASTPrinterInterface
         $this->printStatementList($statements, $output, 0);
     }
 
+    private function trimTrailingNoops(array $statements): array
+    {
+        $out = $statements;
+
+        while ($out[count($out) - 1] instanceof NopStatement) {
+            array_pop($out);
+        }
+
+        return $out;
+    }
+
     /**
      * @param Statement[]     $statements
      * @param OutputInterface $output
@@ -60,6 +74,10 @@ class PrettyPrinter implements ASTPrinterInterface
      */
     private function printStatementList(array $statements, OutputInterface $output, int $nesting = 0): void
     {
+        if ($nesting === 0) {
+            $statements = $this->trimTrailingNoops($statements);
+        }
+
         $indent = $this->getIndent($nesting);
         $count  = count($statements);
 
@@ -220,7 +238,7 @@ class PrettyPrinter implements ASTPrinterInterface
 
     private function printNopStatement(OutputInterface $output): void
     {
-        if($this->prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks()) {
+        if ($this->prettyPrinterConfiguration->shouldIncludeEmptyLineBreaks()) {
             $output->writeln('');
         }
     }
