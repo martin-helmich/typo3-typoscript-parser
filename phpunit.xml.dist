@@ -1,21 +1,16 @@
-<phpunit
-        backupGlobals="true"
-        bootstrap="vendor/autoload.php"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true">
-    <testsuites>
-        <testsuite name="Unit tests">
-            <directory phpVersion="5.4.0" phpVersionOperator=">=">tests/unit</directory>
-        </testsuite>
-        <testsuite name="Functional tests">
-            <directory>tests/functional</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="true" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="Unit tests">
+      <directory phpVersion="5.4.0" phpVersionOperator="&gt;=">tests/unit</directory>
+    </testsuite>
+    <testsuite name="Functional tests">
+      <directory>tests/functional</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

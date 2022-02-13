@@ -5,6 +5,9 @@ use Helmich\TypoScriptParser\Tokenizer\LineGrouper;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
+
 class LineGrouperTest extends TestCase
 {
     public function testTokensAreGroupsByLine()

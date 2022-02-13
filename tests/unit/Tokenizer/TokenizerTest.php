@@ -9,6 +9,9 @@ use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
 use PHPUnit\Framework\TestCase;
 use VirtualFileSystem\FileSystem;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
+
 class TokenizerTest extends TestCase
 {
     /** @var TokenizerInterface */

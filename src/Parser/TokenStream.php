@@ -93,6 +93,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param TokenInterface $value
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new BadMethodCallException('changing a token stream is not permitted');
@@ -102,6 +103,7 @@ class TokenStream implements Iterator, \ArrayAccess
      * @param int $offset
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new BadMethodCallException('changing a token stream is not permitted');

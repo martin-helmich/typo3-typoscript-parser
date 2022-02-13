@@ -6,6 +6,10 @@ use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
+use function PHPUnit\Framework\isTrue;
+
 class TokenStreamTest extends TestCase
 {
     /** @var tokenStream */
