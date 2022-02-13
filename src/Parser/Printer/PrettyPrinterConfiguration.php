@@ -1,12 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 
 namespace Helmich\TypoScriptParser\Parser\Printer;
-
-use InvalidArgumentException;
-use LogicException;
-use Webmozart\Assert\Assert;
 
 /**
  * PrinterConfiguration
@@ -26,25 +23,15 @@ final class PrettyPrinterConfiguration
      */
     public const INDENTATION_STYLE_TABS = 'tabs';
 
-    /**
-     * @var bool
-     */
-    private $addClosingGlobal = false;
+    private bool $addClosingGlobal = false;
 
-    /**
-     * @var bool
-     */
-    private $includeEmptyLineBreaks = false;
+    private bool $includeEmptyLineBreaks = false;
 
-    /**
-     * @var int
-     */
-    private $indentationSize = 4;
+    private int $indentationSize = 4;
 
-    /**
-     * @var string
-     */
-    private $indentationStyle = self::INDENTATION_STYLE_SPACES;
+    private string $indentationStyle = self::INDENTATION_STYLE_SPACES;
+
+    private bool $indentConditions = false;
 
     private function __construct()
     {
@@ -73,7 +60,6 @@ final class PrettyPrinterConfiguration
         return $clone;
     }
 
-
     public function withClosingGlobalStatement(): self
     {
         $clone = clone $this;
@@ -90,6 +76,14 @@ final class PrettyPrinterConfiguration
         return $clone;
     }
 
+    public function withIndentConditions(): self
+    {
+        $clone = clone $this;
+        $clone->indentConditions = true;
+
+        return $clone;
+    }
+
     public function shouldAddClosingGlobal(): bool
     {
         return $this->addClosingGlobal;
@@ -100,9 +94,14 @@ final class PrettyPrinterConfiguration
         return $this->includeEmptyLineBreaks;
     }
 
+    public function shouldIndentConditions(): bool
+    {
+        return $this->indentConditions;
+    }
+
     public function getIndentation(): string
     {
-        if($this->indentationStyle === self::INDENTATION_STYLE_TABS) {
+        if ($this->indentationStyle === self::INDENTATION_STYLE_TABS) {
             return "\t";
         }
 

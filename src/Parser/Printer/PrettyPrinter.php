@@ -104,7 +104,6 @@ class PrettyPrinter implements ASTPrinterInterface
                 );
             } elseif ($statement instanceof ConditionalStatement) {
                 $next     = $i + 1 < $count ? $statements[$i + 1] : null;
-                $previous = $i - 1 >= 0 ? $statements[$i - 1] : null;
 
                 $this->printConditionalStatement(
                     $output,
@@ -200,12 +199,17 @@ class PrettyPrinter implements ASTPrinterInterface
      */
     private function printConditionalStatement(OutputInterface $output, int $nesting, ConditionalStatement $statement, bool $hasNext = false): void
     {
+        $conditionNesting = $nesting;
+        if ($this->prettyPrinterConfiguration->shouldIndentConditions()) {
+            $conditionNesting += 1;
+        }
+
         $output->writeln($statement->condition);
-        $this->printStatementList($statement->ifStatements, $output, $nesting);
+        $this->printStatementList($statement->ifStatements, $output, $conditionNesting);
 
         if (count($statement->elseStatements) > 0) {
             $output->writeln('[else]');
-            $this->printStatementList($statement->elseStatements, $output, $nesting);
+            $this->printStatementList($statement->elseStatements, $output, $conditionNesting);
         }
 
         if ($this->closeCondition($hasNext)) {
