@@ -1,6 +1,7 @@
 <?php
 
 use Helmich\TypoScriptParser\Parser\AST\NestedAssignment;
+use Helmich\TypoScriptParser\Parser\AST\NopStatement;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
@@ -34,5 +35,11 @@ return [
             )
         ],
         1,
-    )
+    ),
+    new NopStatement(10),
+    new Assignment(
+        new ObjectPath('TCEFORM.tt_content.space_before_class.altLabels..', 'TCEFORM.tt_content.space_before_class.altLabels..'),
+        new Scalar('foo'),
+        11,
+    ),
 ];

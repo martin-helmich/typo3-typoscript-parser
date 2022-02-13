@@ -7,3 +7,5 @@ TCEFORM {
         }
     }
 }
+
+TCEFORM.tt_content.space_before_class.altLabels.. = foo
