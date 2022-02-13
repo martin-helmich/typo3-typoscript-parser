@@ -42,7 +42,7 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run type checker
-      run: ./vendor/bin/psalm
+      run: ./vendor/bin/psalm --php-version=${{ matrix.php-versions}}
 
     - name: Run unit tests
       run: ./vendor/bin/phpunit --testdox
