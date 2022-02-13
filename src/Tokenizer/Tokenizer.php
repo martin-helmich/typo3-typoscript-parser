@@ -9,6 +9,8 @@ use Helmich\TypoScriptParser\Tokenizer\Preprocessing\StandardPreprocessor;
 
 class Tokenizer implements TokenizerInterface
 {
+    const OBJECT_ACCESSOR = '((?:\.)|(?:[a-zA-Z0-9_\-\\\\:\$\{\}]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}]*)*))';
+
     const TOKEN_WHITESPACE = ',^[ \t\n]+,s';
     const TOKEN_COMMENT_ONELINE = ',^(#|/)[^\n]*,';
     const TOKEN_COMMENT_MULTILINE_BEGIN = ',^/\*,';
@@ -18,7 +20,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_CONDITION_END = ',^\[(global|end)\],i';
 
     const TOKEN_OBJECT_NAME = ',^(CASE|CLEARGIF|COA(?:_INT)?|COBJ_ARRAY|COLUMNS|CTABLE|EDITPANEL|FILES?|FLUIDTEMPLATE|FORM|HMENU|HRULER|TEXT|IMAGE|IMG_RESOURCE|IMGTEXT|LOAD_REGISTER|MEDIA|MULTIMEDIA|OTABLE|QTOBJECT|RECORDS|RESTORE_REGISTER|SEARCHRESULT|SVG|SWFOBJECT|TEMPLATE|USER(?:_INT)?|GIFBUILDER|[GT]MENU(?:_LAYERS)?|(?:G|T|JS|IMG)MENUITEM)$,';
-    const TOKEN_OBJECT_ACCESSOR = '((?:\.)|(?:[a-zA-Z0-9_\-\\\\:\$\{\}]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}]*)*))';
+    const TOKEN_OBJECT_ACCESSOR = ',' . self::OBJECT_ACCESSOR . '$';
     const TOKEN_OBJECT_REFERENCE = ',^\.?([a-zA-Z0-9_\-\\\\:\$\{\}]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}]+)*)$,';
 
     const TOKEN_NESTING_START = ',^\{$,';
@@ -32,7 +34,7 @@ class Tokenizer implements TokenizerInterface
         \)
     $,x';
     const TOKEN_OPERATOR_LINE = ',^
-        ' . self::TOKEN_OBJECT_ACCESSOR . ' # Left value (object accessor)
+        ' . self::OBJECT_ACCESSOR . ' # Left value (object accessor)
         (\s*)                               # Whitespace
         (=<|=|:=|<|>|\{|\()                 # Operator
         (\s*)                               # More whitespace
