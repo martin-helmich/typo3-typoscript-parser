@@ -46,7 +46,7 @@ class Parser implements ParserInterface
     {
         $content = file_get_contents($stream);
         if ($content === false) {
-            throw new \InvalidArgumentException("could not open file '${stream}'");
+            throw new \InvalidArgumentException("could not open file '$stream'");
         }
 
         return $this->parseString($content);

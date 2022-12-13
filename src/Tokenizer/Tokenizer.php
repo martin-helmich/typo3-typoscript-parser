@@ -147,7 +147,7 @@ class Tokenizer implements TokenizerInterface
     {
         $content = file_get_contents($inputStream);
         if ($content === false) {
-            throw new \InvalidArgumentException("could not open file '${inputStream}'");
+            throw new \InvalidArgumentException("could not open file '$inputStream'");
         }
 
         return $this->tokenizeString($content);
