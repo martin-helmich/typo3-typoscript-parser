@@ -19,9 +19,9 @@
         "symfony/yaml": "^5.4 || ^6.4"
     },
     "require-dev": {
-        "php-vfs/php-vfs": "^1.3",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
+        "php-vfs/php-vfs": "^1.4.2",
+        "phpspec/prophecy-phpunit": "^2.1.0",
+        "phpunit/phpunit": "^9.6.16",
         "symfony/phpunit-bridge": "^5.4 || ^6.4",
         "vimeo/psalm": "^4.20"
     },
