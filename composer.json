@@ -23,7 +23,7 @@
         "phpspec/prophecy-phpunit": "^2.1.0",
         "phpunit/phpunit": "^9.6.16",
         "symfony/phpunit-bridge": "^5.4 || ^6.4",
-        "vimeo/psalm": "^4.20"
+        "vimeo/psalm": "^5.20"
     },
     "autoload": {
         "psr-4": {
