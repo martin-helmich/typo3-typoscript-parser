@@ -14,15 +14,15 @@
     },
     "require": {
         "php": ">=7.4",
-        "symfony/config": "^5.4 || ^6.4",
-        "symfony/dependency-injection": "^5.4 || ^6.4",
-        "symfony/yaml": "^5.4 || ^6.4"
+        "symfony/config": "^5.4 || ^6.4 || ^7.0",
+        "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.0",
+        "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
     },
     "require-dev": {
         "php-vfs/php-vfs": "^1.4.2",
         "phpspec/prophecy-phpunit": "^2.1.0",
         "phpunit/phpunit": "^9.6.16",
-        "symfony/phpunit-bridge": "^5.4 || ^6.4",
+        "symfony/phpunit-bridge": "^5.4 || ^6.4 || ^7.0",
         "vimeo/psalm": "^4.20"
     },
     "autoload": {

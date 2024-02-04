@@ -13,12 +13,18 @@ jobs:
     strategy:
       matrix:
         php-versions: ["7.4", "8.0", "8.1", "8.2"]
-        symfony-versions: [ "^5.4", "^6.4" ]
+        symfony-versions: [ "^5.4", "^6.4", "^7.0" ]
         exclude:
           - php-versions: "7.4"
             symfony-versions: "^6.4"
           - php-versions: "8.0"
             symfony-versions: "^6.4"
+          - php-versions: "7.4"
+            symfony-versions: "^7.0"
+          - php-versions: "8.0"
+            symfony-versions: "^7.0"
+          - php-versions: "8.1"
+            symfony-versions: "^7.0"
     runs-on: ubuntu-latest
 
     steps:
