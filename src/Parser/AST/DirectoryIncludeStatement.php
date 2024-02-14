@@ -13,32 +13,25 @@ class DirectoryIncludeStatement extends IncludeStatement
 
     /**
      * The directory to include from.
-     *
-     * @var string
      */
-    public $directory;
+    public string $directory;
 
     /**
      * Conditional statement that is attached to this include
-     *
-     * @var string|null
      */
-    public $condition;
+    public string|null $condition;
 
     /**
      * Same as extensions
      *
-     * @var string|null
      * @deprecated Use `extensions` instead
      */
-    public $extension = null;
+    public string|null $extension = null;
 
     /**
      * An optional file extension filter. May be NULL.
-     *
-     * @var string|null
      */
-    public $extensions = null;
+    public string|null $extensions = null;
 
     /**
      * Constructs a new directory include statement.

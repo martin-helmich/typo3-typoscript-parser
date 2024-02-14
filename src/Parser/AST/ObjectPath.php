@@ -54,10 +54,11 @@ class ObjectPath
     public function parent(): ObjectPath
     {
         $components = explode('.', $this->absoluteName);
-        if (count($components) === 1) {
+        array_pop($components);
+
+        if (count($components) === 0) {
             return new RootObjectPath();
         }
-        array_pop($components);
         return new self(implode('.', $components), $components[count($components) - 1]);
     }
 
