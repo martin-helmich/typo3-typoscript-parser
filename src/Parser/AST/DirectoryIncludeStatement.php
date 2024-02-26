@@ -13,10 +13,8 @@ class DirectoryIncludeStatement extends IncludeStatement
 
     /**
      * The directory to include from.
-     *
-     * @var string
      */
-    public $directory;
+    public string $directory;
 
     /**
      * Conditional statement that is attached to this include
