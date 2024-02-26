@@ -1,0 +1,3 @@
+templates.vendor/package {
+    10 = vendor/otherpackage/Resources/Private/Backend
+}
