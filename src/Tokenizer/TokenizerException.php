@@ -12,8 +12,7 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class TokenizerException extends \Exception
 {
-    /** @var int|null */
-    private $sourceLine;
+    private ?int $sourceLine;
 
     /**
      * Constructs a new tokenizer exception.
@@ -23,7 +22,7 @@ class TokenizerException extends \Exception
      * @param \Exception|null $previous   A nested previous exception.
      * @param int|null        $sourceLine The original source line.
      */
-    public function __construct(string $message = "", int $code = 0, \Exception $previous = null, int $sourceLine = null)
+    public function __construct(string $message = "", int $code = 0, \Exception $previous = null, ?int $sourceLine = null)
     {
         parent::__construct($message, $code, $previous);
 

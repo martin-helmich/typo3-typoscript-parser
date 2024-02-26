@@ -17,12 +17,7 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
  */
 class Modification extends BinaryOperator
 {
-    /**
-     * The modification call.
-     *
-     * @var ModificationCall
-     */
-    public $call;
+    public ModificationCall $call;
 
     /**
      * Constructs a modification statement.

@@ -16,18 +16,10 @@ use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
  */
 class Parser implements ParserInterface
 {
-    /** @var TokenizerInterface */
-    private $tokenizer;
+    private TokenizerInterface $tokenizer;
 
-    /** @var Builder */
-    private $builder;
+    private Builder $builder;
 
-    /**
-     * Parser constructor.
-     *
-     * @param TokenizerInterface $tokenizer
-     * @param Builder|null       $astBuilder
-     */
     public function __construct(TokenizerInterface $tokenizer, Builder $astBuilder = null)
     {
         $this->tokenizer = $tokenizer;
@@ -41,6 +33,7 @@ class Parser implements ParserInterface
      *
      * @param string $stream The stream resource.
      * @return Statement[] The syntax tree.
+     * @throws ParseError
      */
     public function parseStream(string $stream): array
     {
@@ -57,6 +50,7 @@ class Parser implements ParserInterface
      *
      * @param string $string The string to parse.
      * @return Statement[] The syntax tree.
+     * @throws ParseError
      */
     public function parseString(string $string): array
     {
@@ -69,6 +63,7 @@ class Parser implements ParserInterface
      *
      * @param TokenInterface[] $tokens The token stream to parse.
      * @return Statement[] The syntax tree.
+     * @throws ParseError
      */
     public function parseTokens(array $tokens): array
     {
@@ -91,8 +86,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserState $state
-     * @return void
      * @throws ParseError
      */
     private function parseToken(ParserState $state): void
@@ -153,9 +146,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserState $state
-     * @param int|null    $startLine
-     * @return void
      * @throws ParseError
      */
     private function parseNestedStatements(ParserState $state, ?int $startLine = null): void
@@ -197,7 +187,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserState $state
      * @throws ParseError
      */
     private function parseCondition(ParserState $state): void
@@ -270,9 +259,6 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param ParserState $state
-     */
     private function parseInclude(ParserState $state): void
     {
         $token = $state->token();
@@ -304,12 +290,6 @@ class Parser implements ParserInterface
         $state->statements()->append($node);
     }
 
-    /**
-     * @param string         $optional
-     * @param TokenInterface $token
-     * @return array
-     * @throws ParseError
-     */
     private function parseIncludeOptionals(string $optional, TokenInterface $token): array
     {
         if (!(preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches) > 0)) {
@@ -342,10 +322,6 @@ class Parser implements ParserInterface
         return [$extensions, $condition];
     }
 
-    /**
-     * @param ParserState $state
-     * @throws ParseError
-     */
     private function parseValueOperation(ParserState $state): void
     {
         switch ($state->token(1)->getType()) {
@@ -368,9 +344,6 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param ParserState $state
-     */
     private function parseAssignment(ParserState $state): void
     {
         switch ($state->token(2)->getType()) {
@@ -402,10 +375,6 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param ParserState $state
-     * @throws ParseError
-     */
     private function parseCopyOrReference(ParserState $state): void
     {
         $targetToken = $state->token(2);
@@ -424,7 +393,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserState $state
      * @throws ParseError
      */
     private function parseModification(ParserState $state): void
@@ -448,7 +416,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param ParserState $state
      * @throws ParseError
      */
     private function parseDeletion(ParserState $state): void
@@ -467,9 +434,6 @@ class Parser implements ParserInterface
         $state->next(1);
     }
 
-    /**
-     * @param ParserState $state
-     */
     private function parseMultilineAssigment(ParserState $state): void
     {
         $state->statements()->append($this->builder->op()->assignment(
@@ -481,7 +445,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param TokenInterface $token
      * @throws ParseError
      */
     private function validateModifyOperatorRightValue(TokenInterface $token): void
@@ -496,7 +459,6 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param TokenInterface $token
      * @throws ParseError
      */
     private function validateCopyOperatorRightValue(TokenInterface $token): void

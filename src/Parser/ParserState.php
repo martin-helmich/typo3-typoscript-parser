@@ -9,14 +9,11 @@ use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
 class ParserState
 {
-    /** @var ObjectPath */
-    private $context;
+    private ObjectPath $context;
 
-    /** @var ArrayObject */
-    private $statements;
+    private ArrayObject $statements;
 
-    /** @var TokenStream */
-    private $tokens;
+    private TokenStream $tokens;
 
     public function __construct(TokenStream $tokens, ArrayObject $statements = null)
     {
@@ -43,43 +40,26 @@ class ParserState
         return $clone;
     }
 
-    /**
-     * @param int $lookAhead
-     * @return TokenInterface
-     */
     public function token(int $lookAhead = 0): TokenInterface
     {
         return $this->tokens->current($lookAhead);
     }
 
-    /**
-     * @param int $increment
-     * @return void
-     */
     public function next(int $increment = 1): void
     {
         $this->tokens->next($increment);
     }
 
-    /**
-     * @return bool
-     */
     public function hasNext(): bool
     {
         return $this->tokens->valid();
     }
 
-    /**
-     * @return ObjectPath
-     */
     public function context(): ObjectPath
     {
         return $this->context;
     }
 
-    /**
-     * @return ArrayObject
-     */
     public function statements(): ArrayObject
     {
         return $this->statements;

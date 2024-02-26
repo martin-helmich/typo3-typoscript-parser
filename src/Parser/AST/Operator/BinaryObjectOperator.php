@@ -14,8 +14,6 @@ abstract class BinaryObjectOperator extends BinaryOperator
 {
     /**
      * The target object to reference to or copy from.
-     *
-     * @var ObjectPath
      */
-    public $target;
+    public ObjectPath $target;
 }

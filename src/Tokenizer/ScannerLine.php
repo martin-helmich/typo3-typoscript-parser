@@ -20,7 +20,7 @@ class ScannerLine
      * @psalm-param non-empty-string $pattern
      * @return string[]|false
      */
-    public function scan(string $pattern)
+    public function scan(string $pattern): array|false
     {
         if (preg_match($pattern, $this->line, $matches)) {
             $matchingPart = substr($this->line, strlen($matches[0]));
@@ -36,7 +36,7 @@ class ScannerLine
      * @psalm-param non-empty-string $pattern
      * @return string[]|false
      */
-    public function peek(string $pattern)
+    public function peek(string $pattern): array|false
     {
         if (preg_match($pattern, $this->line, $matches)) {
             return $matches;

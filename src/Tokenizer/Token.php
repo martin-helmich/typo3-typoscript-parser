@@ -4,28 +4,16 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 
 class Token implements TokenInterface
 {
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var string */
-    private $value;
+    private string $value;
 
-    /** @var int */
-    private $line;
+    private int $line;
 
-    /** @var int */
-    private $column;
+    private int $column;
 
-    /** @var array */
-    private $patternMatches;
+    private array $patternMatches;
 
-    /**
-     * @param string $type
-     * @param string $value
-     * @param int    $line
-     * @param int    $column
-     * @param array  $patternMatches
-     */
     public function __construct(string $type, string $value, int $line, int $column = 1, array $patternMatches = [])
     {
         $this->type           = $type;
@@ -35,42 +23,26 @@ class Token implements TokenInterface
         $this->patternMatches = $patternMatches;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * @param string $name
-     * @return string|null
-     */
     public function getSubMatch(string $name): ?string
     {
         return isset($this->patternMatches[$name]) ? $this->patternMatches[$name] : null;
     }
 
-    /**
-     * @return int
-     */
     public function getLine(): int
     {
         return $this->line;
     }
 
-    /**
-     * @return int
-     */
     public function getColumn(): int
     {
         return $this->column;

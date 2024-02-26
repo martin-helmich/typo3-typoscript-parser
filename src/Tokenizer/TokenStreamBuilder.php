@@ -12,14 +12,11 @@ use ArrayObject;
  */
 class TokenStreamBuilder
 {
-    /** @var ArrayObject */
-    private $tokens;
+    private ArrayObject $tokens;
 
-    /** @var int|null */
-    private $currentLine = null;
+    private ?int $currentLine = null;
 
-    /** @var int */
-    private $currentColumn = 1;
+    private int $currentColumn = 1;
 
     /**
      * TokenStreamBuilder constructor.
@@ -69,9 +66,6 @@ class TokenStreamBuilder
         return $this->tokens->count();
     }
 
-    /**
-     * @return int
-     */
     public function currentColumn(): int
     {
         return $this->currentColumn;

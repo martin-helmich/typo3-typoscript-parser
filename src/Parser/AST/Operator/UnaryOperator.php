@@ -15,10 +15,8 @@ abstract class UnaryOperator extends Statement
 {
     /**
      * The object the operator should be applied on.
-     *
-     * @var ObjectPath
      */
-    public $object;
+    public ObjectPath $object;
 
     /**
      * Constructs a unary operator statement.

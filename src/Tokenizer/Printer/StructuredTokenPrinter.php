@@ -7,8 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class StructuredTokenPrinter implements TokenPrinterInterface
 {
-    /** @var Yaml */
-    private $yaml;
+    private Yaml $yaml;
 
     public function __construct(Yaml $yaml = null)
     {
