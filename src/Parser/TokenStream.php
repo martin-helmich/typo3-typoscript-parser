@@ -2,6 +2,7 @@
 
 namespace Helmich\TypoScriptParser\Parser;
 
+use ArrayAccess;
 use BadMethodCallException;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
@@ -12,15 +13,22 @@ use Iterator;
  *
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser
+ *
+ * @template-implements ArrayAccess<int, TokenInterface>
+ * @template-implements Iterator<int, TokenInterface>
  */
-class TokenStream implements Iterator, \ArrayAccess
+class TokenStream implements Iterator, ArrayAccess
 {
-    /** @var array */
-    private $tokens;
+    /**
+     * @var TokenInterface[]
+     */
+    private array $tokens;
 
-    /** @var int */
-    private $index = 0;
+    private int $index = 0;
 
+    /**
+     * @param TokenInterface[] $tokens
+     */
     public function __construct(array $tokens)
     {
         $this->tokens = $tokens;
@@ -89,8 +97,8 @@ class TokenStream implements Iterator, \ArrayAccess
     }
 
     /**
-     * @param int            $offset
-     * @param TokenInterface $value
+     * @param int $offset
+     * @param TokenInterface|null $value
      * @return void
      */
     #[\ReturnTypeWillChange]
@@ -129,7 +137,7 @@ class TokenStream implements Iterator, \ArrayAccess
         $maxLine = 0;
 
         foreach ($this->tokens as $token) {
-            $maxLine = (int)max($token->getLine(), $maxLine);
+            $maxLine = max($token->getLine(), $maxLine);
 
             // Trim unnecessary whitespace, but leave line breaks! These are important!
             if ($token->getType() === TokenInterface::TYPE_WHITESPACE) {

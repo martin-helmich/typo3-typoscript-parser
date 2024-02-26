@@ -30,10 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PrettyPrinter implements ASTPrinterInterface
 {
-    /**
-     * @var PrettyPrinterConfiguration
-     */
-    private $prettyPrinterConfiguration;
+    private PrettyPrinterConfiguration $prettyPrinterConfiguration;
 
     public function __construct(PrettyPrinterConfiguration $prettyPrinterConfiguration = null)
     {
@@ -155,7 +152,7 @@ class PrettyPrinter implements ASTPrinterInterface
         } else {
             $attributes = "";
 
-            if ($statement->condition) {
+            if ($statement->condition !== null) {
                 $attributes = ' condition="' . $statement->condition . '"';
             }
 
@@ -167,10 +164,10 @@ class PrettyPrinter implements ASTPrinterInterface
     {
         $attributes = "";
 
-        if ($statement->extensions) {
+        if ($statement->extensions !== null && $statement->extensions !== "") {
             $attributes .= ' extensions="' . $statement->extensions . '"';
         }
-        if ($statement->condition) {
+        if ($statement->condition !== null) {
             $attributes .= ' condition="' . $statement->condition . '"';
         }
 
@@ -224,7 +221,7 @@ class PrettyPrinter implements ASTPrinterInterface
      */
     private function printAssignment(OutputInterface $output, Assignment $statement, string $indent): void
     {
-        if (strpos($statement->value->value, "\n") !== false) {
+        if (str_contains($statement->value->value, "\n")) {
             $output->writeln($indent . $statement->object->relativeName . ' (');
             $output->writeln(rtrim($statement->value->value));
             $output->writeln($indent . ')');
