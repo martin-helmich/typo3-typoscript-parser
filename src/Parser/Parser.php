@@ -400,10 +400,18 @@ class Parser implements ParserInterface
         $token = $state->token(2);
         $this->validateModifyOperatorRightValue($token);
 
-        $call = $this->builder->op()->modificationCall(
-            $token->getSubMatch('name'),
-            $token->getSubMatch('arguments')
-        );
+        $name = $token->getSubMatch('name');
+        $arguments = $token->getSubMatch('arguments');
+
+        if ($name === null || $arguments === null) {
+            throw new ParseError(
+                'Invalid modification call; name or arguments are null',
+                1403011201,
+                $token->getLine()
+            );
+        }
+
+        $call = $this->builder->op()->modificationCall($name, $arguments);
 
         $modification = $this->builder->op()->modification(
             $state->context(),
