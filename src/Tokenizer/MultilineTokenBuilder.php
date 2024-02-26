@@ -12,17 +12,13 @@ namespace Helmich\TypoScriptParser\Tokenizer;
  */
 class MultilineTokenBuilder
 {
-    /** @var string|null */
-    private $type = null;
+    private ?string $type = null;
 
-    /** @var string|null */
-    private $value = null;
+    private ?string $value = null;
 
-    /** @var int|null */
-    private $startLine = null;
+    private ?int $startLine = null;
 
-    /** @var int|null */
-    private $startColumn = null;
+    private ?int $startColumn = null;
 
     /**
      * @param string $type   Token type, one of `TokenInterface::TYPE_*`

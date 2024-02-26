@@ -6,10 +6,7 @@ namespace Helmich\TypoScriptParser\Parser\AST;
 
 final class Comment extends Statement
 {
-    /**
-     * @var string
-     */
-    public $comment;
+    public string $comment;
 
     public function __construct(string $comment, int $sourceLine)
     {

@@ -9,14 +9,15 @@ use Iterator;
  *
  * @package    Helmich\TypoScriptParser
  * @subpackage Tokenizer
+ *
+ * @template-implements Iterator<int, ScannerLine>
  */
 class Scanner implements Iterator
 {
     /** @var string[] */
-    private $lines = [];
+    private array $lines;
 
-    /** @var int */
-    private $index = 0;
+    private int $index = 0;
 
     public function __construct(array $lines)
     {

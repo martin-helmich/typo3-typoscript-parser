@@ -13,24 +13,22 @@ class ConditionalStatement extends Statement
 
     /**
      * The condition to evaluate.
-     *
-     * @var string
      */
-    public $condition;
+    public string $condition;
 
     /**
      * Statements within the if-branch.
      *
      * @var Statement[]
      */
-    public $ifStatements = [];
+    public array $ifStatements = [];
 
     /**
      * Statements within the else-branch.
      *
      * @var Statement[]
      */
-    public $elseStatements = [];
+    public array $elseStatements = [];
 
     /**
      * Constructs a conditional statement.

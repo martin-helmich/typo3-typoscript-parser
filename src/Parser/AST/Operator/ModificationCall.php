@@ -12,17 +12,13 @@ class ModificationCall
 {
     /**
      * The method name.
-     *
-     * @var string
      */
-    public $method;
+    public string $method;
 
     /**
      * The argument list.
-     *
-     * @var string
      */
-    public $arguments;
+    public string $arguments;
 
     /**
      * Modification call constructor.

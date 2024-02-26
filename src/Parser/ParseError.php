@@ -7,8 +7,7 @@ use Exception;
 class ParseError extends \Exception
 {
 
-    /** @var int|null */
-    private $sourceLine;
+    private ?int $sourceLine;
 
     public function __construct(string $message = "", int $code = 0, ?int $line = null, Exception $previous = null)
     {

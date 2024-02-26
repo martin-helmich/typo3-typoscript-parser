@@ -12,12 +12,8 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 class ProcessorChain implements Preprocessor
 {
     /** @var Preprocessor[] */
-    protected $processors = [];
+    protected array $processors = [];
 
-    /**
-     * @param Preprocessor $next
-     * @return self
-     */
     public function with(Preprocessor $next): self
     {
         $new             = new self();

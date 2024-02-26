@@ -20,10 +20,8 @@ class Assignment extends BinaryOperator
     /**
      * The value to be assigned. Should be a scalar value, which MAY contain
      * a constant evaluation expression (like "${foo.bar}").
-     *
-     * @var Scalar
      */
-    public $value;
+    public Scalar $value;
 
     /**
      * Constructs an assignment.

@@ -15,13 +15,12 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
 class Traverser
 {
     /** @var Statement[] */
-    private $statements;
+    private array $statements;
 
-    /** @var AggregatingVisitor */
-    private $visitors;
+    private AggregatingVisitor $visitors;
 
     /**
-     * @param Statement[] $statements
+     * @psalm-param Statement[] $statements
      */
     public function __construct(array $statements)
     {
@@ -29,17 +28,11 @@ class Traverser
         $this->visitors   = new AggregatingVisitor();
     }
 
-    /**
-     * @param Visitor $visitor
-     */
     public function addVisitor(Visitor $visitor): void
     {
         $this->visitors->addVisitor($visitor);
     }
 
-    /**
-     * @return void
-     */
     public function walk(): void
     {
         $this->visitors->enterTree($this->statements);
