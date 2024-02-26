@@ -9,7 +9,7 @@ use Helmich\TypoScriptParser\Tokenizer\Preprocessing\StandardPreprocessor;
 
 class Tokenizer implements TokenizerInterface
 {
-    const OBJECT_ACCESSOR = '((?:\.)|(?:[a-zA-Z0-9_\-\\\\:\$\{\}]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}]*)*))';
+    const OBJECT_ACCESSOR = '((?:\.)|(?:[a-zA-Z0-9_\-\\\\:\$\{\}/]+(?:\.[a-zA-Z0-9_\-\\\\:\$\{\}/]*)*))';
 
     const TOKEN_WHITESPACE = ',^[ \t\n]+,s';
     const TOKEN_COMMENT_ONELINE = ',^(#|/)[^\n]*,';
