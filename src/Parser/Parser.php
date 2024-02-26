@@ -431,7 +431,7 @@ class Parser implements ParserInterface
         }
 
         $state->statements()->append($this->builder->op()->delete($state->context(), $state->token(1)->getLine()));
-        $state->next(1);
+        $state->next();
     }
 
     private function parseMultilineAssigment(ParserState $state): void

@@ -46,7 +46,7 @@ class PrettyPrinter implements ASTPrinterInterface
      */
     public function printStatements(array $statements, OutputInterface $output): void
     {
-        $this->printStatementList($statements, $output, 0);
+        $this->printStatementList($statements, $output);
     }
 
     private function trimTrailingNoops(array $statements): array
