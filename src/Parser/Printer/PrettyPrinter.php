@@ -19,7 +19,6 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\NoOpPreprocessor;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**

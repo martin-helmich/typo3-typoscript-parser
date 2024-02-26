@@ -15,7 +15,7 @@ use Iterator;
 class Scanner implements Iterator
 {
     /** @var string[] */
-    private array $lines = [];
+    private array $lines;
 
     private int $index = 0;
 

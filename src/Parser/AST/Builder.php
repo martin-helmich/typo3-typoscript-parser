@@ -2,8 +2,6 @@
 
 namespace Helmich\TypoScriptParser\Parser\AST;
 
-use PhpParser\Node\Stmt\Nop;
-
 /**
  * Helper class for quickly building AST nodes
  *
