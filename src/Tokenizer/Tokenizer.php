@@ -51,17 +51,17 @@ class Tokenizer implements TokenizerInterface
         [\'"](?<filename>[^\']+)[\'"]
     $,x';
 
-    /** @var string */
-    protected $eolChar;
+    /** @psalm-var non-empty-string */
+    protected string $eolChar;
 
-    /** @var Preprocessor */
-    protected $preprocessor;
+    protected Preprocessor $preprocessor;
 
     /**
      * Tokenizer constructor.
      *
      * @param string            $eolChar      Line ending to use for tokenizing.
      * @param Preprocessor|null $preprocessor Option to preprocess file contents before actual tokenizing
+     * @psalm-param non-empty-string $eolChar
      */
     public function __construct(string $eolChar = "\n", ?Preprocessor $preprocessor = null)
     {
@@ -105,12 +105,12 @@ class Tokenizer implements TokenizerInterface
                 $column += 1;
             }
 
-            if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
+            if (($matches = $line->scan(self::TOKEN_WHITESPACE)) !== false) {
                 $tokens->append(TokenInterface::TYPE_WHITESPACE, $matches[0], $line->index());
                 $column += strlen($matches[0]);
             }
 
-            if ($line->peek(self::TOKEN_COMMENT_MULTILINE_BEGIN)) {
+            if ($line->peek(self::TOKEN_COMMENT_MULTILINE_BEGIN) !== false) {
                 $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value(), $line->index(), $column);
                 continue;
             }
@@ -179,9 +179,6 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
-     * @param $tokens
-     * @param $matches
-     * @param $currentLine
      * @throws UnknownOperatorException
      */
     private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, array $matches, int $currentLine): void
@@ -205,7 +202,7 @@ class Tokenizer implements TokenizerInterface
             return;
         }
 
-        if ($matches[3] == ':=' && preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5], $subMatches)) {
+        if ($matches[3] === ':=' && preg_match(self::TOKEN_OBJECT_MODIFIER, $matches[5], $subMatches)) {
             $tokens->append(
                 TokenInterface::TYPE_OBJECT_MODIFIER,
                 $matches[5],
@@ -224,7 +221,7 @@ class Tokenizer implements TokenizerInterface
             return;
         }
 
-        if ($matches[3] == '>' && preg_match(self::TOKEN_COMMENT_ONELINE, $matches[5])) {
+        if ($matches[3] === '>' && preg_match(self::TOKEN_COMMENT_ONELINE, $matches[5]) >= 1) {
             $tokens->append(
                 TokenInterface::TYPE_COMMENT_ONELINE,
                 $matches[5],
@@ -275,11 +272,11 @@ class Tokenizer implements TokenizerInterface
         MultilineTokenBuilder $state,
         ScannerLine $line
     ): void {
-        if ($matches = $line->scan(self::TOKEN_WHITESPACE)) {
+        if (($matches = $line->scan(self::TOKEN_WHITESPACE)) !== false) {
             $state->appendToToken(trim($matches[0]));
         }
 
-        if ($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) {
+        if (($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) !== false) {
             $token = $state->endMultilineToken("\n" . $matches[0]);
             $tokens->appendToken($token);
             return;
@@ -298,7 +295,7 @@ class Tokenizer implements TokenizerInterface
         MultilineTokenBuilder $state,
         ScannerLine $line
     ): void {
-        if ($line->peek(',^\s*\),')) {
+        if ($line->peek(',^\s*\),') !== false) {
             $token = $state->endMultilineToken();
             $tokens->appendToken($token);
             return;
@@ -325,7 +322,7 @@ class Tokenizer implements TokenizerInterface
         ];
 
         foreach ($simpleTokens as $pattern => $type) {
-            if ($matches = $line->scan($pattern)) {
+            if (($matches = $line->scan($pattern)) !== false) {
                 $tokens->append($type, $matches[0], $line->index(), $matches);
                 return true;
             }
@@ -345,7 +342,7 @@ class Tokenizer implements TokenizerInterface
         MultilineTokenBuilder $state,
         ScannerLine $line
     ): bool {
-        if ($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) {
+        if (($matches = $line->scan(self::TOKEN_OPERATOR_LINE)) !== false) {
             $tokens->append(TokenInterface::TYPE_OBJECT_IDENTIFIER, $matches[1], $line->index());
 
             if ($matches[2]) {

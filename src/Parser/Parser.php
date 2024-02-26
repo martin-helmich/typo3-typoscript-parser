@@ -160,7 +160,7 @@ class Parser implements ParserInterface
      */
     private function parseNestedStatements(ParserState $state, ?int $startLine = null): void
     {
-        $startLine  = $startLine ?: $state->token()->getLine();
+        $startLine  = $startLine ?? $state->token()->getLine();
         $statements = new ArrayObject();
         $subContext = $state->withStatements($statements);
 
@@ -312,7 +312,7 @@ class Parser implements ParserInterface
      */
     private function parseIncludeOptionals(string $optional, TokenInterface $token): array
     {
-        if (!preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches)) {
+        if (!(preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches) > 0)) {
             return [null, null];
         }
 
