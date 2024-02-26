@@ -19,7 +19,6 @@ use Helmich\TypoScriptParser\Parser\AST\Operator\Delete;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Modification;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
-use Helmich\TypoScriptParser\Tokenizer\Preprocessing\NoOpPreprocessor;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -43,13 +42,11 @@ class PrettyPrinter implements ASTPrinterInterface
     }
 
     /**
-     * @param Statement[]     $statements
-     * @param OutputInterface $output
-     * @return void
+     * @psalm-param Statement[] $statements
      */
     public function printStatements(array $statements, OutputInterface $output): void
     {
-        $this->printStatementList($statements, $output, 0);
+        $this->printStatementList($statements, $output);
     }
 
     private function trimTrailingNoops(array $statements): array
@@ -64,10 +61,7 @@ class PrettyPrinter implements ASTPrinterInterface
     }
 
     /**
-     * @param Statement[]     $statements
-     * @param OutputInterface $output
-     * @param int             $nesting
-     * @return void
+     * @psalm-param Statement[] $statements
      */
     private function printStatementList(array $statements, OutputInterface $output, int $nesting = 0): void
     {
@@ -176,24 +170,13 @@ class PrettyPrinter implements ASTPrinterInterface
         $output->writeln($includeStmt);
     }
 
-    /**
-     * @param OutputInterface  $output
-     * @param int              $nesting
-     * @param NestedAssignment $statement
-     */
-    private function printNestedAssignment(OutputInterface $output, $nesting, NestedAssignment $statement): void
+    private function printNestedAssignment(OutputInterface $output, int $nesting, NestedAssignment $statement): void
     {
         $output->writeln($this->getIndent($nesting) . $statement->object->relativeName . ' {');
         $this->printStatementList($statement->statements, $output, $nesting + 1);
         $output->writeln($this->getIndent($nesting) . '}');
     }
 
-    /**
-     * @param OutputInterface      $output
-     * @param int                  $nesting
-     * @param ConditionalStatement $statement
-     * @param bool                 $hasNext
-     */
     private function printConditionalStatement(OutputInterface $output, int $nesting, ConditionalStatement $statement, bool $hasNext = false): void
     {
         $conditionNesting = $nesting;
@@ -214,11 +197,6 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param Assignment      $statement
-     * @param string          $indent
-     */
     private function printAssignment(OutputInterface $output, Assignment $statement, string $indent): void
     {
         if (str_contains($statement->value->value, "\n")) {

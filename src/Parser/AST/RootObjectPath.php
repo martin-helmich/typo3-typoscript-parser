@@ -10,35 +10,22 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  */
 class RootObjectPath extends ObjectPath
 {
-    /**
-     * RootObjectPath constructor.
-     */
     public function __construct()
     {
         parent::__construct('', '');
     }
 
-    /**
-     * @return ObjectPath
-     */
     public function parent(): ObjectPath
     {
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function depth(): int
     {
         return 0;
     }
 
-    /**
-     * @param string $name
-     * @return ObjectPath
-     */
-    public function append($name): ObjectPath
+    public function append(string $name): ObjectPath
     {
         return new ObjectPath(ltrim($name, '.'), $name);
     }

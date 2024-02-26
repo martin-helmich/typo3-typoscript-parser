@@ -13,20 +13,15 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
 class AggregatingVisitor implements Visitor
 {
     /** @var Visitor[] */
-    private $visitors = [];
+    private array $visitors = [];
 
-    /**
-     * @param Visitor $visitor
-     * @return void
-     */
     public function addVisitor(Visitor $visitor): void
     {
         $this->visitors[spl_object_hash($visitor)] = $visitor;
     }
 
     /**
-     * @param Statement[] $statements
-     * @return void
+     * @psalm-param Statement[] $statements
      */
     public function enterTree(array $statements): void
     {
@@ -35,10 +30,6 @@ class AggregatingVisitor implements Visitor
         }
     }
 
-    /**
-     * @param Statement $statement
-     * @return void
-     */
     public function enterNode(Statement $statement): void
     {
         foreach ($this->visitors as $visitor) {
@@ -46,10 +37,6 @@ class AggregatingVisitor implements Visitor
         }
     }
 
-    /**
-     * @param Statement $statement
-     * @return void
-     */
     public function exitNode(Statement $statement): void
     {
         foreach ($this->visitors as $visitor) {
@@ -58,8 +45,7 @@ class AggregatingVisitor implements Visitor
     }
 
     /**
-     * @param Statement[] $statements
-     * @return void
+     * @psalm-param Statement[] $statements
      */
     public function exitTree(array $statements): void
     {

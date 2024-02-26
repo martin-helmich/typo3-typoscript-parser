@@ -34,19 +34,11 @@ class TokenStream implements Iterator, ArrayAccess
         $this->tokens = $tokens;
     }
 
-    /**
-     * @param int $lookAhead
-     * @return TokenInterface
-     */
     public function current(int $lookAhead = 0): TokenInterface
     {
         return $this[$this->index + $lookAhead];
     }
 
-    /**
-     * @param int $increment
-     * @return void
-     */
     public function next(int $increment = 1): void
     {
         if ($this->index < count($this->tokens)) {
@@ -54,25 +46,16 @@ class TokenStream implements Iterator, ArrayAccess
         }
     }
 
-    /**
-     * @return bool
-     */
     public function valid(): bool
     {
         return ($this->index) < count($this->tokens);
     }
 
-    /**
-     * @return void
-     */
     public function rewind(): void
     {
         $this->index = 0;
     }
 
-    /**
-     * @return int
-     */
     public function key(): int
     {
         return $this->index;
@@ -101,8 +84,7 @@ class TokenStream implements Iterator, ArrayAccess
      * @param TokenInterface|null $value
      * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new BadMethodCallException('changing a token stream is not permitted');
     }
@@ -111,8 +93,7 @@ class TokenStream implements Iterator, ArrayAccess
      * @param int $offset
      * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new BadMethodCallException('changing a token stream is not permitted');
     }

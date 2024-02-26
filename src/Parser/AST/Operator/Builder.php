@@ -2,19 +2,22 @@
 
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
+use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
+use Helmich\TypoScriptParser\Parser\AST\Scalar;
+
 /**
  * Helper class for quickly building operator AST nodes
  *
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  *
- * @method ObjectCreation objectCreation($path, $value, $line)
- * @method Assignment assignment($path, $value, $line)
- * @method Copy copy($path, $value, $line)
- * @method Reference reference($path, $value, $line)
- * @method Delete delete($path, $line)
- * @method ModificationCall modificationCall($method, $arguments)
- * @method Modification modification($path, $call, $line)
+ * @method ObjectCreation objectCreation(ObjectPath $path, Scalar $value, int $line)
+ * @method Assignment assignment(ObjectPath $path, Scalar $value, int $line)
+ * @method Copy copy(ObjectPath $path, ObjectPath $value, int $line)
+ * @method Reference reference(ObjectPath $path, ObjectPath $value, int $line)
+ * @method Delete delete(ObjectPath $path, int $line)
+ * @method ModificationCall modificationCall(string $method, string $arguments)
+ * @method Modification modification(ObjectPath $path, ModificationCall $call, int $line)
  */
 class Builder
 {

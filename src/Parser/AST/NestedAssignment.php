@@ -25,17 +25,15 @@ class NestedAssignment extends Statement
 
     /**
      * The object to operate on.
-     *
-     * @var ObjectPath
      */
-    public $object;
+    public ObjectPath $object;
 
     /**
      * The nested statements.
      *
      * @var Statement[]
      */
-    public $statements;
+    public array $statements;
 
     /**
      * @param ObjectPath  $object     The object to operate on.

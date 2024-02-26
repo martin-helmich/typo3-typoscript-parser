@@ -17,9 +17,8 @@ class FileIncludeStatement extends IncludeStatement
 
     /**
      * Conditional statement that is attached to this include
-     * @var string|null
      */
-    public $condition;
+    public ?string $condition;
 
     /**
      * Determines if this statement uses the new @import syntax

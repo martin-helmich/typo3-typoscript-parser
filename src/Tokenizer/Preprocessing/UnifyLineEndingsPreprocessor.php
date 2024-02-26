@@ -9,8 +9,7 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
  */
 class UnifyLineEndingsPreprocessor implements Preprocessor
 {
-    /** @var string */
-    private $eolCharacter;
+    private string $eolCharacter;
 
     public function __construct(string $eolCharacter = "\n")
     {

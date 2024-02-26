@@ -13,14 +13,8 @@ namespace Helmich\TypoScriptParser\Parser\Printer;
  */
 final class PrettyPrinterConfiguration
 {
-    /**
-     * @var string
-     */
     public const INDENTATION_STYLE_SPACES = 'spaces';
 
-    /**
-     * @var string
-     */
     public const INDENTATION_STYLE_TABS = 'tabs';
 
     private bool $addClosingGlobal = false;

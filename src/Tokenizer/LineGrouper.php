@@ -11,7 +11,7 @@ namespace Helmich\TypoScriptParser\Tokenizer;
 class LineGrouper
 {
     /** @var TokenInterface[][] */
-    private $tokensByLine = [];
+    private array $tokensByLine = [];
 
     /**
      * @param TokenInterface[] $tokens

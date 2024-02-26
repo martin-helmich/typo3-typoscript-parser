@@ -12,10 +12,8 @@ abstract class Statement
 {
     /**
      * The original source line. Useful for tracing and debugging.
-     *
-     * @var int
      */
-    public $sourceLine;
+    public int $sourceLine;
 
     /**
      * Base statement constructor.

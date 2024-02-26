@@ -14,17 +14,13 @@ class ObjectPath
 {
     /**
      * The relative object path, as specified in the source code.
-     *
-     * @var string
      */
-    public $relativeName;
+    public string $relativeName;
 
     /**
      * The absolute object path, as evaluated from parent nested statements.
-     *
-     * @var string
      */
-    public $absoluteName;
+    public string $absoluteName;
 
     /**
      * Constructs a new object path.
@@ -38,9 +34,6 @@ class ObjectPath
         $this->relativeName = $relativeName;
     }
 
-    /**
-     * @return int
-     */
     public function depth(): int
     {
         return count(explode('.', $this->absoluteName));
@@ -62,10 +55,6 @@ class ObjectPath
         return new self(implode('.', $components), $components[count($components) - 1]);
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function append(string $name): self
     {
         if ($name[0] === '.' && $name !== '.') {

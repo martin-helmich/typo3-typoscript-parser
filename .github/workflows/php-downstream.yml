@@ -7,13 +7,8 @@ jobs:
   build:
     strategy:
       matrix:
-        php-versions: ["7.4", "8.0", "8.1", "8.2", "8.3"]
+        php-versions: ["8.1", "8.2", "8.3"]
         symfony-versions: ["^5.4", "^6.4"]
-        exclude:
-          - php-versions: "7.4"
-            symfony-versions: "^6.4"
-          - php-versions: "8.0"
-            symfony-versions: "^6.4"
     runs-on: ubuntu-latest
     continue-on-error: true
 
