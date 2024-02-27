@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 interface ASTPrinterInterface
 {
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     public function printStatements(array $statements, OutputInterface $output): void;
 
