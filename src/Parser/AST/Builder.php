@@ -21,8 +21,8 @@ class Builder
     }
 
     /**
-     * @psalm-param Statement[] $if
-     * @psalm-param Statement[] $else
+     * @param Statement[] $if
+     * @param Statement[] $else
      */
     public function condition(string $condition, array $if, array $else, int $line): ConditionalStatement
     {
