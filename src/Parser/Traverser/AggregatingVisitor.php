@@ -21,7 +21,7 @@ class AggregatingVisitor implements Visitor
     }
 
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     public function enterTree(array $statements): void
     {
@@ -45,7 +45,7 @@ class AggregatingVisitor implements Visitor
     }
 
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     public function exitTree(array $statements): void
     {

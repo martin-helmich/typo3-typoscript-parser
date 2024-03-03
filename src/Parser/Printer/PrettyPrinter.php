@@ -42,7 +42,7 @@ class PrettyPrinter implements ASTPrinterInterface
     }
 
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     public function printStatements(array $statements, OutputInterface $output): void
     {
@@ -61,7 +61,7 @@ class PrettyPrinter implements ASTPrinterInterface
     }
 
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     private function printStatementList(array $statements, OutputInterface $output, int $nesting = 0): void
     {

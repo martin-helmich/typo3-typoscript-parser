@@ -20,7 +20,7 @@ class Traverser
     private AggregatingVisitor $visitors;
 
     /**
-     * @psalm-param Statement[] $statements
+     * @param Statement[] $statements
      */
     public function __construct(array $statements)
     {
