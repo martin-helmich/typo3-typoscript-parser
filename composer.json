@@ -21,7 +21,7 @@
     "require-dev": {
         "php-vfs/php-vfs": "^1.4.2",
         "phpspec/prophecy-phpunit": "^2.1.0",
-        "phpunit/phpunit": "^9.6.16",
+        "phpunit/phpunit": "^10.5.11",
         "symfony/phpunit-bridge": "^5.4 || ^6.4 || ^7.0",
         "vimeo/psalm": "^5.22.0"
     },
