@@ -24,9 +24,9 @@ class Builder
      * @param Statement[] $if
      * @param Statement[] $else
      */
-    public function condition(string $condition, array $if, array $else, int $line): ConditionalStatement
+    public function condition(string $condition, array $if, array $else, int $line, bool $unterminated = false): ConditionalStatement
     {
-        return new ConditionalStatement($condition, $if, $else, $line);
+        return new ConditionalStatement($condition, $if, $else, $line, $unterminated);
     }
 
     public function comment(string $comment, int $line): Comment

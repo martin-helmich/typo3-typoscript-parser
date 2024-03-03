@@ -206,6 +206,7 @@ class Parser implements ParserInterface
         $conditionLine = $state->token()->getLine();
 
         $inElseBranch = false;
+        $conditionEnded = false;
         $subContext   = $state->withStatements($ifStatements);
 
         $state->next();
@@ -219,6 +220,7 @@ class Parser implements ParserInterface
                     $conditionLine
                 ));
                 $state->next();
+                $conditionEnded = true;
                 break;
             } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
@@ -240,6 +242,7 @@ class Parser implements ParserInterface
                         $conditionLine
                     )
                 );
+                $conditionEnded = true;
                 $this->parseCondition($state);
                 break;
             }
@@ -256,6 +259,17 @@ class Parser implements ParserInterface
             }
 
             $this->parseToken($subContext);
+        }
+
+        if (!$conditionEnded) {
+            $state->statements()->append($this->builder->condition(
+                $condition,
+                $ifStatements->getArrayCopy(),
+                $elseStatements->getArrayCopy(),
+                $conditionLine,
+                unterminated: true,
+            ));
+            $state->next();
         }
     }
 
