@@ -10,8 +10,7 @@ use function PHPUnit\Framework\equalTo;
 
 class StructuredTokenPrinterTest extends TestCase
 {
-    /** @var StructuredTokenPrinter */
-    private $printer;
+    private StructuredTokenPrinter $printer;
 
     public function setUp(): void
     {

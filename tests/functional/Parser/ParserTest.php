@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
+use Generator;
 use Helmich\TypoScriptParser\Parser\ParseError;
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -15,7 +18,7 @@ class ParserTest extends TestCase
         $this->parser = new Parser(new Tokenizer());
     }
 
-    public function dataForParserTest()
+    public static function dataForParserTest(): array
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         $testCases = [];
@@ -25,7 +28,6 @@ class ParserTest extends TestCase
             $output = null;
 
             if (file_exists($outputFile)) {
-                /** @noinspection PhpIncludeInspection */
                 $output = include $outputFile;
             }
 
@@ -35,7 +37,7 @@ class ParserTest extends TestCase
         return $testCases;
     }
 
-    public function dataForParseErrorTest()
+    public static function dataForParseErrorTest(): Generator
     {
         yield ["foo {\n    bar = 1"];
         yield ["foo > bar"];
@@ -49,12 +51,8 @@ class ParserTest extends TestCase
         yield ["foo < hello world"];
     }
 
-    /**
-     * @dataProvider dataForParserTest
-     * @testdox Code is parsed into correct AST
-     * @param $inputFile
-     * @param $expectedAST
-     */
+    #[DataProvider('dataForParserTest')]
+    #[TestDox("Code is parsed into correct AST")]
     public function testCodeIsParsedIntoCorrectAST($inputFile, $expectedAST)
     {
         $ast = $this->parser->parseStream($inputFile);
@@ -63,16 +61,12 @@ class ParserTest extends TestCase
         $isIncompleteTestCase = $expectedAST === null;
         if ($isIncompleteTestCase) {
             $this->markTestIncomplete(var_export($ast, true));
-            return;
         }
 
         $this->assertEquals($expectedAST, $ast);
     }
 
-    /**
-     * @dataProvider dataForParseErrorTest
-     * @param $inputCode
-     */
+    #[DataProvider('dataForParseErrorTest')]
     public function testBadCodeCausesParserError($inputCode)
     {
         $this->expectException(ParseError::class);

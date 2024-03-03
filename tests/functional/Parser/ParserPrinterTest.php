@@ -10,6 +10,7 @@ use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -31,7 +32,7 @@ class ParserPrinterTest extends TestCase
         );
     }
 
-    public function dataForIdempotencyTest(): Generator
+    public static function dataForIdempotencyTest(): Generator
     {
         $parser = new Parser(new Tokenizer());
         $printer = new PrettyPrinter(
@@ -53,9 +54,7 @@ class ParserPrinterTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider dataForIdempotencyTest
-     */
+    #[DataProvider('dataForIdempotencyTest')]
     public function testParsingAndPrintingIsIdempotent($inputCode): void
     {
         $ast = $this->parser->parseString($inputCode);

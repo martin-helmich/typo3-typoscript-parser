@@ -9,8 +9,7 @@ use function PHPUnit\Framework\equalTo;
 
 class RootObjectPathTest extends TestCase
 {
-    /** @var RootObjectPath */
-    private $path;
+    private RootObjectPath $path;
 
     public function setUp(): void
     {
