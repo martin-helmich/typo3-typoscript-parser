@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ParseErrorTest extends TestCase
 {
-    /** @var ParseError */
-    private $exc;
+    private ParseError $exc;
 
     public function setUp(): void
     {

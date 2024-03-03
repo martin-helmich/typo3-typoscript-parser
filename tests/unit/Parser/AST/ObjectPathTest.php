@@ -19,6 +19,6 @@ class ObjectPathTest extends TestCase
     public function testIntPathsRaisesTypeError()
     {
         $this->expectException(\TypeError::class);
-        new ObjectPath("foo.0", 0);
+        $_ = new ObjectPath("foo.0", 0);
     }
 }

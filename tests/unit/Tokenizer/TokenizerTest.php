@@ -6,6 +6,7 @@ use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerException;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use VirtualFileSystem\FileSystem;
 
@@ -14,15 +15,14 @@ use function PHPUnit\Framework\equalTo;
 
 class TokenizerTest extends TestCase
 {
-    /** @var TokenizerInterface */
-    private $tokenizer;
+    private TokenizerInterface $tokenizer;
 
     public function setUp(): void
     {
         $this->tokenizer = new Tokenizer();
     }
 
-    public function dataValidForTokenizer()
+    public static function dataValidForTokenizer(): array
     {
         return [
             "assignment with line breaks"                          => ["foo = bar\n\n", [
@@ -212,7 +212,7 @@ class TokenizerTest extends TestCase
         ];
     }
 
-    public function dataInvalidForTokenizer()
+    public static function dataInvalidForTokenizer(): array
     {
         return [
             "unterminated multiline assignment" => ["a (\nasdf"],
@@ -222,22 +222,14 @@ class TokenizerTest extends TestCase
         ];
     }
 
-    /**
-     * @param $inputText
-     * @param $expectedTokenStream
-     * @dataProvider dataValidForTokenizer
-     */
+    #[DataProvider('dataValidForTokenizer')]
     public function testInputTextIsCorrectlyTokenized($inputText, $expectedTokenStream)
     {
         $tokenStream = $this->tokenizer->tokenizeString($inputText);
         assertThat($tokenStream, equalTo($expectedTokenStream));
     }
 
-    /**
-     * @param $inputText
-     * @param $expectedTokenStream
-     * @dataProvider dataValidForTokenizer
-     */
+    #[DataProvider('dataValidForTokenizer')]
     public function testInputStreamIsCorrectlyTokenized($inputText, $expectedTokenStream)
     {
         $fs = new FileSystem();
@@ -246,10 +238,7 @@ class TokenizerTest extends TestCase
         assertThat($tokenStream, equalTo($expectedTokenStream));
     }
 
-    /**
-     * @param $inputText
-     * @dataProvider dataInvalidForTokenizer
-     */
+    #[DataProvider('dataInvalidForTokenizer')]
     public function testInvalidInputTestThrowsTokenizerError($inputText)
     {
         $this->expectException(TokenizerException::class);

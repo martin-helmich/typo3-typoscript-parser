@@ -10,8 +10,7 @@ use function PHPUnit\Framework\equalTo;
 
 class CodeTokenPrinterTest extends TestCase
 {
-    /** @var CodeTokenPrinter */
-    private $printer;
+    private CodeTokenPrinter $printer;
 
     public function setUp(): void
     {

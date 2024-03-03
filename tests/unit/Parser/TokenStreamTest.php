@@ -12,11 +12,10 @@ use function PHPUnit\Framework\isTrue;
 
 class TokenStreamTest extends TestCase
 {
-    /** @var tokenStream */
-    private $stream;
+    private TokenStream $stream;
 
     /** @var TokenInterface[] */
-    private $tokens;
+    private array $tokens;
 
     public function setUp(): void
     {

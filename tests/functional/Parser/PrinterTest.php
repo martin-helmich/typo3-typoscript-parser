@@ -11,6 +11,7 @@ use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -30,7 +31,7 @@ class PrinterTest extends TestCase
         );
     }
 
-    public function dataForPrinterTest(): array
+    public static function dataForPrinterTest(): array
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
         $testCases = [];
@@ -40,7 +41,6 @@ class PrinterTest extends TestCase
             $astFile = str_replace('.typoscript', '.php', $outputFile);
 
             if (file_exists($astFile)) {
-                /** @noinspection PhpIncludeInspection */
                 $ast = include $astFile;
             }
 
@@ -57,14 +57,11 @@ class PrinterTest extends TestCase
         return $testCases;
     }
 
-    /**
-     * @dataProvider dataForPrinterTest
-     */
-    public function testParsedCodeIsCorrectlyPrinted(array $ast, string $expectedOutput): void
+    #[DataProvider('dataForPrinterTest')]
+    public function testParsedCodeIsCorrectlyPrinted(array|null $ast, string $expectedOutput): void
     {
         if ($ast === null) {
             $this->markTestIncomplete("no output AST provided");
-            return;
         }
 
         $output = new BufferedOutput();

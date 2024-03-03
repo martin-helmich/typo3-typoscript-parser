@@ -15,10 +15,9 @@ class TraverserTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $tree;
+    private array $tree;
 
-    /** @var Traverser */
-    private $traverser;
+    private Traverser $traverser;
 
     public function setUp(): void
     {

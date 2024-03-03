@@ -14,8 +14,7 @@ use function PHPUnit\Framework\isInstanceOf;
 
 class BuilderTest extends TestCase
 {
-    /** @var OperatorBuilder */
-    private $opBuilder;
+    private OperatorBuilder $opBuilder;
 
     public function setUp(): void
     {
