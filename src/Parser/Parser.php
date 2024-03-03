@@ -267,6 +267,7 @@ class Parser implements ParserInterface
                 $ifStatements->getArrayCopy(),
                 $elseStatements->getArrayCopy(),
                 $conditionLine,
+                unterminated: true,
             ));
             $state->next();
         }
