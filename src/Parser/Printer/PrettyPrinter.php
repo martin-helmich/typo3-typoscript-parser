@@ -6,6 +6,7 @@ namespace Helmich\TypoScriptParser\Parser\Printer;
 
 use Helmich\TypoScriptParser\Parser\AST\Comment;
 use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator;
 use Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement;
 use Helmich\TypoScriptParser\Parser\AST\IncludeStatement;
@@ -193,7 +194,7 @@ class PrettyPrinter implements ASTPrinterInterface
         }
 
         if ($this->closeCondition($hasNext)) {
-            $output->writeln('[global]');
+            $output->writeln($this->getConditionTerminatorStatement($statement));
         }
     }
 
@@ -219,5 +220,20 @@ class PrettyPrinter implements ASTPrinterInterface
     private function closeCondition(bool $hasNext): bool
     {
         return !$hasNext || $this->prettyPrinterConfiguration->shouldAddClosingGlobal();
+    }
+
+    private function getConditionTerminatorStatement(ConditionalStatement $stmt): string
+    {
+        switch ($this->prettyPrinterConfiguration->getConditionTermination()) {
+            case PrettyPrinterConditionTermination::EnforceGlobal:
+                return "[global]";
+            case PrettyPrinterConditionTermination::Keep:
+                return match ($stmt->terminator) {
+                    ConditionalStatementTerminator::Global => "[global]",
+                    default => "[end]",
+                };
+            default:
+                return "[end]";
+        }
     }
 }

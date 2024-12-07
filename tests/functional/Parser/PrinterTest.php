@@ -11,6 +11,7 @@ use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConditionTermination;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
 use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
@@ -100,9 +101,10 @@ class PrinterTest extends TestCase
     }
 
     #[Test]
-    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEnd()
+    public function conditionsTerminatedWithEndShouldDefaultToPrinterDefaults()
     {
         $condition = "[foo == 'bar']\n    foo = bar\n[end]\n";
+        $expectedOutput = "[foo == 'bar']\n    foo = bar\n[global]\n";
 
         $parser = new Parser(new Tokenizer());
         $ast = $parser->parseString($condition);
@@ -112,6 +114,32 @@ class PrinterTest extends TestCase
             PrettyPrinterConfiguration::create()
                 ->withEmptyLineBreaks()
                 ->withIndentConditions()
+        );
+        $printer->printStatements($ast, $out);
+
+        assertThat($out->fetch(), equalTo($expectedOutput));
+    }
+
+    public static function conditionTerminations(): array
+    {
+        return [["[end]"], ["[global]"]];
+    }
+
+    #[Test]
+    #[DataProvider("conditionTerminations")]
+    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEndWhenConfigured(string $termination)
+    {
+        $condition = "[foo == 'bar']\n    foo = bar\n$termination\n";
+
+        $parser = new Parser(new Tokenizer());
+        $ast = $parser->parseString($condition);
+        $out = new BufferedOutput();
+
+        $printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+                ->withEmptyLineBreaks()
+                ->withIndentConditions()
+                ->withConditionTermination(PrettyPrinterConditionTermination::Keep)
         );
         $printer->printStatements($ast, $out);
 

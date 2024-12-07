@@ -10,4 +10,5 @@ enum ConditionalStatementTerminator
     case Global;
     case End;
     case Unterminated;
+    case Next;
 }
