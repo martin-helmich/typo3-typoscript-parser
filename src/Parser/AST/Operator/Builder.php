@@ -4,6 +4,7 @@ namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 
 /**
  * Helper class for quickly building operator AST nodes
@@ -21,7 +22,12 @@ use Helmich\TypoScriptParser\Parser\AST\Scalar;
  */
 class Builder
 {
-    public function __call(string $name, array $args)
+    /**
+     * @param string $name
+     * @param mixed[] $args
+     * @return object
+     */
+    public function __call(string $name, array $args): object
     {
         $class = __NAMESPACE__ . '\\' . ucfirst($name);
         return new $class(...$args);

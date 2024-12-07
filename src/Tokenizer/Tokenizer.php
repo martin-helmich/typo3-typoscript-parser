@@ -179,6 +179,7 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
+     * @param string[] $matches
      * @throws UnknownOperatorException
      */
     private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, array $matches, int $currentLine): void

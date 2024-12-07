@@ -5,16 +5,24 @@ namespace Helmich\TypoScriptParser\Parser;
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\RootObjectPath;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 
 class ParserState
 {
     private ObjectPath $context;
 
+    /**
+     * @var ArrayObject<int, Statement>
+     */
     private ArrayObject $statements;
 
     private TokenStream $tokens;
 
+    /**
+     * @param TokenStream $tokens
+     * @param ArrayObject<int, Statement>|null $statements
+     */
     public function __construct(TokenStream $tokens, ArrayObject $statements = null)
     {
         if ($statements === null) {
@@ -33,6 +41,10 @@ class ParserState
         return $clone;
     }
 
+    /**
+     * @param ArrayObject<int, Statement> $statements
+     * @return $this
+     */
     public function withStatements(ArrayObject $statements): self
     {
         $clone             = clone $this;
@@ -60,6 +72,9 @@ class ParserState
         return $this->context;
     }
 
+    /**
+     * @return ArrayObject<int, Statement>
+     */
     public function statements(): ArrayObject
     {
         return $this->statements;

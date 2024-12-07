@@ -12,8 +12,14 @@ class Token implements TokenInterface
 
     private int $column;
 
+    /**
+     * @var string[]
+     */
     private array $patternMatches;
 
+    /**
+     * @param string[] $patternMatches
+     */
     public function __construct(string $type, string $value, int $line, int $column = 1, array $patternMatches = [])
     {
         $this->type           = $type;
@@ -35,7 +41,7 @@ class Token implements TokenInterface
 
     public function getSubMatch(string $name): ?string
     {
-        return isset($this->patternMatches[$name]) ? $this->patternMatches[$name] : null;
+        return $this->patternMatches[$name] ?? null;
     }
 
     public function getLine(): int

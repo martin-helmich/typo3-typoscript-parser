@@ -12,6 +12,9 @@ use ArrayObject;
  */
 class TokenStreamBuilder
 {
+    /**
+     * @var ArrayObject<int, TokenInterface>
+     */
     private ArrayObject $tokens;
 
     private ?int $currentLine = null;
@@ -29,10 +32,10 @@ class TokenStreamBuilder
     /**
      * Appends a new token to the token stream
      *
-     * @param string $type           Token type
-     * @param string $value          Token value
-     * @param int    $line           Line in source code
-     * @param array  $patternMatches Subpattern matches
+     * @param string   $type           Token type
+     * @param string   $value          Token value
+     * @param int      $line           Line in source code
+     * @param string[] $patternMatches Subpattern matches
      * @return void
      */
     public function append(string $type, string $value, int $line, array $patternMatches = []): void
@@ -72,7 +75,7 @@ class TokenStreamBuilder
     }
 
     /**
-     * @return ArrayObject The completed token stream
+     * @return ArrayObject<int, TokenInterface> The completed token stream
      */
     public function build(): ArrayObject
     {

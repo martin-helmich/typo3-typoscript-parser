@@ -304,6 +304,12 @@ class Parser implements ParserInterface
         $state->statements()->append($node);
     }
 
+    /**
+     * @param string $optional
+     * @param TokenInterface $token
+     * @return array{string|null, string|null}
+     * @throws ParseError
+     */
     private function parseIncludeOptionals(string $optional, TokenInterface $token): array
     {
         if (!(preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches) > 0)) {
