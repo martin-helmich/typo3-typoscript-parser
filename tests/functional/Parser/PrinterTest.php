@@ -8,10 +8,14 @@ use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
+use Helmich\TypoScriptParser\Tokenizer\Token;
+use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -93,5 +97,24 @@ class PrinterTest extends TestCase
         $printer->printStatements($ast, $out);
 
         assertThat($out->fetch(), equalTo("[foo = bar]\n    foo = bar\n[else]\n    foo = baz\n[global]\n"));
+    }
+
+    #[Test]
+    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEnd()
+    {
+        $condition = "[foo == 'bar']\n    foo = bar\n[end]\n";
+
+        $parser = new Parser(new Tokenizer());
+        $ast = $parser->parseString($condition);
+        $out = new BufferedOutput();
+
+        $printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+                ->withEmptyLineBreaks()
+                ->withIndentConditions()
+        );
+        $printer->printStatements($ast, $out);
+
+        assertThat($out->fetch(), equalTo($condition));
     }
 }
