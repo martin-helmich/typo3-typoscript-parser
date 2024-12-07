@@ -4,6 +4,7 @@ namespace Helmich\TypoScriptParser\Parser;
 
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
@@ -267,7 +268,7 @@ class Parser implements ParserInterface
                 $ifStatements->getArrayCopy(),
                 $elseStatements->getArrayCopy(),
                 $conditionLine,
-                unterminated: true,
+                terminator: ConditionalStatementTerminator::Unterminated,
             ));
             $state->next();
         }
