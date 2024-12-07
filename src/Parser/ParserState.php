@@ -23,13 +23,9 @@ class ParserState
      * @param TokenStream $tokens
      * @param ArrayObject<int, Statement>|null $statements
      */
-    public function __construct(TokenStream $tokens, ArrayObject $statements = null)
+    public function __construct(TokenStream $tokens, ?ArrayObject $statements = null)
     {
-        if ($statements === null) {
-            $statements = new ArrayObject();
-        }
-
-        $this->statements = $statements;
+        $this->statements = $statements ?: new ArrayObject();
         $this->tokens     = $tokens;
         $this->context    = new RootObjectPath();
     }

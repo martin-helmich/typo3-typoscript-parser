@@ -20,7 +20,7 @@ class Parser implements ParserInterface
 
     private Builder $builder;
 
-    public function __construct(TokenizerInterface $tokenizer, Builder $astBuilder = null)
+    public function __construct(TokenizerInterface $tokenizer, ?Builder $astBuilder = null)
     {
         $this->tokenizer = $tokenizer;
         $this->builder   = $astBuilder ?: new Builder();
