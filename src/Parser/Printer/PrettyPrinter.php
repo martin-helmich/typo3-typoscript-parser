@@ -210,7 +210,8 @@ class PrettyPrinter implements ASTPrinterInterface
             return;
         }
 
-        $output->writeln($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+        $assignment = rtrim($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+        $output->writeln($assignment);
     }
 
     private function printNopStatement(OutputInterface $output): void
