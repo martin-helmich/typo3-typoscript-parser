@@ -17,8 +17,7 @@ class Tokenizer implements TokenizerInterface
     const TOKEN_COMMENT_MULTILINE_END = ',^\*/,';
     const TOKEN_CONDITION = ',^(\[(?<expr>.*?)\](\|\||&&|$))+,';
     const TOKEN_CONDITION_ELSE = ',^\[else\],i';
-    const TOKEN_CONDITION_END = ',^\[end\],i';
-    const TOKEN_CONDITION_GLOBAL = ',^\[global\],i';
+    const TOKEN_CONDITION_END = ',^\[(?<keyword>global|end)\],i';
 
     const TOKEN_OBJECT_NAME = ',^(CASE|CLEARGIF|COA(?:_INT)?|COBJ_ARRAY|COLUMNS|CTABLE|EDITPANEL|FILES?|FLUIDTEMPLATE|FORM|HMENU|HRULER|TEXT|IMAGE|IMG_RESOURCE|IMGTEXT|LOAD_REGISTER|MEDIA|MULTIMEDIA|OTABLE|QTOBJECT|RECORDS|RESTORE_REGISTER|SEARCHRESULT|SVG|SWFOBJECT|TEMPLATE|USER(?:_INT)?|GIFBUILDER|[GT]MENU(?:_LAYERS)?|(?:G|T|JS|IMG)MENUITEM)$,';
     const TOKEN_OBJECT_ACCESSOR = ',' . self::OBJECT_ACCESSOR . '$';
@@ -301,7 +300,6 @@ class Tokenizer implements TokenizerInterface
             self::TOKEN_NESTING_END           => TokenInterface::TYPE_BRACE_CLOSE,
             self::TOKEN_CONDITION_ELSE        => TokenInterface::TYPE_CONDITION_ELSE,
             self::TOKEN_CONDITION_END         => TokenInterface::TYPE_CONDITION_END,
-            self::TOKEN_CONDITION_GLOBAL      => TokenInterface::TYPE_CONDITION_GLOBAL,
             self::TOKEN_CONDITION             => TokenInterface::TYPE_CONDITION,
             self::TOKEN_INCLUDE_STATEMENT     => TokenInterface::TYPE_INCLUDE,
             self::TOKEN_INCLUDE_NEW_STATEMENT => TokenInterface::TYPE_INCLUDE_NEW,
