@@ -17,19 +17,28 @@ use Helmich\TypoScriptParser\Parser\AST\Statement;
  * @method Copy copy(ObjectPath $path, ObjectPath $value, int $line)
  * @method Reference reference(ObjectPath $path, ObjectPath $value, int $line)
  * @method Delete delete(ObjectPath $path, int $line)
- * @method ModificationCall modificationCall(string $method, string $arguments)
  * @method Modification modification(ObjectPath $path, ModificationCall $call, int $line)
  */
 class Builder
 {
+
     /**
      * @param string $name
      * @param mixed[] $args
-     * @return object
+     * @return Statement
      */
-    public function __call(string $name, array $args): object
+    public function __call(string $name, array $args): Statement
     {
         $class = __NAMESPACE__ . '\\' . ucfirst($name);
-        return new $class(...$args);
+        $classInstance = new $class(...$args);
+
+        assert($classInstance instanceof Statement);
+        return $classInstance;
+    }
+
+    public function modificationCall(string $method, string $arguments): ModificationCall
+    {
+        // Needs a special implementation, because ModificationCall is not a Statement
+        return new ModificationCall($method, $arguments);
     }
 }
