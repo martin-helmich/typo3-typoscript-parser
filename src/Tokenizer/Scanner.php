@@ -19,6 +19,9 @@ class Scanner implements Iterator
 
     private int $index = 0;
 
+    /**
+     * @param string[] $lines
+     */
     public function __construct(array $lines)
     {
         $this->lines = $lines;

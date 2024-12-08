@@ -52,26 +52,19 @@ class Tokenizer implements TokenizerInterface
         [\'"](?<filename>[^\']+)[\'"]
     $,x';
 
-    /** @psalm-var non-empty-string */
+    /** @var non-empty-string */
     protected string $eolChar;
 
     protected Preprocessor $preprocessor;
 
     /**
-     * Tokenizer constructor.
-     *
-     * @param string            $eolChar      Line ending to use for tokenizing.
+     * @param non-empty-string  $eolChar      Line ending to use for tokenizing.
      * @param Preprocessor|null $preprocessor Option to preprocess file contents before actual tokenizing
-     * @psalm-param non-empty-string $eolChar
      */
     public function __construct(string $eolChar = "\n", ?Preprocessor $preprocessor = null)
     {
-        if ($preprocessor === null) {
-            $preprocessor = new StandardPreprocessor($eolChar);
-        }
-
         $this->eolChar      = $eolChar;
-        $this->preprocessor = $preprocessor;
+        $this->preprocessor = $preprocessor ?? new StandardPreprocessor($eolChar);
     }
 
     /**
@@ -180,6 +173,7 @@ class Tokenizer implements TokenizerInterface
     }
 
     /**
+     * @param string[] $matches
      * @throws UnknownOperatorException
      */
     private function tokenizeBinaryObjectOperation(TokenStreamBuilder $tokens, array $matches, int $currentLine): void
@@ -286,11 +280,6 @@ class Tokenizer implements TokenizerInterface
         $state->appendToToken("\n" . $line->value());
     }
 
-    /**
-     * @param $tokens
-     * @param $state
-     * @param $line
-     */
     private function tokenizeMultilineAssignment(
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,
@@ -305,11 +294,6 @@ class Tokenizer implements TokenizerInterface
         $state->appendToToken($line . "\n");
     }
 
-    /**
-     * @param TokenStreamBuilder $tokens
-     * @param ScannerLine        $line
-     * @return bool
-     */
     private function tokenizeSimpleStatements(TokenStreamBuilder $tokens, ScannerLine $line): bool
     {
         $simpleTokens = [
@@ -333,12 +317,6 @@ class Tokenizer implements TokenizerInterface
         return false;
     }
 
-    /**
-     * @param $tokens
-     * @param $state
-     * @param $line
-     * @return bool
-     */
     private function tokenizeObjectOperation(
         TokenStreamBuilder $tokens,
         MultilineTokenBuilder $state,

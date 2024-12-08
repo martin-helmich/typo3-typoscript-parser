@@ -10,7 +10,7 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
 class StandardPreprocessor extends ProcessorChain
 {
     /**
-     * @psalm-param non-empty-string $eolChar
+     * @param non-empty-string $eolChar
      */
     public function __construct(string $eolChar = "\n")
     {

@@ -22,6 +22,9 @@ class UnifyLineEndingsPreprocessor implements Preprocessor
      */
     public function preprocess(string $contents): string
     {
-        return preg_replace(",(\r\n|\r|\n),", $this->eolCharacter, $contents);
+        $preprocessed = preg_replace(",(\r\n|\r|\n),", $this->eolCharacter, $contents);
+        assert(is_string($preprocessed));
+
+        return $preprocessed;
     }
 }
