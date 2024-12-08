@@ -2,6 +2,7 @@
 namespace Helmich\TypoScriptParser\Tests\Functional\Parser;
 
 use Generator;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Parser\ParseError;
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
@@ -18,20 +19,27 @@ class ParserTest extends TestCase
         $this->parser = new Parser(new Tokenizer());
     }
 
+    /**
+     * @return array<string, array{string, Statement[]|null}>
+     */
     public static function dataForParserTest(): array
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+
+        assert($files !== false);
+
         $testCases = [];
         foreach ($files as $file) {
             $outputFile = str_replace('.typoscript', '.php', $file);
-
             $output = null;
 
             if (file_exists($outputFile)) {
+                /** @var Statement[] $output */
                 $output = include $outputFile;
             }
 
-            $testCases[str_replace(".typoscript", "", basename($file))] = [$file, $output];
+            $testGroup = basename(dirname($file));
+            $testCases[$testGroup . " / " . str_replace(".typoscript", "", basename($file))] = [$file, $output];
         }
 
         return $testCases;
@@ -51,9 +59,12 @@ class ParserTest extends TestCase
         yield ["foo < hello world"];
     }
 
+    /**
+     * @param Statement[]|null $expectedAST
+     */
     #[DataProvider('dataForParserTest')]
     #[TestDox("Code is parsed into correct AST")]
-    public function testCodeIsParsedIntoCorrectAST($inputFile, $expectedAST)
+    public function testCodeIsParsedIntoCorrectAST(string $inputFile, ?array $expectedAST): void
     {
         $ast = $this->parser->parseStream($inputFile);
 
@@ -67,7 +78,7 @@ class ParserTest extends TestCase
     }
 
     #[DataProvider('dataForParseErrorTest')]
-    public function testBadCodeCausesParserError($inputCode)
+    public function testBadCodeCausesParserError(string $inputCode): void
     {
         $this->expectException(ParseError::class);
         $this->parser->parseString($inputCode);
