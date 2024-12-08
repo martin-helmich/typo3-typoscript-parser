@@ -4,6 +4,8 @@ namespace Helmich\TypoScriptParser\Parser;
 
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
+use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Tokenizer\TokenInterface;
 use Helmich\TypoScriptParser\Tokenizer\TokenizerInterface;
@@ -20,7 +22,7 @@ class Parser implements ParserInterface
 
     private Builder $builder;
 
-    public function __construct(TokenizerInterface $tokenizer, Builder $astBuilder = null)
+    public function __construct(TokenizerInterface $tokenizer, ?Builder $astBuilder = null)
     {
         $this->tokenizer = $tokenizer;
         $this->builder   = $astBuilder ?: new Builder();
@@ -303,6 +305,12 @@ class Parser implements ParserInterface
         $state->statements()->append($node);
     }
 
+    /**
+     * @param string $optional
+     * @param TokenInterface $token
+     * @return array{string|null, string|null}
+     * @throws ParseError
+     */
     private function parseIncludeOptionals(string $optional, TokenInterface $token): array
     {
         if (!(preg_match_all('/((?<key>[a-z]+)="(?<value>[^"]*)\s*)+"/', $optional, $matches) > 0)) {
@@ -394,8 +402,13 @@ class Parser implements ParserInterface
         $this->validateCopyOperatorRightValue($targetToken);
 
         $target = $state->context()->parent()->append($targetToken->getValue());
-        $type   = ($state->token(1)->getType() === TokenInterface::TYPE_OPERATOR_COPY) ? 'copy' : 'reference';
-        $node   = $this->builder->op()->{$type}(
+        $type = match ($state->token(1)->getType()) {
+            TokenInterface::TYPE_OPERATOR_COPY => "copy",
+            default => "reference"
+        };
+
+        /** @var Copy|Reference $node */
+        $node = $this->builder->op()->{$type}(
             $state->context(),
             $target,
             $state->token(1)->getLine()

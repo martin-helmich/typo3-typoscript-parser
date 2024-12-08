@@ -16,15 +16,13 @@ class ScannerLine
     }
 
     /**
-     * @param string $pattern
-     * @psalm-param non-empty-string $pattern
+     * @param non-empty-string $pattern
      * @return string[]|false
      */
     public function scan(string $pattern): array|false
     {
         if (preg_match($pattern, $this->line, $matches)) {
-            $matchingPart = substr($this->line, strlen($matches[0]));
-            $this->line = $matchingPart !== false ? $matchingPart : '';
+            $this->line = substr($this->line, strlen($matches[0]));
             return $matches;
         }
 
@@ -32,8 +30,7 @@ class ScannerLine
     }
 
     /**
-     * @param string $pattern
-     * @psalm-param non-empty-string $pattern
+     * @param non-empty-string $pattern
      * @return string[]|false
      */
     public function peek(string $pattern): array|false

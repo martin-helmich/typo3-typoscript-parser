@@ -9,11 +9,11 @@ namespace Helmich\TypoScriptParser\Tokenizer\Preprocessing;
  */
 class RemoveTrailingWhitespacePreprocessor implements Preprocessor
 {
-    /** @psalm-var non-empty-string */
+    /** @var non-empty-string */
     private string $eolCharacter;
 
     /**
-     * @psalm-param non-empty-string $eolCharacter
+     * @param non-empty-string $eolCharacter
      */
     public function __construct(string $eolCharacter = "\n")
     {

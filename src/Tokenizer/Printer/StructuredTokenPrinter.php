@@ -9,7 +9,7 @@ class StructuredTokenPrinter implements TokenPrinterInterface
 {
     private Yaml $yaml;
 
-    public function __construct(Yaml $yaml = null)
+    public function __construct(?Yaml $yaml = null)
     {
         $this->yaml = $yaml ?: new Yaml();
     }
