@@ -16,8 +16,7 @@ class ScannerLine
     }
 
     /**
-     * @param string $pattern
-     * @psalm-param non-empty-string $pattern
+     * @param non-empty-string $pattern
      * @return string[]|false
      */
     public function scan(string $pattern): array|false
@@ -31,8 +30,7 @@ class ScannerLine
     }
 
     /**
-     * @param string $pattern
-     * @psalm-param non-empty-string $pattern
+     * @param non-empty-string $pattern
      * @return string[]|false
      */
     public function peek(string $pattern): array|false
