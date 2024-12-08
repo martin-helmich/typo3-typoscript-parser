@@ -7,7 +7,7 @@ return [
             new \Helmich\TypoScriptParser\Parser\AST\Scalar('bar'),
             2
         ),
-    ], [], 1),
+    ], [], 1, terminator: \Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator::Next),
     new \Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
         '[globalVar = GP:foo=2]', [
         new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(

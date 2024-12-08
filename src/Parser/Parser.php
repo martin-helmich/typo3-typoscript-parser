@@ -4,6 +4,7 @@ namespace Helmich\TypoScriptParser\Parser;
 
 use ArrayObject;
 use Helmich\TypoScriptParser\Parser\AST\Builder;
+use Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Copy;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Reference;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
@@ -207,21 +208,24 @@ class Parser implements ParserInterface
         $conditionLine = $state->token()->getLine();
 
         $inElseBranch = false;
-        $conditionEnded = false;
+        $conditionTerminator = ConditionalStatementTerminator::Unterminated;
         $subContext   = $state->withStatements($ifStatements);
 
         $state->next();
 
         for (; $state->hasNext(); $state->next()) {
             if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
+                $conditionTerminator = $state->token()->getSubMatch("keyword") === 'global'
+                    ? ConditionalStatementTerminator::Global
+                    : ConditionalStatementTerminator::End;
                 $state->statements()->append($this->builder->condition(
                     $condition,
                     $ifStatements->getArrayCopy(),
                     $elseStatements->getArrayCopy(),
-                    $conditionLine
+                    $conditionLine,
+                    terminator: $conditionTerminator,
                 ));
                 $state->next();
-                $conditionEnded = true;
                 break;
             } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
@@ -240,10 +244,11 @@ class Parser implements ParserInterface
                         $condition,
                         $ifStatements->getArrayCopy(),
                         $elseStatements->getArrayCopy(),
-                        $conditionLine
+                        $conditionLine,
+                        terminator: ConditionalStatementTerminator::Next,
                     )
                 );
-                $conditionEnded = true;
+                $conditionTerminator = ConditionalStatementTerminator::Next;
                 $this->parseCondition($state);
                 break;
             }
@@ -262,13 +267,13 @@ class Parser implements ParserInterface
             $this->parseToken($subContext);
         }
 
-        if (!$conditionEnded) {
+        if ($conditionTerminator === ConditionalStatementTerminator::Unterminated) {
             $state->statements()->append($this->builder->condition(
                 $condition,
                 $ifStatements->getArrayCopy(),
                 $elseStatements->getArrayCopy(),
                 $conditionLine,
-                unterminated: true,
+                terminator: $conditionTerminator,
             ));
             $state->next();
         }

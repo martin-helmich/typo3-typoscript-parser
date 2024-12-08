@@ -209,6 +209,22 @@ class TokenizerTest extends TestCase
                     3      => '',
                 ]),
             ]],
+
+            "condition termination, using global" => ['[global]', [
+                new Token(Token::TYPE_CONDITION_END, '[global]', 1, 1, [
+                    0 => '[global]',
+                    1 => 'global',
+                    'keyword' => 'global',
+                ]),
+            ]],
+
+            "condition termination, using end" => ['[end]', [
+                new Token(Token::TYPE_CONDITION_END, '[end]', 1, 1, [
+                    0 => '[end]',
+                    1 => 'end',
+                    'keyword' => 'end',
+                ]),
+            ]],
         ];
     }
 
