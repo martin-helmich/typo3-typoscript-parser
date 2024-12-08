@@ -168,7 +168,6 @@ class Parser implements ParserInterface
                     $this->parseNestedStatements(
                         $state->withContext($objectPath)->withStatements($statements)
                     );
-                    continue;
                 }
             }
 
