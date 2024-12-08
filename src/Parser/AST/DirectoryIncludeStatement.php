@@ -40,8 +40,6 @@ class DirectoryIncludeStatement extends IncludeStatement
      * @param string|null $extensions The file extension filter. MAY be NULL.
      * @param string|null $condition  Conditional statement that is attached to this include
      * @param int         $sourceLine The original source line.
-     *
-     * @psalm-suppress DeprecatedProperty
      */
     public function __construct(string $directory, ?string $extensions, ?string $condition, int $sourceLine)
     {

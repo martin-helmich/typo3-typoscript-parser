@@ -19,10 +19,6 @@ class StatementTest extends TestCase
     public function testInvalidSourceLineThrowsException($invalidSourceLine)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $statement = $this
-            ->getMockBuilder(Statement::class)
-            ->setConstructorArgs([$invalidSourceLine])
-            ->enableOriginalConstructor()
-            ->getMockForAbstractClass();
+        new class($invalidSourceLine) extends Statement {};
     }
 }

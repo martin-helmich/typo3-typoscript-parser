@@ -20,13 +20,13 @@ class TypoScriptParserExtension implements ExtensionInterface
     /**
      * Loads a specific configuration.
      *
-     * @param array            $configs   An array of configuration values
+     * @param mixed[]          $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      *
      * @api
-     * @psalm-suppress MissingReturnType Signature is determined by Symfony DI -- nothing to fix, here
+     * @phpstan-ignore missingType.return (signature is determined by Symfony DI -- nothing to fix, here)
      */
     public function load(array $configs, ContainerBuilder $container)
     {

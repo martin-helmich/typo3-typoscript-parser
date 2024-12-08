@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        php-versions: ["8.1", "8.2", "8.3"]
+        php-versions: ["8.1", "8.2", "8.3", "8.4"]
         symfony-versions: [ "^5.4", "^6.4", "^7.0" ]
         exclude:
           - php-versions: "8.1"
@@ -37,12 +37,13 @@ jobs:
         composer require --no-update symfony/dependency-injection ${{ matrix.symfony-versions }}
         composer require --no-update symfony/config ${{ matrix.symfony-versions }}
         composer require --no-update symfony/yaml ${{ matrix.symfony-versions }}
+        composer require --no-update symfony/console ${{ matrix.symfony-versions }}
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run type checker
-      run: ./vendor/bin/psalm
+      run: ./vendor/bin/phpstan analyse
 
     - name: Run unit tests
       run: ./vendor/bin/phpunit --testdox
