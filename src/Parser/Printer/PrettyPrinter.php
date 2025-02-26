@@ -57,7 +57,7 @@ class PrettyPrinter implements ASTPrinterInterface
     {
         $out = $statements;
 
-        while ($out[count($out) - 1] instanceof NopStatement) {
+        while (count($out) && $out[count($out) - 1] instanceof NopStatement) {
             array_pop($out);
         }
 
