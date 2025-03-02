@@ -58,7 +58,7 @@ class PrettyPrinter implements ASTPrinterInterface
     {
         $out = $statements;
 
-        while ($out[count($out) - 1] instanceof NopStatement) {
+        while (count($out) && $out[count($out) - 1] instanceof NopStatement) {
             array_pop($out);
         }
 
@@ -211,7 +211,8 @@ class PrettyPrinter implements ASTPrinterInterface
             return;
         }
 
-        $output->writeln($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+        $assignment = rtrim($indent . $statement->object->relativeName . ' = ' . $statement->value->value);
+        $output->writeln($assignment);
     }
 
     private function printNopStatement(OutputInterface $output): void

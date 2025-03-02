@@ -8,20 +8,19 @@ use Helmich\TypoScriptParser\Parser\AST\ConditionalStatement;
 use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
+use Helmich\TypoScriptParser\Parser\AST\Statement;
 use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConditionTermination;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
-use Helmich\TypoScriptParser\Tokenizer\Token;
 use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
-
-use function PHPUnit\Framework\equalTo;
 use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
 
 class PrinterTest extends TestCase
 {
@@ -36,16 +35,22 @@ class PrinterTest extends TestCase
         );
     }
 
+    /**
+     * @return array<string, array{Statement[]|null, string}>
+     */
     public static function dataForPrinterTest(): array
     {
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
-        $testCases = [];
 
+        assert($files !== false);
+
+        $testCases = [];
         foreach ($files as $outputFile) {
             $ast = null;
             $astFile = str_replace('.typoscript', '.php', $outputFile);
 
             if (file_exists($astFile)) {
+                /** @var Statement[] $ast */
                 $ast = include $astFile;
             }
 
@@ -55,13 +60,18 @@ class PrinterTest extends TestCase
             }
 
             $output = file_get_contents($outputFile);
+            assert($output !== false);
 
-            $testCases[str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
+            $testGroup = basename(dirname($outputFile));
+            $testCases[$testGroup . " / " . str_replace(".typoscript", "", basename($outputFile))] = [$ast, $output];
         }
 
         return $testCases;
     }
 
+    /**
+     * @param Statement[]|null $ast
+     */
     #[DataProvider('dataForPrinterTest')]
     public function testParsedCodeIsCorrectlyPrinted(array|null $ast, string $expectedOutput): void
     {
