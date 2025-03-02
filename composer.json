@@ -32,9 +32,6 @@
         }
     },
     "autoload-dev": {
-        "files": [
-            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
-        ],
         "psr-4": {
             "Helmich\\TypoScriptParser\\Tests\\Functional\\": "tests/functional",
             "Helmich\\TypoScriptParser\\Tests\\Unit\\": "tests/unit"
