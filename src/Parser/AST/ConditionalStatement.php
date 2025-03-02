@@ -31,29 +31,36 @@ class ConditionalStatement extends Statement
     public array $elseStatements = [];
 
     /**
-     * This indicates if the conditional statement was property terminated with
-     * a [global] statement.
-     *
-     * This information is not that important for parsing or printing, but might
-     * be of interest to linters.
+     * @deprecated Use $terminator instead
      */
     public bool $unterminated = false;
 
     /**
+     * Indicates how (and if) the conditional statement was terminated with a
+     * [global] or [end] statement.
+     *
+     * This information is not that important for parsing, but might be of
+     * interest to linters and printers.
+     */
+    public ConditionalStatementTerminator $terminator = ConditionalStatementTerminator::Global;
+
+    /**
      * Constructs a conditional statement.
      *
-     * @param string      $condition      The condition statement
-     * @param Statement[] $ifStatements   The statements in the if-branch.
+     * @param string $condition The condition statement
+     * @param Statement[] $ifStatements The statements in the if-branch.
      * @param Statement[] $elseStatements The statements in the else-branch (may be empty).
-     * @param int         $sourceLine     The original source line.
+     * @param ConditionalStatementTerminator $terminator An indicator as to how the statement was termianted
+     * @param int $sourceLine The original source line.
      */
-    public function __construct(string $condition, array $ifStatements, array $elseStatements, int $sourceLine, bool $unterminated = false)
+    public function __construct(string $condition, array $ifStatements, array $elseStatements, int $sourceLine, ConditionalStatementTerminator $terminator = ConditionalStatementTerminator::Global)
     {
         parent::__construct($sourceLine);
 
-        $this->condition      = $condition;
-        $this->ifStatements   = $ifStatements;
+        $this->condition = $condition;
+        $this->ifStatements = $ifStatements;
         $this->elseStatements = $elseStatements;
-        $this->unterminated   = $unterminated;
+        $this->terminator = $terminator;
+        $this->unterminated = $terminator === ConditionalStatementTerminator::Unterminated;
     }
 }

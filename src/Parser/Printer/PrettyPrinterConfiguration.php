@@ -27,6 +27,14 @@ final class PrettyPrinterConfiguration
 
     private bool $indentConditions = false;
 
+    /**
+     * Determines how conditions should be terminated.
+     *
+     * NOTE: Using EnforceEnd would be preferable, but we're keeping
+     * EnforceGlobal as default due to backwards-compatibility.
+     */
+    private PrettyPrinterConditionTermination $conditionTermination = PrettyPrinterConditionTermination::EnforceGlobal;
+
     private function __construct()
     {
     }
@@ -78,6 +86,14 @@ final class PrettyPrinterConfiguration
         return $clone;
     }
 
+    public function withConditionTermination(PrettyPrinterConditionTermination $termination): self
+    {
+        $clone = clone $this;
+        $clone->conditionTermination = $termination;
+
+        return $clone;
+    }
+
     public function shouldAddClosingGlobal(): bool
     {
         return $this->addClosingGlobal;
@@ -100,5 +116,10 @@ final class PrettyPrinterConfiguration
         }
 
         return str_repeat(' ', $this->indentationSize);
+    }
+
+    public function getConditionTermination(): PrettyPrinterConditionTermination
+    {
+        return $this->conditionTermination;
     }
 }

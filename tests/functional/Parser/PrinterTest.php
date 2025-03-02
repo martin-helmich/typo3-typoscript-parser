@@ -9,15 +9,18 @@ use Helmich\TypoScriptParser\Parser\AST\ObjectPath;
 use Helmich\TypoScriptParser\Parser\AST\Operator\Assignment;
 use Helmich\TypoScriptParser\Parser\AST\Scalar;
 use Helmich\TypoScriptParser\Parser\AST\Statement;
+use Helmich\TypoScriptParser\Parser\Parser;
 use Helmich\TypoScriptParser\Parser\Printer\ASTPrinterInterface;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConditionTermination;
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinterConfiguration;
+use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
-
-use function PHPUnit\Framework\equalTo;
 use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\equalTo;
 
 class PrinterTest extends TestCase
 {
@@ -105,5 +108,51 @@ class PrinterTest extends TestCase
         $printer->printStatements($ast, $out);
 
         assertThat($out->fetch(), equalTo("[foo = bar]\n    foo = bar\n[else]\n    foo = baz\n[global]\n"));
+    }
+
+    #[Test]
+    public function conditionsTerminatedWithEndShouldDefaultToPrinterDefaults()
+    {
+        $condition = "[foo == 'bar']\n    foo = bar\n[end]\n";
+        $expectedOutput = "[foo == 'bar']\n    foo = bar\n[global]\n";
+
+        $parser = new Parser(new Tokenizer());
+        $ast = $parser->parseString($condition);
+        $out = new BufferedOutput();
+
+        $printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+                ->withEmptyLineBreaks()
+                ->withIndentConditions()
+        );
+        $printer->printStatements($ast, $out);
+
+        assertThat($out->fetch(), equalTo($expectedOutput));
+    }
+
+    public static function conditionTerminations(): array
+    {
+        return [["[end]"], ["[global]"]];
+    }
+
+    #[Test]
+    #[DataProvider("conditionTerminations")]
+    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEndWhenConfigured(string $termination)
+    {
+        $condition = "[foo == 'bar']\n    foo = bar\n$termination\n";
+
+        $parser = new Parser(new Tokenizer());
+        $ast = $parser->parseString($condition);
+        $out = new BufferedOutput();
+
+        $printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+                ->withEmptyLineBreaks()
+                ->withIndentConditions()
+                ->withConditionTermination(PrettyPrinterConditionTermination::Keep)
+        );
+        $printer->printStatements($ast, $out);
+
+        assertThat($out->fetch(), equalTo($condition));
     }
 }

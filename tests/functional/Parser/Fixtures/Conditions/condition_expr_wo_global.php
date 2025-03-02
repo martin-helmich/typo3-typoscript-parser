@@ -16,6 +16,6 @@ return [
         ],
         elseStatements: [],
         sourceLine: 1,
-        unterminated: true,
+        terminator: \Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator::Unterminated,
     ),
 ];
