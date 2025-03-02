@@ -82,3 +82,37 @@ $traverser = new Traverser($statements);
 $traverser->addVisitor(new VariableNamingCheckVisitor());
 $traverser->walk();
 ```
+
+Printing TypoScript
+-------------------
+
+When you are using this package for code transformation, you might want
+to print a modified syntax tree back into a file. You can use the `PrettyPrinter`
+class for this:
+
+```php
+use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
+use Symfony\Component\Console\Output\StreamOutput;
+
+$syntaxTree = [...];
+
+$output = new StreamOutput(fopen('path/to/file', 'w'));
+
+$printer = new PrettyPrinter();
+$printer->printStatements($syntaxTree, $output);
+```
+
+To get more fine-grained control over the output, you can pass a configuration
+object into your printer instance:
+
+```php
+
+$printerConfiguration = PrettyPrinterConfiguration::create()
+    ->withSpaceIndentation(2)
+    ->withIndentConditions()
+    ->withClosingGlobalStatement()
+    ->withConditionTermination(PrettyPrinterConditionTermination::EnforceEnd);
+
+$printer = new PrettyPrinter($printerConfiguration);
+$printer->printStatements($syntaxTree, $output);
+```
