@@ -215,7 +215,10 @@ class Parser implements ParserInterface
 
         for (; $state->hasNext(); $state->next()) {
             if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_END) {
-                $conditionTerminator = strtolower($state->token()->getSubMatch("keyword")) === 'global'
+                $conditionTerminatorToken = $state->token()->getSubMatch("keyword");
+                assert($conditionTerminatorToken !== null);
+
+                $conditionTerminator = strtolower($conditionTerminatorToken) === 'global'
                     ? ConditionalStatementTerminator::Global
                     : ConditionalStatementTerminator::End;
                 $state->statements()->append($this->builder->condition(
