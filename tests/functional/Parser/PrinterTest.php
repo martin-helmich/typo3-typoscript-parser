@@ -111,7 +111,7 @@ class PrinterTest extends TestCase
     }
 
     #[Test]
-    public function conditionsTerminatedWithEndShouldDefaultToPrinterDefaults()
+    public function conditionsTerminatedWithEndShouldDefaultToPrinterDefaults(): void
     {
         $condition = "[foo == 'bar']\n    foo = bar\n[end]\n";
         $expectedOutput = "[foo == 'bar']\n    foo = bar\n[global]\n";
@@ -130,6 +130,9 @@ class PrinterTest extends TestCase
         assertThat($out->fetch(), equalTo($expectedOutput));
     }
 
+    /**
+     * @return array{0: string}[]
+     */
     public static function conditionTerminations(): array
     {
         return [["[end]"], ["[global]"]];
@@ -137,7 +140,7 @@ class PrinterTest extends TestCase
 
     #[Test]
     #[DataProvider("conditionTerminations")]
-    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEndWhenConfigured(string $termination)
+    public function conditionsTerminatedWithEndShouldAlsoBePrintedWithEndWhenConfigured(string $termination): void
     {
         $condition = "[foo == 'bar']\n    foo = bar\n$termination\n";
 
@@ -154,5 +157,26 @@ class PrinterTest extends TestCase
         $printer->printStatements($ast, $out);
 
         assertThat($out->fetch(), equalTo($condition));
+    }
+
+    #[Test]
+    public function conditionsTerminatedWithUppercaseGlobalShouldKeepGlobal(): void
+    {
+        $condition = "[foo == 'bar']\n    foo = bar\n[GLOBAL]\n";
+        $expected = "[foo == 'bar']\n    foo = bar\n[global]\n";
+
+        $parser = new Parser(new Tokenizer());
+        $ast = $parser->parseString($condition);
+        $out = new BufferedOutput();
+
+        $printer = new PrettyPrinter(
+            PrettyPrinterConfiguration::create()
+                ->withEmptyLineBreaks()
+                ->withIndentConditions()
+                ->withConditionTermination(PrettyPrinterConditionTermination::Keep)
+        );
+        $printer->printStatements($ast, $out);
+
+        assertThat($out->fetch(), equalTo($expected));
     }
 }
