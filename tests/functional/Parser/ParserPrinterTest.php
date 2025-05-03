@@ -42,6 +42,7 @@ class ParserPrinterTest extends TestCase
         );
 
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        assert($files !== false);
 
         foreach ($files as $outputFile) {
             $in = file_get_contents($outputFile);
@@ -55,7 +56,7 @@ class ParserPrinterTest extends TestCase
     }
 
     #[DataProvider('dataForIdempotencyTest')]
-    public function testParsingAndPrintingIsIdempotent($inputCode): void
+    public function testParsingAndPrintingIsIdempotent(string $inputCode): void
     {
         $ast = $this->parser->parseString($inputCode);
         $out = new BufferedOutput();
