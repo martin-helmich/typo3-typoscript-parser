@@ -99,7 +99,7 @@ class PrettyPrinter implements ASTPrinterInterface
                     )
                 );
             } elseif ($statement instanceof ConditionalStatement) {
-                $next     = $i + 1 < $count ? $statements[$i + 1] : null;
+                $next = $i + 1 < $count ? $statements[$i + 1] : null;
 
                 $this->printConditionalStatement(
                     $output,
@@ -108,7 +108,7 @@ class PrettyPrinter implements ASTPrinterInterface
                     $next instanceof ConditionalStatement
                 );
             } elseif ($statement instanceof IncludeStatement) {
-                $this->printIncludeStatement($output, $statement);
+                $this->printIncludeStatement($output, $statement, $indent);
             } elseif ($statement instanceof Comment) {
                 $output->writeln($indent . $statement->comment);
             } elseif ($statement instanceof MultilineComment) {
@@ -135,21 +135,21 @@ class PrettyPrinter implements ASTPrinterInterface
         }
     }
 
-    private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement): void
+    private function printIncludeStatement(OutputInterface $output, IncludeStatement $statement, string $indent): void
     {
         if ($statement instanceof FileIncludeStatement) {
-            $this->printFileIncludeStatement($output, $statement);
+            $this->printFileIncludeStatement($output, $statement, $indent);
         } elseif ($statement instanceof DirectoryIncludeStatement) {
             $this->printDirectoryIncludeStatement($output, $statement);
         }
     }
 
-    private function printFileIncludeStatement(OutputInterface $output, FileIncludeStatement $statement): void
+    private function printFileIncludeStatement(OutputInterface $output, FileIncludeStatement $statement, string $indent): void
     {
         if ($statement->newSyntax) {
-            $output->writeln('@import \'' . $statement->filename . '\'');
+            $output->writeln($indent . '@import \'' . $statement->filename . '\'');
         } else {
-            $attributes = "";
+            $attributes = '';
 
             if ($statement->condition !== null) {
                 $attributes = ' condition="' . $statement->condition . '"';

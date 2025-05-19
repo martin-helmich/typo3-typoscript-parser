@@ -1,4 +1,4 @@
 [5 in tree.rootLineIds || 10 in tree.rootLineIds]
-foo = bar
-bar = baz
+    foo = bar
+    bar = baz
 [global]
