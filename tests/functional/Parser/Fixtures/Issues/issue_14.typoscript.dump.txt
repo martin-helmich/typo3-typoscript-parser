@@ -1,0 +1,36 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: page
+            relativeName: page
+        )
+        statements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: page.meta
+                    relativeName: meta
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: page.meta.foo:bar.cObject
+                            relativeName: foo:bar.cObject
+                        )
+                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                            value: TEXT
+                        )
+                    )
+                    1: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: page.meta.foo:bar.cObject.value
+                            relativeName: foo:bar.cObject.value
+                        )
+                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                            value: qux
+                        )
+                    )
+                )
+            )
+        )
+    )
+)

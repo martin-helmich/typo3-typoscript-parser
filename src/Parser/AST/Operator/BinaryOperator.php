@@ -17,4 +17,9 @@ abstract class BinaryOperator extends Statement
      * The object on the left-hand side of the statement.
      */
     public ObjectPath $object;
+
+    public function getSubNodeNames(): array
+    {
+        return ['object'];
+    }
 }

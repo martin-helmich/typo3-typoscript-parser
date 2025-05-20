@@ -13,4 +13,9 @@ final class Comment extends Statement
         parent::__construct($sourceLine);
         $this->comment = $comment;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['comment'];
+    }
 }

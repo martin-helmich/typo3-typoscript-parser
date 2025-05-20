@@ -47,4 +47,9 @@ class NestedAssignment extends Statement
         $this->object     = $object;
         $this->statements = $statements;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['object', 'statements'];
+    }
 }

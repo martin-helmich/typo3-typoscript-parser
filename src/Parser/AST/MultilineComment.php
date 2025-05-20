@@ -16,4 +16,9 @@ final class MultilineComment extends Statement
 
         $this->comment = $sanitizedComment;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['comment'];
+    }
 }

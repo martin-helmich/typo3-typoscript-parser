@@ -1,0 +1,28 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
+        condition: [5 in tree.rootLineIds || 10 in tree.rootLineIds]
+        ifStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: foo
+                    relativeName: foo
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: bar
+                )
+            )
+            1: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: bar
+                    relativeName: bar
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: baz
+                )
+            )
+        )
+        elseStatements: array(
+        )
+        terminator: Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator:Unterminated
+    )
+)

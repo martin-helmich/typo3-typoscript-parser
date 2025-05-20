@@ -1,0 +1,12 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
+        directory: foo/
+        extensions: typoscript
+        condition: null
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
+        directory: bar/
+        extensions: null
+        condition: null
+    )
+)

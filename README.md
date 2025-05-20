@@ -116,3 +116,31 @@ $printerConfiguration = PrettyPrinterConfiguration::create()
 $printer = new PrettyPrinter($printerConfiguration);
 $printer->printStatements($syntaxTree, $output);
 ```
+
+Dumping the AST
+---------------
+
+You can dump out the AST with the following code:
+
+```php
+use Helmich\TypoScriptParser\Parser\ParseError;
+use Helmich\TypoScriptParser\Parser\Parser;
+use Helmich\TypoScriptParser\Parser\StatementDumper;
+use Helmich\TypoScriptParser\Tokenizer\Tokenizer;
+
+$code = <<<'CODE'
+# A comment
+CODE;
+
+$parser = new Parser(new Tokenizer());
+
+try {
+    $statements = $parser->parseString($code);
+} catch (ParseError $error) {
+    echo "Parse error: {$error->getMessage()}";
+    exit;
+}
+
+$dumper = new StatementDumper();
+echo $dumper->dump($statements);
+```

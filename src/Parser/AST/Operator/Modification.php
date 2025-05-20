@@ -33,4 +33,9 @@ class Modification extends BinaryOperator
         $this->object = $object;
         $this->call   = $call;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['object', 'call'];
+    }
 }

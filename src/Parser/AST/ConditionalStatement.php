@@ -63,4 +63,9 @@ class ConditionalStatement extends Statement
         $this->terminator = $terminator;
         $this->unterminated = $terminator === ConditionalStatementTerminator::Unterminated;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['condition', 'ifStatements', 'elseStatements', 'terminator'];
+    }
 }
