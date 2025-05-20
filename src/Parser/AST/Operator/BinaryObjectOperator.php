@@ -16,4 +16,9 @@ abstract class BinaryObjectOperator extends BinaryOperator
      * The target object to reference to or copy from.
      */
     public ObjectPath $target;
+
+    public function getSubNodeNames(): array
+    {
+        return ['target'];
+    }
 }

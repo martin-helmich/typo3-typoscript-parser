@@ -1,0 +1,56 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
+        condition: [globalVar = GP:foo=1]
+        ifStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: foo
+                    relativeName: foo
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: foo.bar
+                            relativeName: bar
+                        )
+                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                            value: 1
+                        )
+                    )
+                )
+            )
+            1: Helmich\TypoScriptParser\Parser\AST\MultilineComment(
+                comment: /*
+            Hello
+            World
+            */
+            )
+        )
+        elseStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\MultilineComment(
+                comment: /*
+            Hello
+            World
+            */
+            )
+            1: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: foo
+                    relativeName: foo
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: foo.bar
+                            relativeName: bar
+                        )
+                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                            value: 2
+                        )
+                    )
+                )
+            )
+        )
+        terminator: Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator:Global
+    )
+)

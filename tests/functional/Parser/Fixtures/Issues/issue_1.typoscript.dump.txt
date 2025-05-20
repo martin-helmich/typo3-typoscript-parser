@@ -1,0 +1,47 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: config.tx_extbase
+            relativeName: config.tx_extbase
+        )
+        statements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\NopStatement()
+            1: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: config.tx_extbase.view
+                    relativeName: view
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\Comment(
+                        comment: # Configure where to look for widget templates
+                    )
+                    1: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: config.tx_extbase.view.widget
+                            relativeName: widget
+                        )
+                        statements: array(
+                            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                    absoluteName: config.tx_extbase.view.widget.TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper
+                                    relativeName: TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper
+                                )
+                                statements: array(
+                                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                            absoluteName: config.tx_extbase.view.widget.TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper.templateRootPath
+                                            relativeName: templateRootPath
+                                        )
+                                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                                            value: EXT:ext_key/Resources/Private/Templates
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+)

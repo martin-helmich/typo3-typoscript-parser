@@ -10,7 +10,7 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
-class ObjectPath
+class ObjectPath implements Node
 {
     /**
      * The relative object path, as specified in the source code.
@@ -61,5 +61,13 @@ class ObjectPath
             return new self($this->absoluteName . $name, $name);
         }
         return new self($this->absoluteName . '.' . $name, $name);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSubNodeNames(): array
+    {
+        return ['absoluteName', 'relativeName'];
     }
 }

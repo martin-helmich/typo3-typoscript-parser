@@ -2,13 +2,15 @@
 
 namespace Helmich\TypoScriptParser\Parser\AST\Operator;
 
+use Helmich\TypoScriptParser\Parser\AST\Node;
+
 /**
  * A modification call (usually on the right-hand side of a modification statement).
  *
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST\Operator
  */
-class ModificationCall
+class ModificationCall implements Node
 {
     /**
      * The method name.
@@ -30,5 +32,13 @@ class ModificationCall
     {
         $this->arguments = $arguments;
         $this->method    = $method;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSubNodeNames(): array
+    {
+        return ['arguments', 'method'];
     }
 }
