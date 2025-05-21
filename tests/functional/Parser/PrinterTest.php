@@ -32,6 +32,7 @@ class PrinterTest extends TestCase
             PrettyPrinterConfiguration::create()
                 ->withEmptyLineBreaks()
                 ->withSpaceIndentation(4)
+                ->withIndentConditions()
         );
     }
 

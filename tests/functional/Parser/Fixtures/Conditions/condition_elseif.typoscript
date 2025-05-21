@@ -1,7 +1,7 @@
 [globalVar = GP:foo=1]
-foo = bar
+    foo = bar
 [globalVar = GP:foo=2]
-foo = bar2
+    foo = bar2
 [else]
-foo = baz
+    foo = baz
 [global]

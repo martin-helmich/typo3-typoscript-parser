@@ -1,5 +1,5 @@
 [globalVar = GP:foo=1]
-foo = bar
-bar = baz
+    foo = bar
+    bar = baz
 [global]
 baz = foo
