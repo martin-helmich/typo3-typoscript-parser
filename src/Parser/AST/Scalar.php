@@ -8,12 +8,20 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
-class Scalar
+class Scalar implements Node
 {
     public string $value;
 
     public function __construct(string $value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSubNodeNames(): array
+    {
+        return ['value'];
     }
 }

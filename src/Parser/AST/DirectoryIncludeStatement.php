@@ -50,4 +50,9 @@ class DirectoryIncludeStatement extends IncludeStatement
         $this->extensions = $extensions;
         $this->condition  = $condition;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['directory', 'extensions', 'condition'];
+    }
 }

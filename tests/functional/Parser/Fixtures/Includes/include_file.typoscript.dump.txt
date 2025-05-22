@@ -1,0 +1,7 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement(
+        filename: foo.typoscript
+        newSyntax: false
+        condition: null
+    )
+)

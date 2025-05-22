@@ -1,0 +1,17 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
+        directory: foo/
+        extensions: null
+        condition: Your\Custom\ClassOne
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
+        directory: foo/
+        extensions: typoscript
+        condition: Your\Custom\ClassTwo
+    )
+    2: Helmich\TypoScriptParser\Parser\AST\DirectoryIncludeStatement(
+        directory: foo/
+        extensions: typoscript
+        condition: Your\Custom\ClassThree
+    )
+)

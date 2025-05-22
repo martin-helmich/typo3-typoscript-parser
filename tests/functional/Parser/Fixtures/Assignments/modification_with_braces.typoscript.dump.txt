@@ -1,0 +1,13 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\Operator\Modification(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+        call: Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall(
+            arguments: some string with () braces in it
+            method: appendString
+        )
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\NopStatement()
+)

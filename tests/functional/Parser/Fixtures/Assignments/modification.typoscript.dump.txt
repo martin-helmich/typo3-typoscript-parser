@@ -1,0 +1,12 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\Operator\Modification(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+        call: Helmich\TypoScriptParser\Parser\AST\Operator\ModificationCall(
+            arguments: 1234
+            method: addToList
+        )
+    )
+)

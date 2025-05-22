@@ -1,0 +1,61 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: page
+            relativeName: page
+        )
+        statements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\Operator\ObjectCreation(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: page.20
+                    relativeName: 20
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: USER
+                )
+            )
+            1: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: page.20
+                    relativeName: 20
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: page.20.userFunc
+                            relativeName: userFunc
+                        )
+                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                            value: TYPO3\CMS\Extbase\Core\Bootstrap->run
+                        )
+                    )
+                    1: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: page.20.switchableControllerActions
+                            relativeName: switchableControllerActions
+                        )
+                        statements: array(
+                            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                    absoluteName: page.20.switchableControllerActions.{$plugin.tx_foo.settings.bar.controllerName}
+                                    relativeName: {$plugin.tx_foo.settings.bar.controllerName}
+                                )
+                                statements: array(
+                                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                            absoluteName: page.20.switchableControllerActions.{$plugin.tx_foo.settings.bar.controllerName}.1
+                                            relativeName: 1
+                                        )
+                                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                                            value: {$plugin.tx_foo.settings.bar.actionName}
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+)

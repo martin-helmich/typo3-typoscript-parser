@@ -1,0 +1,21 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: bar
+            relativeName: bar
+        )
+        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+            value: baz
+        )
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\Operator\Reference(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: baz
+            relativeName: baz
+        )
+        target: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: bar
+            relativeName: .bar
+        )
+    )
+)
