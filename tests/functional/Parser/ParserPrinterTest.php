@@ -42,20 +42,24 @@ class ParserPrinterTest extends TestCase
         );
 
         $files = glob(__DIR__ . '/Fixtures/*/*.typoscript');
+        if (is_array($files)) {
+            foreach ($files as $outputFile) {
+                $in = file_get_contents($outputFile);
+                if ($in === false) {
+                    continue;
+                }
+                $ast = $parser->parseString($in);
+                $out = new BufferedOutput();
 
-        foreach ($files as $outputFile) {
-            $in = file_get_contents($outputFile);
-            $ast = $parser->parseString($in);
-            $out = new BufferedOutput();
+                $printer->printStatements($ast, $out);
 
-            $printer->printStatements($ast, $out);
-
-            yield [$out->fetch()];
+                yield [$out->fetch()];
+            }
         }
     }
 
     #[DataProvider('dataForIdempotencyTest')]
-    public function testParsingAndPrintingIsIdempotent($inputCode): void
+    public function testParsingAndPrintingIsIdempotent(string $inputCode): void
     {
         $ast = $this->parser->parseString($inputCode);
         $out = new BufferedOutput();
