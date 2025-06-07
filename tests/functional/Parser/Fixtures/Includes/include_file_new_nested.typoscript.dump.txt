@@ -1,0 +1,15 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
+        condition: [frontend.user.isLoggedIn]
+        ifStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\FileIncludeStatement(
+                filename: foo.typoscript
+                newSyntax: true
+                condition: null
+            )
+        )
+        elseStatements: array(
+        )
+        terminator: Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator:Global
+    )
+)

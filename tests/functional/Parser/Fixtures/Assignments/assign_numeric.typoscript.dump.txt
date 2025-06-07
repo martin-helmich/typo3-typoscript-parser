@@ -1,0 +1,28 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+        statements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: foo.0
+                    relativeName: 0
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: hello
+                )
+            )
+            1: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: foo.1
+                    relativeName: 1
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: world
+                )
+            )
+        )
+    )
+)

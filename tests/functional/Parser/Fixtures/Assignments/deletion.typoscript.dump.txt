@@ -1,0 +1,8 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\Operator\Delete(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+    )
+)

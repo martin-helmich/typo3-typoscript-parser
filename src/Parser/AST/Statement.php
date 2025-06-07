@@ -8,7 +8,7 @@ namespace Helmich\TypoScriptParser\Parser\AST;
  * @package    Helmich\TypoScriptParser
  * @subpackage Parser\AST
  */
-abstract class Statement
+abstract class Statement implements Node
 {
     /**
      * The original source line. Useful for tracing and debugging.
@@ -30,4 +30,6 @@ abstract class Statement
 
         $this->sourceLine = $sourceLine;
     }
+
+    abstract public function getSubNodeNames(): array;
 }

@@ -16,9 +16,15 @@ class StatementTest extends TestCase
     }
 
     #[DataProvider('dataForInvalidSourceLines')]
-    public function testInvalidSourceLineThrowsException($invalidSourceLine)
+    public function testInvalidSourceLineThrowsException(int $invalidSourceLine): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        new class($invalidSourceLine) extends Statement {};
+
+        $_ = new class($invalidSourceLine) extends Statement {
+            public function getSubNodeNames(): array
+            {
+                return [];
+            }
+        };
     }
 }
