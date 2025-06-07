@@ -1,0 +1,38 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\ConditionalStatement(
+        condition: [globalVar = GP:foo=1]
+        ifStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: one
+                    relativeName: one
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: 1
+                )
+            )
+        )
+        elseStatements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: two
+                    relativeName: two
+                )
+                value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                    value: 2
+                )
+            )
+        )
+        terminator: Helmich\TypoScriptParser\Parser\AST\ConditionalStatementTerminator:Global
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\NopStatement()
+    2: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: three
+            relativeName: three
+        )
+        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+            value: 3
+        )
+    )
+)

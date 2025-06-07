@@ -1,0 +1,7 @@
+[globalVar = GP:foo=1]
+    one = 1
+[else]
+    two = 2
+[global]
+
+three = 3
