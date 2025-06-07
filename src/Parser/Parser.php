@@ -225,9 +225,10 @@ class Parser implements ParserInterface
                     $conditionLine,
                     terminator: $conditionTerminator,
                 ));
-                $state->next();
                 break;
-            } elseif ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
+            }
+
+            if ($state->token()->getType() === TokenInterface::TYPE_CONDITION_ELSE) {
                 $this->triggerParseErrorIf(
                     $inElseBranch,
                     sprintf('Duplicate else in conditional statement in line %d.', $state->token()->getLine()),
