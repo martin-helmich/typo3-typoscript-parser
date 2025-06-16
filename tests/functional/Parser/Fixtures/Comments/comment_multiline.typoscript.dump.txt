@@ -1,0 +1,17 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\MultilineComment(
+        comment: /*
+    Multiline Comment
+    Here comes a multiline comment
+    */
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+            value: bar
+        )
+    )
+)

@@ -1,0 +1,14 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\Comment(
+        comment: # Hello World
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: foo
+            relativeName: foo
+        )
+        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+            value: bar
+        )
+    )
+)

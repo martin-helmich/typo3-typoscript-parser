@@ -30,4 +30,9 @@ abstract class UnaryOperator extends Statement
 
         $this->object = $object;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['object'];
+    }
 }

@@ -37,4 +37,9 @@ class Assignment extends BinaryOperator
         $this->object = $object;
         $this->value  = $value;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['object', 'value'];
+    }
 }

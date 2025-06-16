@@ -31,4 +31,9 @@ class Reference extends BinaryObjectOperator
         $this->object = $object;
         $this->target = $target;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['object', 'target'];
+    }
 }

@@ -1,0 +1,53 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: TCEFORM
+            relativeName: TCEFORM
+        )
+        statements: array(
+            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                    absoluteName: TCEFORM.tt_content
+                    relativeName: tt_content
+                )
+                statements: array(
+                    0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                            absoluteName: TCEFORM.tt_content.space_before_class
+                            relativeName: space_before_class
+                        )
+                        statements: array(
+                            0: Helmich\TypoScriptParser\Parser\AST\NestedAssignment(
+                                object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                    absoluteName: TCEFORM.tt_content.space_before_class.altLabels
+                                    relativeName: altLabels
+                                )
+                                statements: array(
+                                    0: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+                                        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+                                            absoluteName: TCEFORM.tt_content.space_before_class.altLabels..
+                                            relativeName: .
+                                        )
+                                        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+                                            value: LLL:EXT:theme/Resources/Private/Language/locallang_db.xlf:general.noGap
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+    1: Helmich\TypoScriptParser\Parser\AST\NopStatement()
+    2: Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
+        object: Helmich\TypoScriptParser\Parser\AST\ObjectPath(
+            absoluteName: TCEFORM.tt_content.space_before_class.altLabels..
+            relativeName: TCEFORM.tt_content.space_before_class.altLabels..
+        )
+        value: Helmich\TypoScriptParser\Parser\AST\Scalar(
+            value: foo
+        )
+    )
+)

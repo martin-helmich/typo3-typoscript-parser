@@ -40,4 +40,9 @@ class FileIncludeStatement extends IncludeStatement
         $this->newSyntax = $newSyntax;
         $this->condition = $condition;
     }
+
+    public function getSubNodeNames(): array
+    {
+        return ['filename', 'newSyntax', 'condition'];
+    }
 }
