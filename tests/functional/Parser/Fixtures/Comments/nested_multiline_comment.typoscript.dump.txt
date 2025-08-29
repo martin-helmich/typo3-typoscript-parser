@@ -1,0 +1,9 @@
+array(
+    0: Helmich\TypoScriptParser\Parser\AST\MultilineComment(
+        comment: /*
+        temp {
+            foo = 1
+        }
+    */
+    )
+)
