@@ -2,8 +2,8 @@
 
 return [
     new \Helmich\TypoScriptParser\Parser\AST\MultilineComment('/*
-Multiline Comment
-Here comes a multiline comment
+    Multiline Comment
+    Here comes a multiline comment
 */', 1),
     new \Helmich\TypoScriptParser\Parser\AST\Operator\Assignment(
         new \Helmich\TypoScriptParser\Parser\AST\ObjectPath('foo', 'foo'),

@@ -104,7 +104,7 @@ class Tokenizer implements TokenizerInterface
             }
 
             if ($line->peek(self::TOKEN_COMMENT_MULTILINE_BEGIN) !== false) {
-                $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value(), $line->index(), $column);
+                $state->startMultilineToken(TokenInterface::TYPE_COMMENT_MULTILINE, $line->value() . "\n", $line->index(), $column);
                 continue;
             }
 
@@ -266,17 +266,19 @@ class Tokenizer implements TokenizerInterface
         MultilineTokenBuilder $state,
         ScannerLine $line
     ): void {
+        // Add whitespace at the beginning of the line
         if (($matches = $line->scan(self::TOKEN_WHITESPACE)) !== false) {
-            $state->appendToToken(trim($matches[0]));
+            $state->appendToToken($matches[0]);
         }
 
+        // Check for closing multiline token
         if (($matches = $line->peek(self::TOKEN_COMMENT_MULTILINE_END)) !== false) {
-            $token = $state->endMultilineToken("\n" . $matches[0]);
+            $token = $state->endMultilineToken($matches[0]);
             $tokens->appendToken($token);
             return;
         }
 
-        $state->appendToToken("\n" . $line->value());
+        $state->appendToToken($line->value() . "\n");
     }
 
     private function tokenizeMultilineAssignment(

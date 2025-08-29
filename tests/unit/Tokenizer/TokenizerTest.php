@@ -225,6 +225,60 @@ class TokenizerTest extends TestCase
                     'keyword' => 'end',
                 ]),
             ]],
+
+            "deep nested assignment" => [
+                <<<CODE
+temp {
+    code {
+        one = 1
+    }
+}
+CODE
+                , [
+                new Token(Token::TYPE_OBJECT_IDENTIFIER, "temp", 1, 1),
+                new Token(Token::TYPE_WHITESPACE, " ", 1, 5),
+                new Token(Token::TYPE_BRACE_OPEN, "{", 1, 6),
+                new Token(Token::TYPE_WHITESPACE, "\n", 1, 7),
+
+                new Token(Token::TYPE_WHITESPACE, "    ", 2, 1),
+                new Token(Token::TYPE_OBJECT_IDENTIFIER, "code", 2, 5),
+                new Token(Token::TYPE_WHITESPACE, " ", 2, 9),
+                new Token(Token::TYPE_BRACE_OPEN, "{", 2, 10),
+                new Token(Token::TYPE_WHITESPACE, "\n", 2, 11),
+
+                new Token(Token::TYPE_WHITESPACE, "        ", 3, 1),
+                new Token(Token::TYPE_OBJECT_IDENTIFIER, "one", 3, 9),
+                new Token(Token::TYPE_WHITESPACE, " ", 3, 12),
+                new Token(Token::TYPE_OPERATOR_ASSIGNMENT, "=", 3, 13),
+                new Token(Token::TYPE_WHITESPACE, " ", 3, 14),
+                new Token(Token::TYPE_RIGHTVALUE, "1", 3, 15),
+                new Token(Token::TYPE_WHITESPACE, "\n", 3, 16),
+
+                new Token(Token::TYPE_WHITESPACE, "    ", 4, 1),
+                new Token(Token::TYPE_BRACE_CLOSE, "}", 4, 5, ['}']),
+                new Token(Token::TYPE_WHITESPACE, "\n", 4, 6),
+
+                new Token(Token::TYPE_BRACE_CLOSE, "}", 5, 1, ['}']),
+            ]],
+
+            "multiline comment" => [
+                <<<CODE
+/*
+    temp {
+        one = 1
+    }
+*/
+CODE
+                , [
+                    new Token(Token::TYPE_COMMENT_MULTILINE, <<<CODE
+/*
+    temp {
+        one = 1
+    }
+*/
+CODE, 1, 1),
+
+                ]],
         ];
     }
 
