@@ -1,10 +1,7 @@
 TypoScript Parser
 =================
 
-![Build Status](https://github.com/martin-helmich/typo3-typoscript-parser/workflows/PHP%20type%20checking%20and%20unit%20testing/badge.svg?branch=master)
-[![Code Climate](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/gpa.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser)
-[![Test Coverage](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/badges/coverage.svg)](https://codeclimate.com/github/martin-helmich/typo3-typoscript-parser/coverage)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=martin-helmich/typo3-typoscript-parser)](https://dependabot.com)
+[![PHP type checking and unit testing](https://github.com/martin-helmich/typo3-typoscript-parser/actions/workflows/php.yml/badge.svg)](https://github.com/martin-helmich/typo3-typoscript-parser/actions/workflows/php.yml)
 
 Author
 ======
@@ -21,8 +18,8 @@ Why?
 ====
 
 Just as [typoscript-lint](https://github.com/martin-helmich/typo3-typoscript-lint),
-this project started of as a simple programming excercise. Tokenizer and parser
-could probably implemented in a better way (it's open source, go for it!).
+this project started of as a simple programming exercise.
+Tokenizer and parser could probably be implemented in a better way (it's open source, go for it!).
 
 Usage
 =====
@@ -30,10 +27,9 @@ Usage
 Parsing TypoScript
 ------------------
 
-You can use the `Helmich\TypoScriptParser\Parser\Parser` class to generate a syntax
-tree from source code input. The class requires an instance of the `Helmich\TypoScriptParser\Tokenizer\Tokenizer`
-class as dependency. When using the Symfony DependencyInjection component, you can
-simply use the service `parser` for this.
+You can use the `Helmich\TypoScriptParser\Parser\Parser` class to generate a syntax tree from source code input.
+The class requires an instance of the `Helmich\TypoScriptParser\Tokenizer\Tokenizer` class as dependency.
+When using the Symfony DependencyInjection component, you can use the `parser` service for this.
 
 ```php
 use Helmich\TypoScriptParser\Parser\Parser,
@@ -86,9 +82,9 @@ $traverser->walk();
 Printing TypoScript
 -------------------
 
-When you are using this package for code transformation, you might want
-to print a modified syntax tree back into a file. You can use the `PrettyPrinter`
-class for this:
+When you are using this package for code transformation, 
+you might want to print a modified syntax tree back into a file.
+You can use the `PrettyPrinter` class for this:
 
 ```php
 use Helmich\TypoScriptParser\Parser\Printer\PrettyPrinter;
