@@ -26,9 +26,8 @@ class TypoScriptParserExtension implements ExtensionInterface
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      *
      * @api
-     * @phpstan-ignore missingType.return (signature is determined by Symfony DI -- nothing to fix, here)
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
         $loader->load('services.yml');
@@ -67,7 +66,7 @@ class TypoScriptParserExtension implements ExtensionInterface
      *
      * @api
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'typoscript_parser';
     }

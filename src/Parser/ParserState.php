@@ -39,7 +39,6 @@ class ParserState
 
     /**
      * @param ArrayObject<int, Statement> $statements
-     * @return $this
      */
     public function withStatements(ArrayObject $statements): self
     {

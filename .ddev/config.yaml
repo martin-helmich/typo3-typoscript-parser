@@ -1,0 +1,7 @@
+name: typo3-typoscript-parser
+type: php
+docroot: .
+php_version: "8.4"
+webserver_type: nginx-fpm
+xdebug_enabled: false
+omit_containers: [db, dba]
